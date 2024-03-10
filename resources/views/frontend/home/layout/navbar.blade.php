@@ -37,8 +37,14 @@
                 </ul>
             @else
                 <i class="text-3xl fa-regular fa-circle-user"></i>
-                <a href="{{route("login")}}">Login</a>/
-                <a href="{{route("register")}}">Sign Up</a>
+                <a href="{{route("login")}}" class="group/login relative">
+                    Login
+                    <p class="absolute duration-300  group-hover/login:duration-300 group-hover/login:w-[105%] w-0 left-[0px] bg-white h-[2px] bottom-[-10px]"></p>
+                </a>/
+                <a href="{{route("register")}}" class="group/signup relative">
+                    Sign Up
+                    <p class="absolute duration-300  group-hover/signup:duration-300 group-hover/signup:w-[100%] w-0 left-[0px] bg-white h-[2px] bottom-[-10px]"></p>
+                </a>
             @endif
         </div>
         <a>
