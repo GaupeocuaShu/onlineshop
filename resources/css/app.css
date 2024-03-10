@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.active {
+    border-left: 5px solid rgb(52, 52, 82);
+    font-weight: 600;
+}
+
+.button-outline {
+    border: 2px solid black;
+    padding: 8px;
+    border-radius: 5px;
+    transition: 0.2s;
+    &:hover {
+        background-color: black;
+        color: white;
+        transition: 0.2s;
+    }
+}

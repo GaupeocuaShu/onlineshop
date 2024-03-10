@@ -9,8 +9,9 @@
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
-    <title>Home</title>
-</head>
+     {{-- Jquery UI --}}
+
+     <title>{{ $title ?? 'Home' }}</title></head>
 <body>
     <div class="font-sans" >
         {{-- Navbar --}}
@@ -30,7 +31,9 @@
         @include('frontend.home.layout.footer')
 
     </div>
-
+    {{-- Jquery UI --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     {{-- Font Awesome --}}
     <script src="https://kit.fontawesome.com/1027857984.js" crossorigin="anonymous"></script>
     {{-- Swiper --}}
