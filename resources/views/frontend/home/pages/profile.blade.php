@@ -6,10 +6,10 @@
 {{-- Account sidebar --}}
 <div id="tabs" class="flex flex-col md:flex-row  gap-6 ">
     <ul class="rounded-xl">
-      <li class="w-[280px] active link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200"><a class="w-[100%] block p-5" href="#tabs-1"><i class="fa-solid fa-circle-user"></i>&emsp;Account</a></li>
-      <li class="w-[280px] link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200"><a class="w-[100%] block p-5" href="#tabs-2"><i class="fa-solid fa-cart-shopping"></i>&emsp;Historic Order</a></li>
-      <li class="w-[280px] link duration-100 hover:duratio100-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200"><a class="w-[100%] block p-5" href="#tabs-3"><i class="fa-solid fa-lock"></i>&emsp;Password And Security</a></li>
-      <li class="w-[280px] link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200"><a class="w-[100%] block p-5" href="#tabs-3"><i class="fa-solid fa-heart"></i>&emsp;Favorite Items</a></li>
+      <li data-id="1" class="w-[280px] tab-link-1 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200"><a class="w-[100%] block p-5" href="#tabs-1"><i class="fa-solid fa-circle-user"></i>&emsp;Account</a></li>
+      <li data-id="2" class="w-[280px] tab-link-2 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200"><a class="w-[100%] block p-5" href="#tabs-2"><i class="fa-solid fa-cart-shopping"></i>&emsp;Historic Order</a></li>
+      <li data-id="3" class="w-[280px] tab-link-3 tab-link duration-100 hover:duratio100-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200"><a class="w-[100%] block p-5" href="#tabs-3"><i class="fa-solid fa-lock"></i>&emsp;Password And Security</a></li>
+      <li data-id="4" class="w-[280px] tab-link-4 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200"><a class="w-[100%] block p-5" href="#tabs-3"><i class="fa-solid fa-heart"></i>&emsp;Favorite Items</a></li>
     </ul>
     <div class="w-[100vw]">
         <div id="tabs-1" class=" bg-white p-8">
@@ -73,12 +73,48 @@
             </div>
         </div>
           <div id="tabs-2">
+            
             <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
           </div>
-          <div id="tabs-3">
-            <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-            <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
-          </div>
+          <div id="tabs-3" class=" bg-white p-8 h-[100vh]">
+            <div>
+                {{-- Change Password --}}
+          
+                <div class="gap-y-10"> 
+                    <h1 class="text-2xl pb-2 font-semibold border-b-2 border-slate-300">
+                        Password & Security <br/>
+                        <span class="text-base font-normal">For your safety, We recommend you to use a strong password </span>
+                    </h1>
+                    <div class="mt-5 flex gap-5 flex-col md:flex-row md:items-center pb-8 border-b-2 border-slate-300">
+                        <div class="flex-1">
+                            <form enctype="multipart/form-data" method="POST" action="{{route("user.update-password")}}" class="flex flex-col gap-y-5"> 
+                                @csrf
+                                <label class="font-semibold">Modifying Password</label>
+                                <ul class="text-base ">
+                                    @if ($errors->any())
+                                        @foreach ($errors->all() as $err)
+                                        <li class="text-red-600">{{$err}}</li>
+                                        @endforeach
+                                    @endif
+                                    @if(Session::has('status'))
+                                       <li class="text-green-600"> {{session("status")}}!</li>
+                                    @endif
+                                </ul>
+                                <input class="md:w-[70%] w-[100%] rounded-lg hover:border-blue-500 border-[2px]"  type="password" name="current_password" placeholder="Current Password"/>
+                                <input class="md:w-[70%] w-[100%] rounded-lg hover:border-blue-500 border-[2px]"  type="password" name="password" placeholder="New Password"/>
+                                <input class="md:w-[70%] w-[100%] rounded-lg hover:border-blue-500 border-[2px]"  type="password" name="password_confirmation" placeholder="Confirm New Password"/>
+                                <button class="w-[100%] md:w-[25%] button-outline">Save Change</button> 
+                            </form>
+                        </div>
+                        <div class="flex-1 border-l-2 pl-8 border-slate-500 ">
+                            <h1 class="font-semibold">Your New Password</h1>
+                            <p>At least one character and one number</p>
+                            <p>More than 8 characters</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
   </div>
 </div>
@@ -88,11 +124,10 @@
 @push("scripts")
   <script>
     $(document).ready(function() {
-
-        $( function() {
-            $( "#tabs" ).tabs();
-        } );
-
+        const tabID = localStorage.getItem("tab");
+        $(".tab-link-"+tabID).addClass("active");
+        $( "#tabs" ).tabs({active:tabID-1});
+        console.log( tabID );
         $(".file").on("change",function(){
             $(this).closest("form").submit();
         })
@@ -102,8 +137,13 @@
             $(".file").click();
         });
 
-        $(".link").on("click", function () {
-            $('.link').removeClass("active");
+        $(".tab-link").on("click", function () { 
+            const id = $(this).data("id");
+
+            // Save tab into cookie 
+            localStorage.setItem('tab', id);
+            
+            $('.tab-link').removeClass("active");
             $(this).addClass("active");
         });
 

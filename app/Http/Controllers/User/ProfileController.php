@@ -7,6 +7,7 @@ use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
 class ProfileController extends Controller
 {
     use UploadTrait;
@@ -15,7 +16,7 @@ class ProfileController extends Controller
         $user = Auth::user();
         return view("frontend.home.pages.profile",compact("title","user"));
     }
-
+    // Update Profile
     public function updateProfile(Request $request){
         $user = Auth::user();
      
@@ -43,6 +44,24 @@ class ProfileController extends Controller
                 "name" => $request->name,
             ]);
         }; 
+        return redirect()->back();
+    }
+
+    // Update Password 
+    public function updatePassword(Request $request){
+        $user = Auth::user();
+        $request->validate([
+            "current_password" => ["required","current_password"], 
+            "password" => [
+                "required",
+                "confirmed",
+                "string",
+                "min:8", 
+                'regex:/^(?=.*[A-Z])(?=.*\d).+$/',
+            ],  
+        ]);
+        $user->update(["password" =>bcrypt($request->password)]);
+        Session::flash("status","Update Password Successfully");
         return redirect()->back();
     }
 }

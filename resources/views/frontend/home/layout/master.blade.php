@@ -9,8 +9,9 @@
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
-     {{-- Jquery UI --}}
 
+    {{-- Toastify --}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
      <title>{{ $title ?? 'Home' }}</title></head>
 <body>
     <div class="font-sans" >
@@ -22,7 +23,7 @@
     
         <!-- Main Content -->
         <div class=" bg-slate-100"> 
-            <div class="main-content w-[1400px] mx-auto">
+            <div class="main-content lg:w-[1400px] mx-auto">
                 @yield('content')
             </div>
         </div>
@@ -38,6 +39,34 @@
     <script src="https://kit.fontawesome.com/1027857984.js" crossorigin="anonymous"></script>
     {{-- Swiper --}}
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    {{-- Toastify --}}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        @if ($errors->any())
+        @foreach ($errors->all() as $err)
+        
+                    Toastify({
+                    text: "{{ $err }}",
+                    duration: 3000,
+                    className: "info",
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                    }).showToast();
+           
+            @endforeach
+        @endif
+        @if (Session::has('status'))
+            Toastify({
+                text: "{{ session('status') }}",
+                duration: 3000,
+                className: "info",
+                style: {
+                    background: "linear-gradient(to right, #00b09b, #96c93d)",
+                }
+            }).showToast();
+        @endif
+    </script>
     @stack('scripts')
 </body>
 

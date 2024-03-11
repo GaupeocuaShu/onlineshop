@@ -1,4 +1,4 @@
-<div class="bg-black p-5">
+<div class="bg-slate-700 p-5">
     <nav class=" flex justify-between md:gap-5 lg:gap-0 lg:justify-between text-white md:w-[1400px] mx-auto items-center">
         <h1 class="text-2xl"> 
             <a href="/" class="hidden md:block">ShuTy's Shop</a>
@@ -52,7 +52,7 @@
         </h1>
         <div class="md:w-[20%] lg:w-[40%] w-[100%] ml-8 flex items-center">
             <input class="text-black border-none w-[100%]" type="search" placeholder="We have everything"/>
-            <button class="px-5 py-[6px] bg-black text-white z-5 translate-x-[-60px]"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button class="px-5 py-[6px] bg-slate-700 text-white z-5 translate-x-[-60px]"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
         
         <div class="hidden md:flex  items-center  group gap-2 relative">

@@ -1,13 +1,15 @@
 <!-- Swiper -->
-<div class="swiper w-[100%] h-[100%] mySwiper">
-    <div class="swiper-wrapper py-8">
-        <div class="swiper-slide"><img class="rounded-xl block w-[100%] h-[400px]  object-cover" src="{{asset("uploads/vip1.jpeg")}}"/></div>
-        <div class="swiper-slide"><img class="rounded-xl block w-[100%] h-[400px]  object-cover" src="{{asset("uploads/standard1.jpeg")}}"/></div>
+<div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="my-8 swiper max-w-full h-full mySwiper">
+    <div class="swiper-wrapper max-w-full ">
+        @foreach ($sliders as $slider)
+            <div class="swiper-slide">
+                <img class=" rounded-xl block md:w-full h-[400px]" src="{{asset($slider->banner)}}"/>
+            </div>
+        @endforeach
     </div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
+    <div class=" swiper-button-next"></div>
+    <div class=" swiper-button-prev"></div>
     <div class="swiper-pagination"></div>
-  
 </div>
 
 @push('scripts')

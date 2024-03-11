@@ -44,7 +44,6 @@
       {{-- Navbar --}}
       @include('admin.layout.navbar')
 
-
       {{-- Sidebar --}}
       @include('admin.layout.sidebar')
 
