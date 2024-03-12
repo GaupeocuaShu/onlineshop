@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
-use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
+use App\Traits\UploadTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 class ProfileController extends Controller
@@ -12,7 +12,7 @@ class ProfileController extends Controller
     use UploadTrait;
     public function index(){
         $user  = Auth::user(); 
-        return view("admin.profile.index",[ 
+        return view("vendor.profile.index",[ 
             "user" => $user, 
         ]);
     }
