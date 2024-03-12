@@ -12,8 +12,8 @@ Route::resource('user', UserController::class);
 
 // Slider ------------------------------------------------
 // Change Status 
-Route::put("slider/change-status",[SliderController::class,"changeStatus"])->name("slider.change-status");
+Route::put("slider/{id}/change-status",[SliderController::class,"changeStatus"])->name("slider.change-status");
 // Change Serial 
-Route::put("slider/change-serial",[SliderController::class,"changeserial"])->name("slider.change-serial");
+Route::put("slider/{id}/change-serial",[SliderController::class,"changeserial"])->name("slider.change-serial");
 Route::resource("slider",SliderController::class);
 // Slider ------------------------------------------------

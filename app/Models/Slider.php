@@ -9,6 +9,6 @@ class Slider extends Model
 {
     use HasFactory;
     public $fillable = [
-        "banner","url","serial","status",
+        "name","banner","url","serial","status",
     ];
 }

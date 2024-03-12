@@ -33,6 +33,7 @@ class SliderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            "name" => ["required","string"],
             "banner" => ["required","image"], 
             "serial" => ["required","numeric"], 
             "url" => ["nullable"], 
@@ -45,6 +46,7 @@ class SliderController extends Controller
 
         
         Slider::create([
+            "name" => $request->name,
             "banner" => $banner, 
             "serial" => $request->serial,
             "status" => $request->status,
@@ -53,21 +55,13 @@ class SliderController extends Controller
         Session::flash("status","Create Slider Successfully"); 
         return redirect()->route("admin.slider.index");
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        //
+        $slider = Slider::findOrFail($id); 
+        return view("admin.slider.edit",compact("slider"));
     }
 
     /**
@@ -75,24 +69,58 @@ class SliderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $slider = Slider::findOrFail($id); 
+        $request->validate([
+            "name" => ["required","string"],
+            "banner" => ["image"], 
+            "serial" => ["required","numeric"], 
+            "url" => ["nullable"], 
+            "status" => ["required"],
+        ]);
+        $banner = $this->updateImage($request,$slider->banner,"uploads","banner");
+        $slider->update([
+            "banner" => $banner ? $banner : $slider->banner, 
+            "name" => $request->name, 
+            "serial" => $request->serial, 
+            "url" => $request->url, 
+            "status" => $request->status, 
+        ]) ; 
+        Session::flash("status","Update Slider Successfully");
+        return redirect()->route("admin.slider.index");
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $slider = Slider::findOrFail($id); 
+        $slider->delete();
+
+        return response(["status" => "success","message" => "Deleted Slider","is_empty" => self::isTableEmpty()]);
     }
 
     // Change Status 
-    public function changeStatus(){
-
+    public function changeStatus(string $id){
+        $slider = Slider::findOrFail($id); 
+        $newStatus = !$slider->status; 
+        $slider->update(["status" => $newStatus]);
+        return response([
+            "status" => "success",
+            "message" => "Updated Slider Status", 
+            
+        ]);
     }
     
     // Change Serial 
-    public function changeSerial(){
-      
+    public function changeSerial(Request $request,string $id){
+        $slider = Slider::findOrFail($id); 
+        $serial = $request->serial; 
+        $slider->update(["serial" => $serial]);
+        return response(["status" => "success","message" => "Updated slider Serial"]);
+    }
+
+    // Check table is Empty 
+    public function isTableEmpty(){
+        return Slider::get()->isEmpty();
     }
 }

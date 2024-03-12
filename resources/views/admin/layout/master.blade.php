@@ -136,8 +136,30 @@
   <script>
     
     $(document).ready(function() {
-      // Do anything
-      
+       // ------------------------------ Change serial --------------------------------- 
+
+      $("body").on("change",".serial",function(){
+        const serial = $(this).val();
+        const url = $(this).data("url");
+        $.ajax({
+          type: "PUT",
+          url: url,
+          data: {serial:serial},
+          dataType: "JSON",
+          success: function (data) {
+            if(data.status == 'success'){
+              Toastify({
+              text: data.message,
+              className:"info",  
+              style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+              }
+              }).showToast(); 
+            }
+          },
+        });  
+      })
+
       // ------------------------------ Change Status --------------------------------- 
       $("body").on("change",".status",function(){
 
@@ -204,7 +226,7 @@
               style: {
                 background: "linear-gradient(to right, #00b09b, #96c93d)",
               }
-              }).showToast();
+              }).showToast(); 
             }
 
             if(data.status == 'hide'){
@@ -317,6 +339,10 @@
                   icon: "success"
                   });
                   $(this).parent().parent().hide();
+                  if(data.is_empty == true) {
+                    const html = '<td valign="top" colspan="6" class="dataTables_empty">No data available in table</td>';
+                    $("tbody").html(html);
+                  } 
                 }
                 else{ 
                   Swal.fire({
