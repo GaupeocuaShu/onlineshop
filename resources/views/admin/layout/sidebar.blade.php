@@ -23,8 +23,17 @@
                             href="{{ route('admin.slider.index') }}">Slider</a></li>
                     <li class="{{ setActive(['admin.brand.index', 'admin.brand.create']) }}"><a class="nav-link"
                             href="{{ route('admin.brand.index') }}">Brand</a></li>
-                    <li class="{{ setActive(['admin.category.index', 'admin.category.create']) }}"><a class="nav-link"
-                            href="{{ route('admin.category.index') }}">Category</a></li>
+                </ul>
+            </li>
+            <li class="{{ setActive(['admin.category.*', 'admin.sub-category.*']) }} dropdown">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i>
+                    <span>Category Management</span></a>
+                <ul class="dropdown-menu">
+                    <li class="{{ setActive(['admin.category.index', 'admin.category.create', 'admin.category.edit']) }}">
+                        <a class="nav-link" href="{{ route('admin.category.index') }}">Main Categories</a></li>
+                    <li class="{{ setActive(['admin.sub-category.index']) }}"><a class=" nav-link"
+                            href="{{ route('admin.sub-category.index') }}">Sub Categories</a>
+                    </li>
                 </ul>
             </li>
             <li class="dropdown {{ setActive(['admin.user.*']) }}">

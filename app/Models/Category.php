@@ -11,4 +11,8 @@ class Category extends Model
     public $fillable = [
         "icon","image", "name", "status", "slug",
     ];
+    public function subCategories()
+    {
+        return $this->hasMany(SubCategory::class);
+    }
 }

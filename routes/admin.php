@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Category;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\SliderController;
+use App\Http\Controllers\Admin\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 // Profile -------------------------------------------------
@@ -42,3 +43,9 @@ Route::resource("brand",BrandController::class);
 Route::put("category/{id}/change-status",[CategoryController::class,"changeStatus"])->name("category.change-status");
 Route::resource("category",CategoryController::class);
 // Category ------------------------------------------------
+
+
+//Sub Category ------------------------------------------------
+Route::put("sub-category/{id}/change-status", [SubCategoryController::class, "changeStatus"])->name("sub-category.change-status");
+Route::resource("sub-category", SubCategoryController::class);
+//Sub Category ------------------------------------------------

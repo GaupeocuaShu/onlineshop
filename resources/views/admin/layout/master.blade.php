@@ -365,9 +365,10 @@
                                 } else {
                                     Swal.fire({
                                         icon: "error",
-                                        title: "Oops...",
-                                        text: "Something went wrong!",
-                                        footer: '<a href="#">Why do I have this issue?</a>'
+                                        title: "There is something wrong",
+                                        text: data.message,
+                                        footer: "<a href=' {{ route('admin.sub-category.index') }} '>Go To Sub Categories</a>"
+
                                     });
                                 }
                             },

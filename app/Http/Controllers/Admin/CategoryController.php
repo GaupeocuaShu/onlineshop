@@ -100,13 +100,13 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         $category = Category::findOrFail($id);
-        // $count = $category->subCategories->count("id");
-        // if ($count > 0) return response([
-        //     "status" => "error",
-        //     "message" => "Can't delete the category when it contains sub category",
-        // ]);
-        // else 
-        $this->deleteImage($category->image);
+        $count = $category->subCategories->count("id");
+        if ($count > 0) return response([
+            "status" => "error",
+            "message" => "Can't delete the category when it contains sub category",
+        
+        ]);
+        else $this->deleteImage($category->image);
         $category->delete();
         return response([
             "status" => "success",
