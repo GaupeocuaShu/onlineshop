@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\SliderController;
 use Illuminate\Support\Facades\Route;
@@ -24,3 +25,11 @@ Route::put("slider/{id}/change-status",[SliderController::class,"changeStatus"])
 Route::put("slider/{id}/change-serial",[SliderController::class,"changeserial"])->name("slider.change-serial");
 Route::resource("slider",SliderController::class);
 // Slider ------------------------------------------------
+
+
+
+// Brand ------------------------------------------------
+Route::put("brand/{id}/change-status",[BrandController::class,"changeStatus"])->name("brand.change-status");
+Route::put("brand/{id}/change-featured",[BrandController::class,"changeFeatured"])->name("brand.change-featured");
+Route::resource("brand",BrandController::class);
+// Brand ------------------------------------------------

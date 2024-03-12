@@ -96,7 +96,7 @@ class SliderController extends Controller
         $slider = Slider::findOrFail($id); 
         $slider->delete();
 
-        return response(["status" => "success","message" => "Deleted Slider","is_empty" => self::isTableEmpty()]);
+        return response(["status" => "success","message" => "Deleted Slider","is_empty" => isTableEmpty(Slider::get())]);
     }
 
     // Change Status 
@@ -119,8 +119,4 @@ class SliderController extends Controller
         return response(["status" => "success","message" => "Updated slider Serial"]);
     }
 
-    // Check table is Empty 
-    public function isTableEmpty(){
-        return Slider::get()->isEmpty();
-    }
 }

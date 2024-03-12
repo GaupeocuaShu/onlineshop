@@ -89,6 +89,7 @@ class SliderDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make("id"),
             Column::computed('banner')->addClass('text-center'),
             Column::make('url'),
             Column::computed('serial'),

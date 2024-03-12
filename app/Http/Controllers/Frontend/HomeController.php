@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function home(){
-        $sliders = Slider::get();
+        $sliders = Slider::get()->sortBy("serial");
         return view("frontend.home.pages.home",compact("sliders"));
     }
 }
