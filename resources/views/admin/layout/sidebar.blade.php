@@ -15,7 +15,7 @@
                     <li><a class="nav-link" href="index.html">Ecommerce Dashboard</a></li>
                 </ul>
             </li>
-            <li class="dropdown {{ setActive(['admin.slider.*', 'admin.brand.*']) }}">
+            <li class="dropdown {{ setActive(['admin.slider.*', 'admin.brand.*', 'admin.category.*']) }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Website
                         Management</span></a>
                 <ul class="dropdown-menu">
@@ -23,7 +23,8 @@
                             href="{{ route('admin.slider.index') }}">Slider</a></li>
                     <li class="{{ setActive(['admin.brand.index', 'admin.brand.create']) }}"><a class="nav-link"
                             href="{{ route('admin.brand.index') }}">Brand</a></li>
-
+                    <li class="{{ setActive(['admin.category.index', 'admin.category.create']) }}"><a class="nav-link"
+                            href="{{ route('admin.category.index') }}">Category</a></li>
                 </ul>
             </li>
             <li class="dropdown {{ setActive(['admin.user.*']) }}">

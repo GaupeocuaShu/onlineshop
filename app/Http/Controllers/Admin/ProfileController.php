@@ -38,7 +38,7 @@ class ProfileController extends Controller
             "email" => $request->email, 
             "phone" => $request->phone, 
         ]);
-        Session::flash(["status" => "success","message" =>"Updated Profile"]);
+        Session::flash("status","Updated Profile");
         return redirect()->back();
     }
 

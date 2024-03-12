@@ -12,33 +12,29 @@
         </div>
 
         <div class="section-body">
-            <h2 class="section-title">Brand</h2>
+            <h2 class="section-title">Category</h2>
 
             <div class="row">
                 <div class="col-12 ">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Create Brand</h4>
+                            <h4>Create Category</h4>
                         </div>
                         <div class="card-body">
-                            <form enctype="multipart/form-data" action="{{ route('admin.brand.store') }}" method="POST">
+                            <form enctype="multipart/form-data" action="{{ route('admin.category.store') }}" method="POST">
                                 @csrf
-
                                 <div class="form-group">
-                                    <label for="">Logo</label>
-                                    <input name="logo" type="file" class="form-control">
+                                    <label for="">Icon</label>
+                                    <div data-cols="10" name="icon" data-selected-class="btn-danger"
+                                        data-unselected-class="btn-info" role="iconpicker"></div>
                                 </div>
-
+                                <div class="form-group">
+                                    <label for="">Image</label>
+                                    <input name="image" type="file" class="form-control">
+                                </div>
                                 <div class="form-group">
                                     <label for="">Name</label>
                                     <input name="name" type="text" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Is featured</label>
-                                    <select name="is_featured" class="form-control">
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
-                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Status</label>
@@ -48,7 +44,7 @@
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Create</button>
-                                <a href="{{ route('admin.brand.index') }}" class="ml-2 btn btn-danger text-white"> Back
+                                <a href="{{ route('admin.category.index') }}" class="ml-2 btn btn-danger text-white"> Back
                                 </a>
 
                             </form>

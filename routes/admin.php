@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\Category;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\SliderController;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +35,10 @@ Route::put("brand/{id}/change-status",[BrandController::class,"changeStatus"])->
 Route::put("brand/{id}/change-featured",[BrandController::class,"changeFeatured"])->name("brand.change-featured");
 Route::resource("brand",BrandController::class);
 // Brand ------------------------------------------------
+
+
+
+// Category ------------------------------------------------
+Route::put("category/{id}/change-status",[CategoryController::class,"changeStatus"])->name("category.change-status");
+Route::resource("category",CategoryController::class);
+// Category ------------------------------------------------
