@@ -35,14 +35,14 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Status</label>
-                                    <select name="status" class="form-control main_category">
+                                    <select name="status" class="form-control">
                                         <option value="1"> Active </option>
                                         <option value="0"> Inactive </option>
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Create</button>
                                 <a href="{{ route('vendor.product.variant.index', $product->id) }}"
-                                    class="ml-2 btn btn-info text-white">
+                                    class="ml-2 btn btn-danger text-white">
                                     Back
                                 </a>
 

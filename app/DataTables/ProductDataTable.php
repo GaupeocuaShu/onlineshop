@@ -59,7 +59,8 @@ class ProductDataTable extends DataTable
                             <i class="fa-solid fa-gear"></i>
                             </button>
                             <div class="dropdown-menu">
-                            <a class="dropdown-item has-icon" href="' . route("vendor.product.image-gallery.index", $query->id) . '"><i class="far fa-heart"></i> Image Gallery</a>
+                                <a class="dropdown-item has-icon" href="' . route("vendor.product.image-gallery.index", $query->id) . '"><i class="far fa-heart"></i> Image Gallery</a>
+                                <a class="dropdown-item has-icon" href="' . route("vendor.product.variant.index", $query->id) . '"><i class="far fa-file"></i>Variants</a>
                             </div>
                             </div>';
                 return $moreBtn.$updateBtn . $deleteBtn;
