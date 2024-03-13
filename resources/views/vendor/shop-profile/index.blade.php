@@ -24,7 +24,7 @@
                             <form enctype="multipart/form-data" action="{{ route('vendor.shop-profile.store') }}"
                                 method="POST">
                                 @csrf
-                                <img src="{{ asset($profile->banner) }}" width="200" />
+                                <img alt="{{ $profile->name }}" src="{{ asset($profile->banner) }}" width="200" />
                                 <div class="form-group">
                                     <label for="">Banner</label>
                                     <input name="banner" type="file" class="form-control">

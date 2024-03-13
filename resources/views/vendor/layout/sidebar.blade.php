@@ -18,11 +18,11 @@
                    </li>
                    <li class="{{ setActive(['vendor.order.*']) }}"><a class=" nav-link"
                            href="{{ route('vendor.order.index') }}">Orders </a>
-                   </li>
+                   </li> --}}
                    <li class="{{ setActive(['vendor.shop-profile.index']) }}"><a class=" nav-link"
                            href="{{ route('vendor.shop-profile.index') }}">Shop
                            Profile</a>
-                   </li> --}}
+                   </li>
                </ul>
            </aside>
        </div>
