@@ -117,4 +117,5 @@ class SubCategoryController extends Controller
             "message" => "Updated Sub Category Status",
         ]);
     }
+
 }

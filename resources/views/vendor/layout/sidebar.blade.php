@@ -13,10 +13,10 @@
                                class="fas fa-fire"></i><span>Dashboard</span></a>
                    </li>
                    <li class="menu-header">Starter</li>
-                   {{-- <li class="{{ setActive(['vendor.product.*']) }}"><a class=" nav-link"
+                   <li class="{{ setActive(['vendor.product.*']) }}"><a class=" nav-link"
                            href="{{ route('vendor.product.index') }}">Products</a>
                    </li>
-                   <li class="{{ setActive(['vendor.order.*']) }}"><a class=" nav-link"
+                   {{-- <li class="{{ setActive(['vendor.order.*']) }}"><a class=" nav-link"
                            href="{{ route('vendor.order.index') }}">Orders </a>
                    </li> --}}
                    <li class="{{ setActive(['vendor.shop-profile.index']) }}"><a class=" nav-link"

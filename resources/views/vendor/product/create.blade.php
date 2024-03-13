@@ -32,7 +32,7 @@
                                     <input value="{{ old('name') }}" name="name" type="text" class="form-control">
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4 form-group">
+                                    <div class="col-md-6 form-group">
                                         <label for="">Category</label>
                                         <select name="category_id" class="form-control main_category">
                                             <option value=""> Select </option>
@@ -41,18 +41,13 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-4 form-group">
+                                    <div class="col-md-6 form-group">
                                         <label for="">Sub Category</label>
                                         <select name="sub_category_id" class="sub_category form-control">
                                             <option value=""> Select </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="">Child Category</label>
-                                        <select name="child_category_id" class="child_category form-control">
-                                            <option value=""> Select </option>
-                                        </select>
-                                    </div>
+
                                 </div>
                                 <div class="form-group">
                                     <label for="">Product type</label>
@@ -106,11 +101,13 @@
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label for="">Offer Start Price</label>
-                                        <input name="offer_start_price" type="date" class="form-control">
+                                        <input value="{{ old('offer_start_price') }}" name="offer_start_price"
+                                            type="date" class="form-control">
                                     </div>
                                     <div class="col-md-6 form-group">
                                         <label for="">Offer End Price</label>
-                                        <input name="offer_end_price" type="date" class="form-control">
+                                        <input value="{{ old('offer_end_price') }}" name="offer_end_price"
+                                            type="date" class="form-control">
                                     </div>
                                 </div>
 
@@ -121,7 +118,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Status</label>
-                                    <select name="status" class="form-control main_category">
+                                    <select name="status" class="form-control ">
                                         <option value="1"> Active </option>
                                         <option value="0"> Inactive </option>
                                     </select>
@@ -132,7 +129,8 @@
                                         class="form-control">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Create</button>
-                                <a href="{{ route('vendor.product.index') }}" class="ml-2 btn btn-info text-white"> Back
+                                <a href="{{ route('vendor.product.index') }}" class="ml-2 btn btn-danger text-white">
+                                    Back
                                 </a>
 
                             </form>

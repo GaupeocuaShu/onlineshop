@@ -169,19 +169,170 @@
 
     <script>
         $(document).ready(function() {
-            // Delete item
+            // ------------------------------ Change Status --------------------------------- 
+            $("body").on("change", ".status", function() {
 
-            $('body').on('click', '.delete-item', function(event) {
-                event.preventDefault();
-                const URL = $(this).attr("href");
+                const currentStatus = $(this).data("status");
+                const phone = $(this).data('user-phone');
+                const URL = $(this).data("url");
+                const status = $(this).val()
+                const id = $(this).data("id");
+                const selectName = $(this).data("name");
+                const data = {
+                    key: status
+                };
+                let text = "";
+                let confirmButtonText = "Yes, I Agree";
+
+                // Set up button text for schedule status select
+                if (selectName == "schedule-status") {
+                    [text, confirmButtonText] = setUpScheduleStatusText();
+                }
+
+                function setUpScheduleStatusText() {
+                    let text = "";
+                    let confirmButtonText = "Agree!";
+                    if (status == "confirmed") {
+                        text = `You should call this number <b><u>${phone}</u></b> to confirm the schedule`;
+                        confirmButtonText = "Yes, I've already called the patient!";
+                    } else if (status == "canceled") {
+                        text = "Give the reason to the patient why you cancel this schedule";
+                    } else if (status == "completed") {
+                        text = "Give some notes to the patient after schedule";
+                    } else {
+                        text = "Give some notes to the patient to prepare for the schedule";
+                    }
+                    return [text, confirmButtonText];
+                }
+
+                // Reset Status if  canceling the request
+                resetStatus = () => {
+                    $(`.select-status-${id} option[value=${currentStatus}]`).prop("selected", 'true');
+                }
+
+                // Chang status by send AJAX 
+                function changeStatus(data = null, text = null) {
+                    $.ajax({
+                        type: "PUT",
+                        async: false,
+                        url: URL,
+                        data: data,
+                        dataType: "JSON",
+                        success: function(data) {
+
+                            if (data.status == 'success_show') {
+                                Swal.fire({
+                                    title: "Updated!",
+                                    text: data.text,
+                                    icon: "success"
+                                });
+                            }
+
+                            if (data.status == 'success') {
+                                Toastify({
+                                    text: data.message,
+                                    className: "info",
+                                    style: {
+                                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                                    }
+                                }).showToast();
+                            }
+
+                            if (data.status == 'hide') {
+                                Swal.fire({
+                                    title: "Updated!",
+                                    text: "The status has changed.",
+                                    icon: "success"
+                                });
+                                $(`.select-status-${data.id}`).parents().eq(2).hide(3000);
+                            }
+
+
+                            if (data.is_empty == true) {
+                                const html =
+                                    '<td valign="top" colspan="6" class="dataTables_empty">No data available in table</td>';
+                                $("tbody").html(html);
+                            }
+
+                        },
+                    });
+                }
+
+                // Update Role Status 
+                if (selectName == "role-status") {
+                    Swal.fire({
+                        title: "Are you sure?",
+                        html: text,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: confirmButtonText,
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
+                            resetStatus();
+                        } else {
+                            changeStatus(data);
+                        }
+                    })
+                }
+                // Update Role Status 
+                else if (selectName == "schedule-status") {
+                    Swal.fire({
+                        title: "Are you sure?",
+                        html: text,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: confirmButtonText,
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
+                            resetStatus();
+                        } else {
+                            if (status != "confirmed") {
+                                async function writeNote() {
+                                    const {
+                                        value: text
+                                    } = await Swal.fire({
+                                        input: "textarea",
+                                        inputLabel: "Message",
+                                        inputPlaceholder: "Type your message here...",
+                                        inputAttributes: {
+                                            "aria-label": "Type your message here"
+                                        },
+                                        showCancelButton: true
+                                    });
+                                    if (text) {
+                                        Swal.fire({
+                                            title: text,
+                                            confirmButtonText: "Send",
+                                        });
+                                        changeStatus({
+                                            ...data,
+                                            text
+                                        });
+                                    } else resetStatus();
+                                }
+                                writeNote();
+                            } else {
+                                changeStatus(data);
+                            }
+                        }
+                    });
+                } else changeStatus();
+            })
+            // ------------------------------ Delete Items --------------------------------- 
+            $("body").on("click", ".delete", function() {
+                const URL = $(this).data("url");
                 Swal.fire({
-                    title: 'Are you sure?',
+                    title: "Are you sure?",
                     text: "You won't be able to revert this!",
-                    icon: 'warning',
+                    icon: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -190,30 +341,34 @@
                             dataType: "JSON",
                             success: (data) => {
                                 if (data.status == "success") {
-                                    Swal.fire(
-                                        'Deleted!',
-                                        data.message,
-                                        'success'
-                                    )
+                                    Swal.fire({
+                                        title: "Deleted!",
+                                        text: data.message,
+                                        icon: "success"
+                                    });
                                     $(this).parent().parent().hide();
+                                    if (data.is_empty == true) {
+                                        const html =
+                                            '<td valign="top" colspan="6" class="dataTables_empty">No data available in table</td>';
+                                        $("tbody").html(html);
+                                    }
                                 } else {
-                                    Swal.fire(
-                                        "Can't delete slider!",
-                                        data.message,
-                                        'error',
-                                    )
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "There is something wrong",
+                                        text: data.message,
+                                        footer: "<a href=' {{ route('admin.sub-category.index') }} '>Go To Sub Categories</a>"
+
+                                    });
                                 }
                             },
-                            error: function(error) {
-                                console.table(error)
-                            }
                         });
+
                     }
-                })
+                });
 
-            });
-            // change default 
-
+            })
+            // ------------------------------ change default ------------------------------
             $('body').on('click', '.isdefault', function() {
 
                 const URL = $(this).data("url");
@@ -235,17 +390,44 @@
                     }
                 });
             })
-
-            // change status 
-            $('body').on('click', '.status', function() {
-                const URL = $(this).data("url")
+            // ------------------------------ Get sub categories ------------------------------
+            $("body").on("change", ".main_category", function() {
+                let id = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('vendor.category.get-sub-categories') }}",
+                    data: {
+                        categoryID: id
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        $(".sub_category").html("<option value=''> Select </option>");
+                        $.each(data.subCategories, function(index, value) {
+                            $(".sub_category").append(
+                                `<option value = ${value.id}>${value.name}</option>`
+                            );
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert("Can't get data")
+                    }
+                });
+            });
+            // ------------------------------ Change product type ------------------------------
+            $("body").on("change", ".product_type", function() {
+                let id = $(this).data("id");
+                let type = $(this).val();
                 $.ajax({
                     type: "PUT",
-                    url: URL,
+                    url: "{{ route('vendor.product.change_type') }}",
+                    data: {
+                        productType: type,
+                        productID: id,
+                    },
                     dataType: "JSON",
                     success: function(data) {
                         Toastify({
-                            text: "Updated status successfully",
+                            text: data.status,
                             duration: 3000,
                             className: "info",
                             style: {
@@ -254,11 +436,11 @@
                         }).showToast();
 
                     },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.table(jqXHR)
+                    }
                 });
             });
-
-
-
         });
     </script>
 
