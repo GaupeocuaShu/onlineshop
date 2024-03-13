@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Vendor;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ProductVariant; 
@@ -84,6 +84,7 @@ class ProductVariantItemController extends Controller
      */
     public function update(Request $request, string $productID, string $variantID, string $itemID)
     {
+        $role = Auth::user()->role;
         $product = Product::findOrFail($productID);
         $variant = ProductVariant::findOrFail($variantID);
         $item = ProductVariantItem::findOrFail($itemID);
@@ -101,7 +102,7 @@ class ProductVariantItemController extends Controller
             "status" => $request->status,
         ]);
         Session::flash("status", "Update Product Variant Item Successfully");
-        return redirect()->route('vendor.product.variant.item.index', [$productID, $variant]);
+        return redirect()->route("$role.product.variant.item.index", [$productID, $variant]);
     }
 
     /**

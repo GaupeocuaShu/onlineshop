@@ -1,5 +1,11 @@
-@extends('vendor.layout.master')
-
+@php
+    $route = route('vendor.product.index');
+    $role = Auth::user()->role;
+    if ($role == 'admin') {
+        $route = route('admin.product_from_vendor.index');
+    }
+@endphp
+@extends(Auth::user()->role === 'admin' ? 'admin.layout.master' : 'vendor.layout.master')
 @section('content')
     <section class="section">
         <div class="section-header">
@@ -10,8 +16,8 @@
                 <div class="breadcrumb-item">Product Image Gallery</div>
             </div>
         </div>
-        <a href="{{ route('vendor.product.index') }}"> <button class="btn btn-primary mb-3"><i
-                    class="fa-solid fa-backward"></i> </button></a>
+
+        <a href="{{ $route }}"> <button class="btn btn-primary mb-3"><i class="fa-solid fa-backward"></i> </button></a>
         <div class="section-body">
 
             <div class="row">
@@ -22,8 +28,10 @@
 
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('vendor.product.image-gallery.store', $product->id) }}" method="POST"
-                                enctype="multipart/form-data">
+                            @php
+                                $route = route("$role.product.image-gallery.store", $product->id);
+                            @endphp
+                            <form action="{{ $route }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
                                     <input type="file" multiple name="images[]" />

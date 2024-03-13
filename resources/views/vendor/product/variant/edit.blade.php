@@ -1,5 +1,11 @@
-@extends('vendor.layout.master')
-
+@php
+    $back = route('vendor.product.variant.index', $product->id);
+    $role = Auth::user()->role;
+    if ($role == 'admin') {
+        $back = route('admin.product.variant.index', $product->id);
+    }
+@endphp
+@extends(Auth::user()->role === 'admin' ? 'admin.layout.master' : 'vendor.layout.master')
 @section('content')
     <section class="section">
         <div class="section-header">
@@ -20,9 +26,10 @@
                             <h4>Update Product Variant</h4>
                         </div>
                         <div class="card-body">
-                            <form enctype="multipart/form-data"
-                                action="{{ route('vendor.product.variant.update', [$product->id, $variant->id]) }}"
-                                method="Post">
+                            @php
+                                $route = route("$role.product.variant.update", [$product->id, $variant->id]);
+                            @endphp
+                            <form enctype="multipart/form-data" action="{{ $route }}" method="Post">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group">
@@ -43,9 +50,8 @@
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Update</button>
-                                <a href="{{ route('vendor.product.variant.index', $product->id) }}"
-                                    class="ml-2 btn btn-info text-white">
-                                    Back </a>
+                                <a href="{{ $back }}" class="ml-2 btn btn-danger text-white">
+                                    back </a>
                             </form>
                         </div>
                     </div>

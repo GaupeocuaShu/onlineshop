@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\ProductVariantItem;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -21,40 +22,41 @@ class ProductVariantItemDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
+        $role = Auth::user()->role;
         return (new EloquentDataTable($query))
-            ->addColumn('status', function ($query) {
+            ->addColumn('status', function ($query) use ($role) {
                 if ($query->status == 1) {
                     return
                         '<label class="custom-switch mt-2">
-                    <input type="checkbox" checked data-url=" ' . route("vendor.product.variant.item.change_status", $query->id) . '" class="status custom-switch-input">
+                    <input type="checkbox" checked data-url=" ' . route("$role.product.variant.item.change_status", $query->id) . '" class="status custom-switch-input">
                     <span class="custom-switch-indicator"></span>
                 </label>';
                 } else {
                     return
                         '<label class="custom-switch mt-2">
-                    <input type="checkbox" data-url=" ' . route("vendor.product.variant.item.change_status", $query->id) . '"  class="status custom-switch-input">
+                    <input type="checkbox" data-url=" ' . route("$role.product.variant.item.change_status", $query->id) . '"  class="status custom-switch-input">
                     <span class="custom-switch-indicator"></span>
                 </label>';
                 }
             })
-            ->addColumn('is_default', function ($query) {
+            ->addColumn('is_default', function ($query) use ($role) {
                 if ($query->is_default == 1) {
                     return
                         '<label class="custom-switch mt-2">
-                    <input name="is_default" type="radio" checked data-url=" ' . route("vendor.product.variant.item.is_default", $query->id) . '" class="isdefault custom-switch-input">
+                    <input name="is_default" type="radio" checked data-url=" ' . route("$role.product.variant.item.is_default", $query->id) . '" class="isdefault custom-switch-input">
                     <span class="custom-switch-indicator"></span>
                 </label>';
                 } else {
                     return
                         '<label class="custom-switch mt-2">
-                    <input name="is_default" type="radio" data-url=" ' . route("vendor.product.variant.item.is_default", $query->id) . '"  class="isdefault custom-switch-input">
+                    <input name="is_default" type="radio" data-url=" ' . route("$role.product.variant.item.is_default", $query->id) . '"  class="isdefault custom-switch-input">
                     <span class="custom-switch-indicator"></span>
                 </label>';
                 }
             })
-            ->addColumn('action', function ($query) {
-                $updateBtn = "<a href = '" . route("vendor.product.variant.item.edit", [$query->productVariant->product_id, $query->product_variant_id, $query->id]) . " ' class='btn btn-primary'><i class='fa-solid fa-pen-to-square'></i> </a> &emsp;";
-                $deleteBtn = "<button class='delete btn btn-danger' data-url='". route("vendor.product.variant.item.destroy", [$query->productVariant->product_id, $query->product_variant_id, $query->id]) ."'><i class='fa-solid fa-trash-can-arrow-up'></i></button>"; 
+            ->addColumn('action', function ($query) use ($role) {
+                $updateBtn = "<a href = '" . route("$role.product.variant.item.edit", [$query->productVariant->product_id, $query->product_variant_id, $query->id]) . " ' class='btn btn-primary'><i class='fa-solid fa-pen-to-square'></i> </a> &emsp;";
+                $deleteBtn = "<button class='delete btn btn-danger' data-url='". route("$role.product.variant.item.destroy", [$query->productVariant->product_id, $query->product_variant_id, $query->id]) ."'><i class='fa-solid fa-trash-can-arrow-up'></i></button>"; 
                 return $updateBtn . $deleteBtn;
             })
             ->rawColumns(["action", "status", "is_default"])
@@ -100,6 +102,7 @@ class ProductVariantItemDataTable extends DataTable
         return [
             Column::make('id')->width(50),
             Column::make('name'),
+            Column::computed('price'),
             Column::computed('is_default'),
             Column::computed('status'),
             Column::computed('action')

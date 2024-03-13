@@ -378,6 +378,106 @@
                 });
 
             })
+            // ---------------------------------  change default --------------------------------- 
+            $('body').on('click', '.isdefault', function() {
+
+                const URL = $(this).data("url");
+                $.ajax({
+                    type: "PUT",
+                    url: URL,
+                    dataType: "JSON",
+                    success: function(data) {
+
+                        Toastify({
+                            text: data.status,
+                            duration: 3000,
+                            className: "info",
+                            style: {
+                                background: "linear-gradient(to right, #00b09b, #96c93d)",
+                            }
+                        }).showToast();
+
+                    }
+                });
+            })
+            // --------------------------------- Get sub categories --------------------------------- 
+            $("body").on("change", ".main_category", function() {
+                $(".child_category").html("<option value=''> Select </option>");
+
+                let id = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('admin.category.get-sub-categories') }}",
+                    data: {
+                        categoryID: id
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        $(".sub_category").html("<option value=''> Select </option>");
+                        $.each(data.subCategories, function(index, value) {
+                            $(".sub_category").append(
+                                `<option value = ${value.id}>${value.name}</option>`
+                            );
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert("Can't get data")
+                    }
+                });
+            });
+            // -------------------------------- Change product type --------------------------------
+            $("body").on("change", ".product_type", function() {
+                let id = $(this).data("id");
+                let type = $(this).val();
+                $.ajax({
+                    type: "PUT",
+                    url: "{{ route('admin.product.change_type') }}",
+                    data: {
+                        productType: type,
+                        productID: id,
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        Toastify({
+                            text: data.status,
+                            duration: 3000,
+                            className: "info",
+                            style: {
+                                background: "linear-gradient(to right, #00b09b, #96c93d)",
+                            }
+                        }).showToast();
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.table(jqXHR)
+                    }
+                });
+            });
+            // -------------------------------- Change Product approved --------------------------------
+            $("body").on("change", ".product_approved", function() {
+                status = $(this).val();
+                id = $(this).data("id");
+                $.ajax({
+                    type: "PUT",
+                    url: "{{ route('admin.product.change_product_approved') }}",
+                    data: {
+                        productStatus: status,
+                        productID: id,
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        Toastify({
+                            text: "Updated status successfully",
+                            duration: 3000,
+                            className: "info",
+                            style: {
+                                background: "linear-gradient(to right, #00b09b, #96c93d)",
+                            }
+                        }).showToast();
+
+                    },
+                });
+            });
         });
     </script>
     @stack('scripts')

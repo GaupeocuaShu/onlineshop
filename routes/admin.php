@@ -1,13 +1,20 @@
 <?php
 
 use App\Http\Controllers\Admin\BrandController;
-use App\Http\Controllers\Admin\Category;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductFromVendorController;
+use App\Http\Controllers\Admin\ProductManagementController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\SliderController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
+use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Http\Controllers\Vendor\ProductImageGalleryController;
+use App\Http\Controllers\Vendor\ProductVariantController; 
+use App\Http\Controllers\Vendor\ProductVariantItemController; 
+use App\Http\Controllers\Vendor\ProductController;
 // Profile -------------------------------------------------
 Route::post("profile-update",[ProfileController::class,"profileUpdate"])->name("profile.profile-update");
 
@@ -49,3 +56,56 @@ Route::resource("category",CategoryController::class);
 Route::put("sub-category/{id}/change-status", [SubCategoryController::class, "changeStatus"])->name("sub-category.change-status");
 Route::resource("sub-category", SubCategoryController::class);
 //Sub Category ------------------------------------------------
+
+
+// Products From Vendors ------------------------------------------------
+Route::get("product-from-vendor/index", [ProductFromVendorController::class, "index"])->name("product_from_vendor.index");
+// Products From Vendors ------------------------------------------------
+
+
+// Product Management ------------------------------------------------
+
+
+// Product Gallery  -------------------------------------------------
+Route::resource("product.image-gallery", ProductImageGalleryController::class);
+// Product Gallery  -------------------------------------------------
+
+
+// Product Variants -------------------------------------------------
+Route::put("product/variant/{id}/change-status", [ProductVariantController::class, 'changeStatus'])->name("product.variant.change_status");
+Route::resource("product.variant", ProductVariantController::class);
+// Product Variants -------------------------------------------------
+
+// Product Variant Items -------------------------------------------------
+Route::put("product/variant/item/{id}/is-default", [ProductVariantItemController::class, "isDefault"])->name("product.variant.item.is_default");
+Route::put("product/variant/item/{id}/change-status", [ProductVariantItemController::class, "changeStatus"])->name("product.variant.item.change_status");
+Route::resource("product.variant.item", ProductVariantItemController::class);
+// Product Variant Items -------------------------------------------------
+
+Route::post("category/get-sub-categories",function(Request $request){
+    $categoryID = $request->categoryID; 
+    $subCategories = Category::findOrFail($categoryID)->subCategories;
+    return response( ["subCategories" => $subCategories]);
+})->name("category.get-sub-categories");
+
+Route::put("product/change-status", [ProductManagementController::class, "changeProductApproved"])->name("product.change_product_approved");
+Route::put("product/{id}/change-status", [ProductManagementController::class, "changeStatus"])->name("product.change_status");
+Route::put("product/change-type", [ProductManagementController::class, "changeType"])->name("product.change_type");
+
+
+// Product -------------------------------------------------
+
+Route::post("category/get-sub-categories",function(Request $request){
+    $categoryID = $request->categoryID; 
+    $subCategories = Category::findOrFail($categoryID)->subCategories;
+    return response( ["subCategories" => $subCategories]);
+})->name("category.get-sub-categories");
+
+Route::put("product/{id}/change-status", [ProductController::class, "changeStatus"])->name("product.change_status");
+Route::put("product/change-type", [ProductController::class, "changeType"])->name("product.change_type");
+Route::resource("product", ProductController::class);
+// Product -------------------------------------------------
+
+// Product Management ------------------------------------------------
+
+

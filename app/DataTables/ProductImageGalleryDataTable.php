@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\ProductImageGallery;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -23,7 +24,8 @@ class ProductImageGalleryDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('action', function ($query) {
-                $deleteBtn = "<button class='delete btn btn-danger' data-url='". route("vendor.product.image-gallery.destroy", ["product" => $query->product_id, "image_gallery" => $query->id]) ."'><i class='fa-solid fa-trash-can-arrow-up'></i></button>"; 
+                $role = Auth::user()->role; 
+                $deleteBtn = "<button class='delete btn btn-danger' data-url='". route("$role.product.image-gallery.destroy", ["product" => $query->product_id, "image_gallery" => $query->id]) ."'><i class='fa-solid fa-trash-can-arrow-up'></i></button>"; 
                 return $deleteBtn;
             })
             ->addColumn("image", function ($query) {

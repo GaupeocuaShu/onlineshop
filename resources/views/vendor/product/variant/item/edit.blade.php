@@ -1,5 +1,11 @@
-@extends('vendor.layout.master')
-
+@php
+    $back = route('vendor.product.variant.item.index', [$product->id, $variant->id]);
+    $role = Auth::user()->role;
+    if ($role == 'admin') {
+        $back = route('admin.product.variant.item.index', [$product->id, $variant->id]);
+    }
+@endphp
+@extends(Auth::user()->role === 'admin' ? 'admin.layout.master' : 'vendor.layout.master')
 @section('content')
     <section class="section">
         <div class="section-header">
@@ -20,9 +26,14 @@
                             <h4>Update Product Variant Item</h4>
                         </div>
                         <div class="card-body">
-                            <form enctype="multipart/form-data"
-                                action="{{ route('vendor.product.variant.item.update', [$product->id, $variant->id, $item->id]) }}"
-                                method="Post">
+                            @php
+                                $route = route("$role.product.variant.item.update", [
+                                    $product->id,
+                                    $variant->id,
+                                    $item->id,
+                                ]);
+                            @endphp
+                            <form enctype="multipart/form-data" action="{{ $route }}" method="Post">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group">
@@ -56,8 +67,7 @@
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Update</button>
-                                <a href="{{ route('vendor.product.variant.item.index', [$product->id, $variant->id]) }}"
-                                    class="ml-2 btn btn-danger text-white">
+                                <a href="{{ $back }}" class="ml-2 btn btn-danger text-white">
                                     Back </a>
                             </form>
                         </div>

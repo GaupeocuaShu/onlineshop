@@ -11,7 +11,7 @@ use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
-
+use Illuminate\Support\Facades\Auth;
 class ProductVariantDataTable extends DataTable
 {
     /**
@@ -22,26 +22,27 @@ class ProductVariantDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         // 
+        $role = Auth::user()->role;
         return (new EloquentDataTable($query))
-            ->addColumn('status', function ($query) {
+            ->addColumn('status', function ($query) use ($role) {
                 if ($query->status == 1) {
                     return
                         '<label class="custom-switch mt-2">
-                        <input type="checkbox" checked data-url=" ' . route("vendor.product.variant.change_status", $query->id) . '" class="status custom-switch-input">
+                        <input type="checkbox" checked data-url=" ' . route("$role.product.variant.change_status", $query->id) . '" class="status custom-switch-input">
                         <span class="custom-switch-indicator"></span>
                     </label>';
                 } else {
                     return
                         '<label class="custom-switch mt-2">
-                        <input type="checkbox" data-url=" ' . route("vendor.product.variant.change_status", $query->id) . '"  class="status custom-switch-input">
+                        <input type="checkbox" data-url=" ' . route("$role.product.variant.change_status", $query->id) . '"  class="status custom-switch-input">
                         <span class="custom-switch-indicator"></span>
                     </label>';
                 }
             })
-            ->addColumn('action', function ($query) {
-                $moreBtn = "<a href = '" . route("vendor.product.variant.item.index", [$query->product_id, $query->id]) . " ' class='ml-3 btn btn-primary'><i class='fa-solid fa-list'></i> </a> &emsp;";
-                $updateBtn = "<a href = '" . route("vendor.product.variant.edit", [$query->product_id, $query->id]) . " ' class='btn btn-primary'><i class='fa-solid fa-pen-to-square'></i> </a> &emsp;";
-                $deleteBtn = "<button class='delete btn btn-danger' data-url='". route("vendor.product.variant.destroy",  [$query->product_id, $query->id]) ."'><i class='fa-solid fa-trash-can-arrow-up'></i></button>"; 
+            ->addColumn('action', function ($query) use ($role){
+                $moreBtn = "<a href = '" . route("$role.product.variant.item.index", [$query->product_id, $query->id]) . " ' class='ml-3 btn btn-primary'><i class='fa-solid fa-list'></i> </a> &emsp;";
+                $updateBtn = "<a href = '" . route("$role.product.variant.edit", [$query->product_id, $query->id]) . " ' class='btn btn-primary'><i class='fa-solid fa-pen-to-square'></i> </a> &emsp;";
+                $deleteBtn = "<button class='delete btn btn-danger' data-url='". route("$role.product.variant.destroy",  [$query->product_id, $query->id]) ."'><i class='fa-solid fa-trash-can-arrow-up'></i></button>"; 
                 return  $moreBtn.$updateBtn . $deleteBtn  ;
             })
             ->rawColumns(["action", "status"])

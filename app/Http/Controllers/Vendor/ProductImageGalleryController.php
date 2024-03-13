@@ -75,7 +75,7 @@ class ProductImageGalleryController extends Controller
         return response([
             "status" => "success",
             "message" => "Deleted Image In Gallery Successfully",
-            "is_empty" => isTableEmpty(ProductImageGallery::get())
+            "is_empty" => isTableEmpty(ProductImageGallery::where("product_id",$product_id)->get())
         ]);
     }
 }

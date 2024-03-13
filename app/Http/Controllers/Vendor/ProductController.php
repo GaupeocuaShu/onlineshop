@@ -114,6 +114,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $role = Auth::user()->role;
         $product = Product::findOrFail($id);
         $request->validate([
             "name" => ["required"],
@@ -129,11 +130,11 @@ class ProductController extends Controller
             "seo_title" => ["required"],
             "seo_description" => ["required"],
         ]);
-        $newPath = $this->uploadImage($request, $product, "uploads", "thumb_image");
+        $newPath = $this->updateImage($request, $product, "uploads", "thumb_image");
         $product->update([
             "name" => $request->name,
             "thumb_image" => empty($newPath) ? $product->thumb_image : $newPath,
-            "shop_profile_id" => Auth::user()->shop_profile->id,
+            // "shop_profile_id" => Auth::user()->shop_profile->id,
             "category_id" => $request->category_id,
             "sub_category_id" => $request->sub_category_id,
             "brand_id" => $request->brand_id,
@@ -154,7 +155,8 @@ class ProductController extends Controller
             "product_type" => $request->product_type,
         ]);
         Session::flash("status", "Update product successfully");
-        return redirect()->route("vendor.product.index");
+        if($role == "vendor") return redirect()->route("vendor.product.index");
+        return redirect()->route("admin.product_from_vendor.index");
     }
 
     /**
