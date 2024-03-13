@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\ProductImageGalleryController;
 use App\Http\Controllers\Vendor\ProductVariantController;
+use App\Http\Controllers\Vendor\ProductVariantItemController;
 use App\Http\Controllers\Vendor\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Vendor\ShopProfileController;
@@ -47,3 +48,10 @@ Route::resource("product.image-gallery", ProductImageGalleryController::class);
 Route::put("product/variant/{id}/change-status", [ProductVariantController::class, 'changeStatus'])->name("product.variant.change_status");
 Route::resource("product.variant", ProductVariantController::class);
 // Product Variants -------------------------------------------------
+
+// Product Variant Items -------------------------------------------------
+Route::put("product/variant/item/{id}/is-default", [ProductVariantItemController::class, "isDefault"])->name("product.variant.item.is_default");
+Route::put("product/variant/item/{id}/change-status", [ProductVariantItemController::class, "changeStatus"])->name("product.variant.item.change_status");
+Route::resource("product.variant.item", ProductVariantItemController::class);
+// Product Variant Items -------------------------------------------------
+

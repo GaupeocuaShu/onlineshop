@@ -57,7 +57,7 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary">Update</button>
                                 <a href="{{ route('vendor.product.variant.item.index', [$product->id, $variant->id]) }}"
-                                    class="ml-2 btn btn-info text-white">
+                                    class="ml-2 btn btn-danger text-white">
                                     Back </a>
                             </form>
                         </div>

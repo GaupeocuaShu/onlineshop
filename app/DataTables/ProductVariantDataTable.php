@@ -39,10 +39,10 @@ class ProductVariantDataTable extends DataTable
                 }
             })
             ->addColumn('action', function ($query) {
-                // $moreBtn = "<a href = '" . route("vendor.product.variant.item.index", [$query->product_id, $query->id]) . " ' class='ml-3 btn btn-primary'><i class='fa-solid fa-list'></i> </a>";
+                $moreBtn = "<a href = '" . route("vendor.product.variant.item.index", [$query->product_id, $query->id]) . " ' class='ml-3 btn btn-primary'><i class='fa-solid fa-list'></i> </a> &emsp;";
                 $updateBtn = "<a href = '" . route("vendor.product.variant.edit", [$query->product_id, $query->id]) . " ' class='btn btn-primary'><i class='fa-solid fa-pen-to-square'></i> </a> &emsp;";
                 $deleteBtn = "<button class='delete btn btn-danger' data-url='". route("vendor.product.variant.destroy",  [$query->product_id, $query->id]) ."'><i class='fa-solid fa-trash-can-arrow-up'></i></button>"; 
-                return $updateBtn . $deleteBtn ;
+                return  $moreBtn.$updateBtn . $deleteBtn  ;
             })
             ->rawColumns(["action", "status"])
             ->setRowId('id');
