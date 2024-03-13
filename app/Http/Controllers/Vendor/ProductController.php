@@ -171,11 +171,11 @@ class ProductController extends Controller
         //     }
         //     $variant->delete();
         // }
-        // $images = $product->productImageGalleries->all();
-        // foreach ($images as $image) {
-        //     $this->deleteImage($image->image);
-        //     $image->delete();
-        // };
+        $images = $product->productImageGalleries->all();
+        foreach ($images as $image) {
+            $this->deleteImage($image->image);
+            $image->delete();
+        };
         $product->delete();
 
         return response([

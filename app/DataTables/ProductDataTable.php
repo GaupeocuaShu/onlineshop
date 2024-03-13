@@ -52,9 +52,17 @@ class ProductDataTable extends DataTable
                 return $img;
             })
             ->addColumn('action', function ($query) {
-                $updateBtn = "<a href = '" . route("vendor.product.edit", $query->id) . " ' class='btn btn-primary'><i class='fa-solid fa-pen-to-square'></i> </a> &emsp;";
-                $deleteBtn = "<button class='delete btn btn-danger' data-url='".route("vendor.product.destroy", $query->id) ."'><i class='fa-solid fa-trash-can-arrow-up'></i></button>"; 
-                return $updateBtn . $deleteBtn;
+                $updateBtn = "<a href = '" . route("vendor.product.edit", $query->id) . " ' class='ml-3 btn btn-primary'><i class='fa-solid fa-pen-to-square'></i> </a>";
+                $deleteBtn = "<a href = '" . route("vendor.product.destroy", $query->id) . " ' class='ml-3 btn btn-danger delete-item'><i class='fa-solid fa-trash'></i> </a>";
+                $moreBtn = ' <div class="ml-2 dropleft d-inline ">
+                            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa-solid fa-gear"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                            <a class="dropdown-item has-icon" href="' . route("vendor.product.image-gallery.index", $query->id) . '"><i class="far fa-heart"></i> Image Gallery</a>
+                            </div>
+                            </div>';
+                return $moreBtn.$updateBtn . $deleteBtn;
             })
             ->addColumn('product_type', function ($query) {
                 $types = [

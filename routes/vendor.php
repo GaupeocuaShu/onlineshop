@@ -2,6 +2,7 @@
 use App\Models\Category;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Vendor\ProductController;
+use App\Http\Controllers\Vendor\ProductImageGalleryController;
 use App\Http\Controllers\Vendor\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Vendor\ShopProfileController;
@@ -34,4 +35,11 @@ Route::put("product/{id}/change-status", [ProductController::class, "changeStatu
 Route::put("product/change-type", [ProductController::class, "changeType"])->name("product.change_type");
 Route::resource("product", ProductController::class);
 // Product -------------------------------------------------
+
+
+// Product Gallery  -------------------------------------------------
+Route::resource("product.image-gallery", ProductImageGalleryController::class);
+// Product Gallery  -------------------------------------------------
+
+
 

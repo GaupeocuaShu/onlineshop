@@ -24,7 +24,18 @@ trait UploadTrait{
             return $path;
         }
     }
-
+    public function uploadMultiImage(Request $request, $name, $pathName)
+    {
+        $paths = array();
+        $images = $request->$name;
+        foreach ($images as $image) {
+            $imageName = date("Y-m-d") . "_" . $image->getClientOriginalName();
+            $image->move(public_path($pathName), $imageName);
+            $path = $pathName . "/" . $imageName;
+            $paths[] = $path;
+        }
+        return $paths;
+    }
     public function deleteImage(string $path)
     {
         if (File::exists(public_path($path))) File::delete(public_path($path));
