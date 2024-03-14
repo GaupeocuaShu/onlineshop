@@ -22,6 +22,10 @@ class CategoryDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->addColumn("banner", function ($query) {
+                $img = " <img alt='$query->name' width='300' src='" . asset($query->banner) . " '/> ";
+                return $img;
+            })
             ->addColumn("image", function ($query) {
                 $img = " <img alt='$query->name' width='300' src='" . asset($query->image) . " '/> ";
                 return $img;
@@ -49,7 +53,7 @@ class CategoryDataTable extends DataTable
             ->addColumn('icon', function ($query) {
                 return "<i style='font-size:40px' class='$query->icon'> </i>";
             })
-            ->rawColumns(["icon", "action", "status","image"])
+            ->rawColumns(["icon", "action", "status","image","banner"])
             ->setRowId('id');
     }
 
@@ -91,6 +95,7 @@ class CategoryDataTable extends DataTable
         return [
             Column::make('id')->width(50),
             Column::make('image')->width(300),
+            Column::make('banner')->width(300),
             Column::computed('icon')->width(100),
             Column::make('name'),
             Column::computed('status'),

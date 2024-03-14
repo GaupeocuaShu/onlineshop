@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("icon");
             $table->string("image")->nullable();
+            $table->string("banner")->nullable();
             $table->string("name");
             $table->string("slug");
             $table->boolean("status");

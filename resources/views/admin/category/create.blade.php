@@ -33,6 +33,10 @@
                                     <input name="image" type="file" class="form-control">
                                 </div>
                                 <div class="form-group">
+                                    <label for="">Banner</label>
+                                    <input name="banner" type="file" class="form-control">
+                                </div>
+                                <div class="form-group">
                                     <label for="">Name</label>
                                     <input name="name" type="text" class="form-control">
                                 </div>

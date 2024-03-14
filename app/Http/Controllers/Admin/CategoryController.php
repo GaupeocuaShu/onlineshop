@@ -37,11 +37,14 @@ class CategoryController extends Controller
         $request->validate([
             "name" => ["required", "unique:categories,name"],
             "icon" => ["required"],
+            "banner" => ["image"],
             "status" => ["required"],
             "image" => ["image"],
         ]);
+        $banner = $this->uploadImage($request,"uploads","banner");
         $image = $this->uploadImage($request,"uploads","image");
         Category::create([
+            "banner" => $banner,
             "image" => $image,
             "name" => $request->name,
             "icon" => $request->icon,
@@ -81,10 +84,12 @@ class CategoryController extends Controller
             "status" => ["required"],
             "image" => ["image"],
         ]);
+        $banner = $this->updateImage($request,$category->banner,"uploads","banner");
         $image = $this->updateImage($request,$category->image,"uploads","image");
         if (empty($request->icon)) $newIcon = $category->icon;
         else $newIcon =  $request->icon;
         $category->update([     
+            "banner" => $banner ? $banner : $category->banner, 
             "image" => $image ? $image : $category->image, 
             "name" => $request->name,
             "icon" => $newIcon,
@@ -106,7 +111,10 @@ class CategoryController extends Controller
             "message" => "Can't delete the category when it contains sub category",
         
         ]);
-        else $this->deleteImage($category->image);
+        else {
+            $this->deleteImage($category->image);
+            $this->deleteImage($category->banner);
+        }
         $category->delete();
         return response([
             "status" => "success",

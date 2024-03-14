@@ -9,7 +9,7 @@ class Category extends Model
 {
     use HasFactory;
     public $fillable = [
-        "icon","image", "name", "status", "slug",
+        "icon","image", "banner","name", "status", "slug",
     ];
     public function subCategories()
     {

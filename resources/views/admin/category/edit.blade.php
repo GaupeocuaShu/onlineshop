@@ -40,6 +40,12 @@
                                     <input name="image" type="file" class="form-control">
                                 </div>
                                 <div class="form-group">
+                                    <label for="">Banner</label>
+                                    <div class="my-3"><img alt="{{ $category->name }}"
+                                            src="{{ asset($category->banner) }}" width="400" /></div>
+                                    <input name="banner" type="file" class="form-control">
+                                </div>
+                                <div class="form-group">
                                     <label for="">Name</label>
                                     <input value="{{ $category->name }}" name="name" type="text" class="form-control">
                                 </div>
