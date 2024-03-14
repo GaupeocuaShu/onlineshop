@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function home(){
         $sliders = Slider::get()->sortBy("serial"); 
-        $categoryBanners = Category::get()->take(8);  
+        $categoryBanners = Category::get()->take(6);  
 
         return view("frontend.home.pages.home",compact("sliders","categoryBanners"));
     }

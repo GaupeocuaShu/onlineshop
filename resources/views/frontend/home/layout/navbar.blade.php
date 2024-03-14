@@ -1,10 +1,24 @@
-<div class="bg-slate-700 p-5">
-    <div class="md:w-[1200px]  mx-auto">
+<div class=" bg-slate-800">
+    <div class=" bg-slate-900 ">
+        <div class="md:w-[1200px] text-white p-5 mx-auto hidden md:flex justify-between">
+            <p> <i class="fa-solid fa-rectangle-ad"></i> &ensp; <a class="hover:underline hover:underline-offset-4"
+                    href="">Best Sweater For Winter</a></p>
+            <ul class="flex justify-end gap-x-5">
+                <li><i class="fa-solid fa-book"></i>&ensp; <a class="hover:underline hover:underline-offset-4  "
+                        href="">How To Buy Our Product?</a></li>
+                <li><i class="fa-solid fa-address-book"></i>&ensp;<a class="hover:underline hover:underline-offset-4  "
+                        href="">Contact Us</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="md:w-[1200px] p-5 mx-auto">
+
         <nav class=" flex justify-between md:gap-5 lg:gap-0 lg:justify-between text-white  items-center">
             <h1 class="text-2xl">
                 <a href="/" class="hidden md:block">ShuTy's Shop</a>
                 <div class="sm:block md:hidden relative">
                     <button class="fa-solid fa-bars show-sidebar"></button>
+                    {{-- Phone --}}
                     <div
                         class="hidden text-black sidebar  md:hidden p-5 fixed left-[0px]  top-[0px] z-10 bg-white h-[100vh] w-[300px]">
                         <button
@@ -26,7 +40,7 @@
                                     {{ $user->email }}</h1>
                             </div>
                             <ul
-                                class="mt-5 border-t-2 border-slate-200 group-hover:block text-base leading-[50px]  text-black ">
+                                class="mt-5 border-t-2 border-slate-200 group-hover:block text-base gap-y-6   text-black ">
                                 <a href="{{ route('user.profile') }}"
                                     class="hover:bg-slate-300 cursor-pointer block rounded-lg p-2">Manage Account</a>
                                 <a href=""
@@ -64,7 +78,9 @@
 
                             <li><a href="#" class="hover:underline hover:underline-offset-8"><i
                                         class="fa-solid fa-list"></i>
-                                    Category</a></li>
+                                    Category</a>
+
+                            </li>
                             <li><a href="#" class="hover:underline hover:underline-offset-8"><i
                                         class="fa-solid fa-eye"></i>
                                     Recently
@@ -79,8 +95,21 @@
                                         class="fa-regular fa-credit-card"></i> Payment
                                     Options</a></li>
                         </ul>
-                    </div>
+                        <ul class="flex flex-col pt-5 border-slate-300 text-base border-t-2 gap-y-6 mt-5">
 
+                            <li> <i class="fa-solid fa-rectangle-ad"></i> <a
+                                    class="hover:underline hover:underline-offset-4" href="">Best Sweater For
+                                    Winter</a></li>
+                            <li><i class="fa-solid fa-book"></i> <a class="hover:underline hover:underline-offset-4  "
+                                    href="">How To Buy Our
+                                    Product?</a></li>
+                            <li><i class="fa-solid fa-address-book"></i> <a
+                                    class="hover:underline hover:underline-offset-4  " href="">Contact Us</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    {{-- Phone --}}
                 </div>
             </h1>
             <div class="md:w-[20%] lg:w-[40%] w-[100%] ml-8 flex items-center">
@@ -137,22 +166,55 @@
                     </a>
                 @endif
             </div>
-            <div class="border-2 border-white py-2 px-4 md:px-6 ">
+            <div class="border-2 border-white py-1 px-4 md:px-6 rounded-lg">
                 <a class="flex items-center gap-x-2">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <p class="hidden md:block">Cart</p>
-                    <div class="text-black bg-white p-1 border-2 border-black">0</div>
+                    <div class="text-black bg-white p-1 border-1 rounded-sm border-black">0</div>
                 </a>
             </div>
 
         </nav>
         <ul class="text-white hidden
          md:flex justify-between mt-5">
-            <li><a href="#" class="hover:underline hover:underline-offset-8"><i class="fa-solid fa-list"></i>
-                    Category</a></li>
+            <li class="relative group/category "><a href="#"
+                    class="hover:underline py-8 pr-[30px] hover:underline-offset-8"><i class="fa-solid fa-list"></i>
+                    Category</a>
+                {{-- Category --}}
+                <ul
+                    class="absolute hidden group-hover/category:block shadow-2xl bg-slate-800  rounded-lg z-100 top-[50px] w-[280px] leading-10">
+
+                    <li class="group/subcategory p-3 px-3 text-lg hover:bg-sky-600  flex justify-between">
+                        <span class="flex items-center">
+                            <i class="fa-solid fa-shirt"></i>&ensp;<a href="" class="block w-full">Shirt</a>
+                        </span>
+                        <span><a href=""><i class="fa-solid fa-caret-right"></i></a></span>
+                        {{-- Sub Category --}}
+                        <ul
+                            class=" absolute hidden group-hover/subcategory:block top-0 left-[280px] shadow-2xl bg-slate-800   z-[100]  w-[350px] leading-10">
+                            <li class=" p-3 px-3 text-lg hover:bg-sky-600  ">
+                                <span class="flex items-center">
+                                    <i class="fa-solid fa-shirt"></i>&ensp;<a href=""
+                                        class="block w-full">Shirt</a>
+                                </span>
+                            </li>
+
+                        </ul>
+
+                    </li>
+                    <li class="p-2 text-lg hover:bg-sky-600 rounded-lg"><a href="" class="block">Dress </a>
+                    </li>
+                    <li class="p-2 text-lg hover:bg-sky-600 rounded-lg"><a href="" class="block">Toy </a>
+                    </li>
+                    <li class="p-2 text-lg hover:bg-sky-600 rounded-lg"><a href="" class="block">Glass </a>
+                    </li>
+                    <li class="p-2 text-lg hover:bg-sky-600 rounded-lg"><a href="" class="block">Cosmetic
+                        </a></li>
+                </ul>
+            </li>
             <li><a href="#" class="hover:underline hover:underline-offset-8"><i class="fa-solid fa-eye"></i>
                     Recently
-                    Viewd</a></li>
+                    View</a></li>
             <li><a href="#" class="hover:underline hover:underline-offset-8"><i
                         class="fa-solid fa-fire-flame-curved"></i> Best
                     Sellers</a></li>
