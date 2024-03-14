@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\SliderController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Backend\FlashSellController;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Http\Controllers\Vendor\ProductImageGalleryController;
@@ -63,7 +64,7 @@ Route::get("product-from-vendor/index", [ProductFromVendorController::class, "in
 // Products From Vendors ------------------------------------------------
 
 
-// Product Management ------------------------------------------------
+// Product Management ------------------------------------------------------------------------
 
 
 // Product Gallery  -------------------------------------------------
@@ -106,6 +107,15 @@ Route::put("product/change-type", [ProductController::class, "changeType"])->nam
 Route::resource("product", ProductController::class);
 // Product -------------------------------------------------
 
-// Product Management ------------------------------------------------
+// Product Management ------------------------------------------------------------------------
 
 
+
+
+// Flash Sell  -------------------------------------------------
+Route::delete("flash-sell/item/{id}/delete", [FlashSellController::class, "destroy"])->name("flash_sell.item.destroy");
+Route::put("flash-sell/item/{id}/change-status", [FlashSellController::class, "changeStatus"])->name("flash_sell.item.change_status");
+Route::put("flash-sell/store", [FlashSellController::class, "store"])->name("flash_sell.store");
+Route::get("flash-sell/index", [FlashSellController::class, "index"])->name("flash_sell.index");
+Route::put("flash-sell/update", [FlashSellController::class, "update"])->name("flash_sell.update");
+// Flash Sell  -------------------------------------------------
