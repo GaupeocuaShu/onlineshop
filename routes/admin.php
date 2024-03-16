@@ -96,12 +96,6 @@ Route::put("product/change-type", [ProductManagementController::class, "changeTy
 
 // Product -------------------------------------------------
 
-Route::post("category/get-sub-categories",function(Request $request){
-    $categoryID = $request->categoryID; 
-    $subCategories = Category::findOrFail($categoryID)->subCategories;
-    return response( ["subCategories" => $subCategories]);
-})->name("category.get-sub-categories");
-
 Route::put("product/{id}/change-status", [ProductController::class, "changeStatus"])->name("product.change_status");
 Route::put("product/change-type", [ProductController::class, "changeType"])->name("product.change_type");
 Route::resource("product", ProductController::class);

@@ -1,4 +1,4 @@
-<div class=" bg-slate-800">
+<div class=" bg-slate-800 fixed w-screen z-[100] ">
     <div class=" bg-slate-900 ">
         <div class="md:w-[1200px] text-white p-5 mx-auto hidden md:flex justify-between">
             <p> <i class="fa-solid fa-rectangle-ad"></i> &ensp; <a class="hover:underline hover:underline-offset-4"
@@ -11,7 +11,7 @@
             </ul>
         </div>
     </div>
-    <div class="md:w-[1200px] p-5 mx-auto">
+    <div class="md:w-[1200px] p-3 mx-auto">
 
         <nav class=" flex justify-between md:gap-5 lg:gap-0 lg:justify-between text-white  items-center">
             <h1 class="text-2xl">
@@ -182,34 +182,26 @@
                     Category</a>
                 {{-- Category --}}
                 <ul
-                    class="absolute hidden group-hover/category:block shadow-2xl bg-slate-800  rounded-lg z-100 top-[50px] w-[280px] leading-10">
+                    class="absolute hidden group-hover/category:block shadow-2xl bg-slate-800   z-100 top-[50px] w-[280px] leading-10">
+                    @foreach ($categories as $cate)
+                        <li class="group/subcategory p-3 px-3 text-lg hover:bg-sky-600 relative flex justify-between">
+                            <span class="flex items-center">
+                                <i class="{{ $cate->icon }}"></i>&ensp;<a href=""
+                                    class="block w-full">{{ $cate->name }}</a>
+                            </span>
+                            <span><a href=""><i class="fa-solid fa-caret-right"></i></a></span>
+                            {{-- Sub Category --}}
+                            <ul
+                                class=" absolute hidden group-hover/subcategory:block top-0 left-[280px] shadow-2xl bg-slate-800   z-[100]  w-[350px] leading-10">
+                                @foreach ($cate->subCategories as $sub)
+                                    <li class=" p-3 px-3 text-lg hover:bg-sky-600  ">
+                                        <a href="" class="block w-full">{{ $sub->name }}</a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                    @endforeach
 
-                    <li class="group/subcategory p-3 px-3 text-lg hover:bg-sky-600  flex justify-between">
-                        <span class="flex items-center">
-                            <i class="fa-solid fa-shirt"></i>&ensp;<a href="" class="block w-full">Shirt</a>
-                        </span>
-                        <span><a href=""><i class="fa-solid fa-caret-right"></i></a></span>
-                        {{-- Sub Category --}}
-                        <ul
-                            class=" absolute hidden group-hover/subcategory:block top-0 left-[280px] shadow-2xl bg-slate-800   z-[100]  w-[350px] leading-10">
-                            <li class=" p-3 px-3 text-lg hover:bg-sky-600  ">
-                                <span class="flex items-center">
-                                    <i class="fa-solid fa-shirt"></i>&ensp;<a href=""
-                                        class="block w-full">Shirt</a>
-                                </span>
-                            </li>
-
-                        </ul>
-
-                    </li>
-                    <li class="p-2 text-lg hover:bg-sky-600 rounded-lg"><a href="" class="block">Dress </a>
-                    </li>
-                    <li class="p-2 text-lg hover:bg-sky-600 rounded-lg"><a href="" class="block">Toy </a>
-                    </li>
-                    <li class="p-2 text-lg hover:bg-sky-600 rounded-lg"><a href="" class="block">Glass </a>
-                    </li>
-                    <li class="p-2 text-lg hover:bg-sky-600 rounded-lg"><a href="" class="block">Cosmetic
-                        </a></li>
                 </ul>
             </li>
             <li><a href="#" class="hover:underline hover:underline-offset-8"><i class="fa-solid fa-eye"></i>
@@ -228,7 +220,7 @@
     </div>
 
 </div>
-
+<div class="h-[170px]"></div>
 @push('scripts')
     <script>
         $(document).ready(function() {

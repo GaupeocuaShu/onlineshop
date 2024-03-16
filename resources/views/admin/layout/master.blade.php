@@ -406,7 +406,7 @@
 
                 let id = $(this).val();
                 $.ajax({
-                    type: "GET",
+                    type: "POST",
                     url: "{{ route('admin.category.get-sub-categories') }}",
                     data: {
                         categoryID: id

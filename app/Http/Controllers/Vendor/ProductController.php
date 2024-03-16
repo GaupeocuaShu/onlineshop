@@ -148,7 +148,7 @@ class ProductController extends Controller
             "offer_start_price" => $request->offer_start_price,
             "offer_end_price" => $request->offer_end_price,
             "status" => $request->status,
-            "is_approved" => 1,
+            "is_approved" => -1,
             "seo_title" => $request->seo_title,
             "seo_description" => $request->seo_description,
             "slug" => Str::slug($request->name),
