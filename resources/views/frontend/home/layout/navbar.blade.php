@@ -1,4 +1,4 @@
-<div class=" bg-slate-800 fixed w-screen z-[100] ">
+<div class=" bg-slate-800  w-screen z-[100] ">
     <div class=" bg-slate-900 ">
         <div class="md:w-[1200px] text-white p-5 mx-auto hidden md:flex justify-between">
             <p> <i class="fa-solid fa-rectangle-ad"></i> &ensp; <a class="hover:underline hover:underline-offset-4"
@@ -182,7 +182,7 @@
                     Category</a>
                 {{-- Category --}}
                 <ul
-                    class="absolute hidden group-hover/category:block shadow-2xl bg-slate-800   z-100 top-[50px] w-[280px] leading-10">
+                    class=" absolute hidden group-hover/category:block shadow-2xl bg-slate-800   z-100 top-[50px] w-[280px] leading-10">
                     @foreach ($categories as $cate)
                         <li class="group/subcategory p-3 px-3 text-lg hover:bg-sky-600 relative flex justify-between">
                             <span class="flex items-center">
@@ -218,9 +218,7 @@
                     Options</a></li>
         </ul>
     </div>
-
 </div>
-<div class="h-[170px]"></div>
 @push('scripts')
     <script>
         $(document).ready(function() {
