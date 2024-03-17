@@ -18,8 +18,10 @@ class HomeController extends Controller
         $hotCategories = Category::get()->take(6);  
         $brands = Brand::get()->take(10); 
         $topProducts = Product::where("product_type","top")->where("is_approved",1)->get()->take(12);
+        $newProducts = Product::where("product_type","new_arrival")->where("is_approved",1)->get()->take(12);
+        
         return view("frontend.home.pages.home",
         compact("sliders","categoryBanners","categories","hotCategories","brands"
-        ,"topProducts"));
+        ,"topProducts","newProducts"));
     }
 }

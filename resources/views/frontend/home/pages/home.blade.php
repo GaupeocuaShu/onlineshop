@@ -13,8 +13,9 @@
     {{-- Brand --}}
     @include('frontend.home.sections.brand')
 
-
-
     {{-- top product --}}
     @include('frontend.home.sections.top-product')
+
+    {{-- New Arrival product --}}
+    @include('frontend.home.sections.new-arrival')
 @endsection
