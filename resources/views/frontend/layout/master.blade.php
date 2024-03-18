@@ -16,10 +16,10 @@
 <body>
     <div class="font-sans">
         {{-- Navbar --}}
-        @include('frontend.home.layout.navbar')
+        @include('frontend.layout.navbar')
 
         {{-- Sidebar --}}
-        @include('frontend.home.layout.sidebar')
+        @include('frontend.layout.sidebar')
 
         <!-- Main Content -->
         <div class=" bg-slate-100">
@@ -29,7 +29,7 @@
         </div>
 
         {{-- Footer --}}
-        @include('frontend.home.layout.footer')
+        @include('frontend.layout.footer')
 
     </div>
     {{-- Jquery UI --}}

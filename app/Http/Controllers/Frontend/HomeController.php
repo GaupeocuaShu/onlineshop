@@ -21,8 +21,27 @@ class HomeController extends Controller
         $topProducts = Product::where("product_type","top")->where("is_approved",1)->get()->take(12);
         $newProducts = Product::where("product_type","new_arrival")->where("is_approved",1)->get()->take(12);
         $flashSellProducts = FlashSellItem::with("product")->get();
-        return view("frontend.home.pages.home",
+        return view("frontend.pages.home",
         compact("sliders","categoryBanners","categories","hotCategories","brands"
         ,"topProducts","newProducts","flashSellProducts"));
     }
+    // return category page 
+    public function category($slug){ 
+        $categories = Category::with("subCategories")->get();
+        $category = Category::where("slug",$slug)->first();
+
+        $products = Product::where("category_id",$category->id)->get();
+        return view("frontend.pages.category",[
+            "categories" => $categories,
+            "category" => $category,
+            "products" => $products,
+        ]);
+    }
+    // return product page 
+
+    public function product($slug){ 
+        return view("frontend.pages.product");
+
+    }
+
 }

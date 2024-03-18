@@ -3,8 +3,5 @@
         <h1 class="text-2xl">
             OnlineShop
         </h1>
-
-
     </nav>
-
 </div>

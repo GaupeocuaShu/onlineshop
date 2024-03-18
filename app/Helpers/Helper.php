@@ -57,3 +57,8 @@ function getProductType($product)
     }
     return $type;
 }
+
+
+function getAllType(){
+    return ["Featured","Best","Top","New Arrival"];
+}

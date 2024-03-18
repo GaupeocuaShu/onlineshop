@@ -27,6 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get("get-slug-url/",[HomeController::class,"getSlugUrl"])->name("get-slug-url");
 
+Route::get("category/{slug}",[HomeController::class,"category"])->name("category");
+Route::get("product/{slug}",[HomeController::class,"product"])->name("product");
 
 require __DIR__.'/auth.php';
