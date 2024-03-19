@@ -29,6 +29,7 @@ class HomeController extends Controller
     // return product page 
     // {product?}/{type?}/{subcategory?}/{category?}/{brand?}/{vendor?}
     public function product(Request $request){ 
+   
         $allCategories = Category::with("subCategories")->get();
         $subCategory = null;
         $activeSub = null;
@@ -39,6 +40,10 @@ class HomeController extends Controller
             $activeSub = $subCategory->slug;
         };
         $category = Category::where("slug",$request->category)->first();
+        $brands = Brand::with("categories")->whereHas("categories",function($query) use ($category){
+            $query->where("categories.id",$category->id);
+        })->get();
+   
         $products = Product::where([
                 ["category_id",$category->id],
                 ["product_type",$type]
@@ -54,6 +59,7 @@ class HomeController extends Controller
             "activeType" => $type,
             "activeSub" =>  $activeSub,
             "slug" => $category->slug,
+            "brands" => $brands,
         ]);
     }
 }

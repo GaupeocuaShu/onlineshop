@@ -1,3 +1,13 @@
+@php
+
+    $paras = request()->input();
+    $brand_slugs = explode(',', $paras['brand_slug']);
+    $brandSlugAsso = [];
+    foreach ($brand_slugs as $key => $value) {
+        $brandSlugAsso[$value] = 1;
+    }
+
+@endphp
 @extends('frontend.layout.master')
 @section('content')
     <div class="flex py-8 gap-10">
@@ -29,31 +39,32 @@
                     @endif
                 @endforeach
             </div>
-            {{-- Brand --}}
             <div class="flex flex-col min-w-[200px]">
                 <a href="" class="text-xl font-semibold py-4 border-b-2 border-slate-200">
                     <i class="fa-solid fa-shuffle"></i>&ensp; Filter</a>
-                @if (!$activeSub)
-                    <a href="{{ route('product', ['category' => $category->slug]) }}" class="my-2 text-sky-600"> <i
-                            class="fa-solid fa-play text-sm"></i> {{ $category->name }}</a>
-                @else
-                    <a href="{{ route('product', ['category' => $category->slug]) }}"
-                        class="my-2 font-semibold">{{ $category->name }}</a>
-                @endif
-                @foreach ($category->subCategories as $sub)
-                    @if ($sub->slug == $activeSub)
-                        <a href="{{ route('product', ['subcategory' => $sub->slug, 'category' => $category->slug, 'type' => $activeType]) }}"
-                            class="my-2 text-sky-600">
-                            <i class="fa-solid fa-play text-sm"></i> {{ $sub->name }}
-
-                        </a>
-                    @else
-                        <a href="{{ route('product', ['subcategory' => $sub->slug, 'category' => $category->slug, 'type' => $activeType]) }}"
-                            class="my-2">
-                            {{ $sub->name }}
-                        </a>
-                    @endif
-                @endforeach
+                {{-- Brand --}}
+                <div>
+                    <h1 class="font-semibold">Brand</h1>
+                    <div class="flex flex-col">
+                        <form method="GET" action="{{ route('product') }}">
+                            @foreach ($paras as $key => $p)
+                                @if ($key != 'brand_slug')
+                                    <input type="hidden" name="{{ $key }}" value="{{ $p }}" />
+                                @endif
+                            @endforeach
+                            <input type="hidden" class="brand-slug" name="brand_slug" />
+                            @foreach ($brands as $br)
+                                <div class="flex gap-2 items-center my-3">
+                                    <input
+                                        {{ isset($brandSlugAsso[$br->slug]) && $brandSlugAsso[$br->slug] == 1 ? 'checked' : '' }}
+                                        class="brand-filter" type="checkbox" value="{{ $br->slug }}">
+                                    <label>{{ $br->name }}</label>
+                                </div>
+                            @endforeach
+                            <button class="filter-btn">Filter</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
         <div>
@@ -104,6 +115,15 @@
                 window.location.replace($(this).data("url"));
             });
 
+            $(".brand-filter").on("click", function(e) {
+                const brands = $(".brand-filter:checked");
+                const brandsID = [];
+                $.each(brands, function(index, value) {
+                    brandsID.push($(value).val());
+                });
+                $brandsIDStr = brandsID.join(",");
+                $(".brand-slug").val($brandsIDStr);
+            })
         });
     </script>
 @endpush
