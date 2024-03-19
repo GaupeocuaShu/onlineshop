@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\FlashSellItem;
 use App\Models\Product;
 use App\Models\Slider;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -25,23 +26,34 @@ class HomeController extends Controller
         compact("sliders","categoryBanners","categories","hotCategories","brands"
         ,"topProducts","newProducts","flashSellProducts"));
     }
-    // return category page 
-    public function category($slug){ 
-        $categories = Category::with("subCategories")->get();
-        $category = Category::where("slug",$slug)->first();
-
-        $products = Product::where("category_id",$category->id)->get();
+    // return product page 
+    // {product?}/{type?}/{subcategory?}/{category?}/{brand?}/{vendor?}
+    public function product(Request $request){ 
+        $allCategories = Category::with("subCategories")->get();
+        $subCategory = null;
+        $activeSub = null;
+        if($request->type) $type = $request->type ;
+        else $type = "featured";
+        if($request->subcategory) {
+            $subCategory = SubCategory::where("slug",$request->subcategory)->first(); 
+            $activeSub = $subCategory->slug;
+        };
+        $category = Category::where("slug",$request->category)->first();
+        $products = Product::where([
+                ["category_id",$category->id],
+                ["product_type",$type]
+            ])
+            ->where(function($query) use ($subCategory){ 
+                if($subCategory) $query->where("sub_category_id",$subCategory->id);
+            })
+            ->get();
         return view("frontend.pages.category",[
-            "categories" => $categories,
+            "categories" => $allCategories,
             "category" => $category,
             "products" => $products,
+            "activeType" => $type,
+            "activeSub" =>  $activeSub,
+            "slug" => $category->slug,
         ]);
     }
-    // return product page 
-
-    public function product($slug){ 
-        return view("frontend.pages.product");
-
-    }
-
 }

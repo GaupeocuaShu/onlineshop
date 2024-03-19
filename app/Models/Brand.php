@@ -11,4 +11,7 @@ class Brand extends Model
     protected $fillable = [
         "name", "slug", "logo", "status", "is_featured"
     ];
+    public function categories(){
+        return $this->belongsToMany(Category::class);
+    }
 }

@@ -60,5 +60,5 @@ function getProductType($product)
 
 
 function getAllType(){
-    return ["Featured","Best","Top","New Arrival"];
+    return ["featured" => "Featured","best" => "Best","top" => "Top","new" => "New Arrival"];
 }

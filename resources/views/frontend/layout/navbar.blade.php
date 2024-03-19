@@ -182,7 +182,7 @@
                     Category</a>
                 {{-- Category --}}
                 <ul
-                    class=" absolute hidden group-hover/category:block shadow-2xl bg-slate-800   z-100 top-[50px] w-[280px] leading-10">
+                    class=" absolute hidden group-hover/category:block shadow-2xl bg-slate-800   z-[100] top-[50px] w-[280px] leading-10">
                     @foreach ($categories as $cate)
                         <li class="group/subcategory p-3 px-3 text-lg hover:bg-sky-600 relative flex justify-between">
                             <span class="flex items-center">

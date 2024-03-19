@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\UploadTrait;
 use App\Models\Brand;
+use App\Models\Category;
 use Illuminate\Support\Facades\Session; 
 use Illuminate\Support\Str;
 class BrandController extends Controller
@@ -25,7 +26,8 @@ class BrandController extends Controller
      */
     public function create()
     {
-        return view("admin.brand.create");
+        $categories = Category::get(); 
+        return view("admin.brand.create",compact("categories"));
     }
 
     /**
@@ -42,27 +44,30 @@ class BrandController extends Controller
 
         $path = $this->uploadImage($request, "uploads", "logo");
 
-        Brand::create([
+        $brand = Brand::create([
             "slug" => Str::slug($request->name),
             "name" => $request->name,
             "logo" => $path,
             "status" => $request->status,
             "is_featured" => $request->is_featured,
         ]);
+        foreach($request->category_id as $id){
+            $brand->categories()->attach($id); 
+        }
         Session::flash("status", "Create brand successfully");
         return redirect()->route("admin.brand.index");
     }
-
-
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
         $brand = Brand::findOrFail($id);
+        $categories = Category::get(); 
 
         return view("admin.brand.edit", [
             "brand" => $brand,
+            "categories" => $categories,
         ]);
     }
 
@@ -85,6 +90,7 @@ class BrandController extends Controller
             "status" => $request->status,
             "is_featured" => $request->is_featured,
         ]);
+        $brand->categories()->sync($request->category_id);
         Session::flash("status", "Update Brand successfully");
         return redirect()->route("admin.brand.index");
     }
@@ -122,5 +128,14 @@ class BrandController extends Controller
         return response([
             "status" => "success","message" => "Updated Brand Featured"
         ]);
+    }
+
+    public function getCategory(string $id){
+        $brand = Brand::with("categories")->findOrFail($id); 
+        $categoryIDs = array();
+        foreach($brand->categories as $s){
+            $categoryIDs[] = $s->id;
+        };
+        return response($categoryIDs);
     }
 }

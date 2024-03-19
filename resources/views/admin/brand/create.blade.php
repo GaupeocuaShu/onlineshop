@@ -23,7 +23,14 @@
                         <div class="card-body">
                             <form enctype="multipart/form-data" action="{{ route('admin.brand.store') }}" method="POST">
                                 @csrf
-
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select name="category_id[]" class="form-control select2" multiple="multiple">
+                                        @foreach ($categories as $c)
+                                            <option value="{{ $c->id }}">{{ $c->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="form-group">
                                     <label for="">Logo</label>
                                     <input name="logo" type="file" class="form-control">

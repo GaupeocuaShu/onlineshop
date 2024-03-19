@@ -29,7 +29,5 @@ Route::middleware('auth')->group(function () {
 
 Route::get("get-slug-url/",[HomeController::class,"getSlugUrl"])->name("get-slug-url");
 
-Route::get("category/{slug}",[HomeController::class,"category"])->name("category");
-Route::get("product/{slug}",[HomeController::class,"product"])->name("product");
-
+Route::get("/product",[HomeController::class,"product"])->name("product");
 require __DIR__.'/auth.php';

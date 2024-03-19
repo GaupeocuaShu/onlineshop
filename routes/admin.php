@@ -40,6 +40,7 @@ Route::resource("slider",SliderController::class);
 
 
 // Brand ------------------------------------------------
+Route::get("brand/{id}/get-category",[BrandController::class,"getCategory"])->name("brand.get-category");
 Route::put("brand/{id}/change-status",[BrandController::class,"changeStatus"])->name("brand.change-status");
 Route::put("brand/{id}/change-featured",[BrandController::class,"changeFeatured"])->name("brand.change-featured");
 Route::resource("brand",BrandController::class);

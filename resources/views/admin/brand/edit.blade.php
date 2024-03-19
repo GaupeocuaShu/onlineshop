@@ -25,6 +25,14 @@
                                 method="post">
                                 @method('PUT')
                                 @csrf
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select name="category_id[]" class="form-control select2" multiple="multiple">
+                                        @foreach ($categories as $c)
+                                            <option value="{{ $c->id }}">{{ $c->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <img src="{{ asset($brand->logo) }}" width="200px" class="my-3" />
                                 <div class="form-group">
                                     <label for="">Logo</label>
@@ -65,3 +73,17 @@
         </div>
     </section>
 @endsection
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('admin.brand.get-category', $brand->id) }}",
+                dataType: "JSON",
+                success: function(data) {
+                    $('.select2').select2().val(data).trigger('change')
+                },
+            });
+        })
+    </script>
+@endpush
