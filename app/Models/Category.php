@@ -15,5 +15,7 @@ class Category extends Model
     {
         return $this->hasMany(SubCategory::class);
     }
-
+    public function brand(){
+        return $this->belongsTo(Brand::class);
+    }
 }

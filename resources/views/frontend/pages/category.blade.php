@@ -1,12 +1,12 @@
 @php
-
     $paras = request()->input();
-    $brand_slugs = explode(',', $paras['brand_slug']);
-    $brandSlugAsso = [];
-    foreach ($brand_slugs as $key => $value) {
-        $brandSlugAsso[$value] = 1;
+    if (isset($paras['brand_slug'])) {
+        $brand_slugs = explode(',', $paras['brand_slug']);
+        $brandSlugAsso = [];
+        foreach ($brand_slugs as $key => $value) {
+            $brandSlugAsso[$value] = 1;
+        }
     }
-
 @endphp
 @extends('frontend.layout.master')
 @section('content')
@@ -17,23 +17,31 @@
             <div class="flex flex-col min-w-[200px]">
                 <a href="" class="text-xl font-semibold py-4 border-b-2 border-slate-200"><i
                         class="fa-solid fa-list text-base"></i>&ensp; All Category</a>
+                @php
+                    $paras_2 = $paras;
+                    $paras_2['category'] = $category->slug;
+                    unset($paras_2['subcategory']);
+                @endphp
                 @if (!$activeSub)
-                    <a href="{{ route('product', ['category' => $category->slug]) }}" class="my-2 text-sky-600"> <i
+                    <a href="{{ route('product', $paras_2) }}" class="my-2 text-sky-600"> <i
                             class="fa-solid fa-play text-sm"></i> {{ $category->name }}</a>
                 @else
-                    <a href="{{ route('product', ['category' => $category->slug]) }}"
-                        class="my-2 font-semibold">{{ $category->name }}</a>
+                    <a href="{{ route('product', $paras_2) }}" class="my-2 font-semibold">{{ $category->name }}</a>
                 @endif
+                {{-- Category --}}
+
                 @foreach ($category->subCategories as $sub)
+                    @php
+                        $paras_2 = $paras;
+                        $paras_2['subcategory'] = $sub->slug;
+                    @endphp
                     @if ($sub->slug == $activeSub)
-                        <a href="{{ route('product', ['subcategory' => $sub->slug, 'category' => $category->slug, 'type' => $activeType]) }}"
-                            class="my-2 text-sky-600">
+                        <a href="{{ route('product', $paras_2) }}" class="my-2 text-sky-600">
                             <i class="fa-solid fa-play text-sm"></i> {{ $sub->name }}
 
                         </a>
                     @else
-                        <a href="{{ route('product', ['subcategory' => $sub->slug, 'category' => $category->slug, 'type' => $activeType]) }}"
-                            class="my-2">
+                        <a href="{{ route('product', $paras_2) }}" class="my-2">
                             {{ $sub->name }}
                         </a>
                     @endif
@@ -61,26 +69,31 @@
                                     <label>{{ $br->name }}</label>
                                 </div>
                             @endforeach
-                            <button class="filter-btn">Filter</button>
+                            <button
+                                class="hover:bg-sky-700 filter-btn my-2 rounded-sm bg-sky-600 text-white py-1 px-4">Filter</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
         <div>
-
+            {{-- Type  --}}
             <div class=  " bg-slate-200 p-4 rounded-lg flex gap-5 text-center mb-7 cursor-pointer">
                 @foreach (getAllType() as $key => $type)
-                    <span data-url="{{ route('product', ['type' => $key, 'category' => $slug]) }}"
+                    @php
+                        $paras_2 = $paras;
+                        $paras_2['type'] = $key;
+                    @endphp
+                    <span data-url="{{ route('product', $paras_2) }}"
                         class=" type-filter rounded-sm p-2 min-w-[80px] {{ $key == $activeType ? 'bg-sky-600 text-white' : 'bg-white text-black' }}">
-                        <a href="{{ route('product', ['type' => $key, 'category' => $slug]) }}">{{ $type }}</a>
+                        <a href="{{ route('product', $paras_2) }}">{{ $type }}</a>
                     </span>
                 @endforeach
             </div>
             <div class="grid grid-cols-5 gap-3 z-[1] relative">
                 @foreach ($products as $p)
                     <li
-                        class= "bg-slate-200 relative hover:shadow-xl hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between border-2 leading-8  border-slate-100">
+                        class= "bg-slate-200 shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between  leading-8  ">
                         <img class="min-h-[180px] w-full" src="{{ asset($p->thumb_image) }}" />
                         <div class="absolute w-full flex justify-between">
                             <span class="bg-sky-600 rounded-sm text-white text-sm  py-1 px-2">

@@ -29,27 +29,45 @@ class HomeController extends Controller
     // return product page 
     // {product?}/{type?}/{subcategory?}/{category?}/{brand?}/{vendor?}
     public function product(Request $request){ 
-   
         $allCategories = Category::with("subCategories")->get();
         $subCategory = null;
-        $activeSub = null;
+        $activeSub = null; 
+        $brandSlugs = null; 
+        $brandSlugsID = null; 
+        // if brand filter was chosen 
+
+        if($request->brand_slug) {
+            $brandSlugs = explode(",",$request->brand_slug);
+            foreach ($brandSlugs as $key => $value) {
+                $brandSlugsID[] = Brand::where("slug",$value)->pluck("id")->toArray();
+            }
+        }
+
+        // If type was chosen 
         if($request->type) $type = $request->type ;
-        else $type = "featured";
+        else $type = "featured"; 
+
+        // If subcategory was chosen 
         if($request->subcategory) {
             $subCategory = SubCategory::where("slug",$request->subcategory)->first(); 
             $activeSub = $subCategory->slug;
         };
         $category = Category::where("slug",$request->category)->first();
+        // fetch brands based on category
         $brands = Brand::with("categories")->whereHas("categories",function($query) use ($category){
             $query->where("categories.id",$category->id);
         })->get();
-   
+        
+
         $products = Product::where([
                 ["category_id",$category->id],
                 ["product_type",$type]
             ])
             ->where(function($query) use ($subCategory){ 
                 if($subCategory) $query->where("sub_category_id",$subCategory->id);
+            })
+            ->where(function($query) use ($brandSlugsID){
+                if($brandSlugsID) $query->whereIn('brand_id',array_merge(...$brandSlugsID));
             })
             ->get();
         return view("frontend.pages.category",[
