@@ -185,8 +185,9 @@
                     class=" absolute hidden group-hover/category:block shadow-2xl bg-slate-800   z-[100] top-[50px] w-[280px] leading-10">
                     @foreach ($categories as $cate)
                         <li class="group/subcategory p-3 px-3 text-lg hover:bg-sky-600 relative flex justify-between">
-                            <span class="flex items-center">
-                                <i class="{{ $cate->icon }}"></i>&ensp;<a href=""
+                            <span class="flex items-center w-full">
+                                <i class="{{ $cate->icon }}"></i>&ensp;<a
+                                    href="{{ route('product', ['category' => $cate->slug]) }}"
                                     class="block w-full">{{ $cate->name }}</a>
                             </span>
                             <span><a href=""><i class="fa-solid fa-caret-right"></i></a></span>
@@ -195,7 +196,8 @@
                                 class=" absolute hidden group-hover/subcategory:block top-0 left-[280px] shadow-2xl bg-slate-800   z-[100]  w-[350px] leading-10">
                                 @foreach ($cate->subCategories as $sub)
                                     <li class=" p-3 px-3 text-lg hover:bg-sky-600  ">
-                                        <a href="" class="block w-full">{{ $sub->name }}</a>
+                                        <a href="{{ route('product', ['category' => $cate->slug, 'subcategory' => $sub->slug]) }}"
+                                            class="block w-full">{{ $sub->name }}</a>
                                     </li>
                                 @endforeach
                             </ul>

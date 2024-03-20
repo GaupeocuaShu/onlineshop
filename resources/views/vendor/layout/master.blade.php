@@ -413,6 +413,29 @@
                     }
                 });
             });
+            // ------------------------------ Get brand ------------------------------
+            $("body").on("change", ".main_category", function() {
+                let id = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('vendor.brand.get-brand') }}",
+                    data: {
+                        categoryID: id
+                    },
+                    dataType: "JSON",
+                    success: function(data) {
+                        $(".brand").html("<option value=''> Select </option>");
+                        $.each(data.brands, function(index, value) {
+                            $(".brand").append(
+                                `<option value = ${value.id}>${value.name}</option>`
+                            );
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert("Can't get data")
+                    }
+                });
+            });
             // ------------------------------ Change product type ------------------------------
             $("body").on("change", ".product_type", function() {
                 let id = $(this).data("id");

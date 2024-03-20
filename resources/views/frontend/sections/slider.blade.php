@@ -6,7 +6,8 @@
         <h1 class="gradient_text uppercase  text-4xl  ">Hot Category</h1>
         <ul class="mt-3 text-lg">
             @foreach ($hotCategories as $cate)
-                <li class="p-2 hover:bg-slate-200 rounded-lg"><a class="block" href=""><i
+                <li class="p-2 hover:bg-slate-200 rounded-lg"><a class="block"
+                        href="{{ route('product', ['category' => $cate->slug]) }}"><i
                             class="{{ $cate->icon }}"></i>&emsp;{{ $cate->name }}</a></li>
             @endforeach
         </ul>

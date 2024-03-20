@@ -1,11 +1,18 @@
 @php
     $paras = request()->input();
+    // Check is brand filtered
     if (isset($paras['brand_slug'])) {
         $brand_slugs = explode(',', $paras['brand_slug']);
         $brandSlugAsso = [];
         foreach ($brand_slugs as $key => $value) {
             $brandSlugAsso[$value] = 1;
         }
+    }
+    // Check is price filtered
+    $from = null;
+    $to = null;
+    if (isset($paras['price_range'])) {
+        [$from, $to] = explode(',', $paras['price_range']);
     }
 @endphp
 @extends('frontend.layout.master')
@@ -47,33 +54,58 @@
                     @endif
                 @endforeach
             </div>
-            <div class="flex flex-col min-w-[200px]">
-                <a href="" class="text-xl font-semibold py-4 border-b-2 border-slate-200">
-                    <i class="fa-solid fa-shuffle"></i>&ensp; Filter</a>
-                {{-- Brand --}}
+            <div class="flex flex-col w-[200px] ">
+                <div class="flex justify-between items-center border-b-2">
+                    <a href="" class="text-xl font-semibold py-4  border-slate-200">
+                        <i class="fa-solid fa-shuffle"></i>&ensp; Filter</a>
+                    <a href="{{ route('product', ['category' => $category->slug]) }}"
+                        class=" hover:bg-red-700 hover:text-white text-sm text-black filter-btn rounded-lg border-red-600 border-2 py-1   px-2">
+                        Reset
+                    </a>
+                </div>
                 <div>
-                    <h1 class="font-semibold">Brand</h1>
                     <div class="flex flex-col">
                         <form method="GET" action="{{ route('product') }}">
-                            @foreach ($paras as $key => $p)
-                                @if ($key != 'brand_slug')
-                                    <input type="hidden" name="{{ $key }}" value="{{ $p }}" />
-                                @endif
-                            @endforeach
-                            <input type="hidden" class="brand-slug" name="brand_slug" />
-                            @foreach ($brands as $br)
-                                <div class="flex gap-2 items-center my-3">
-                                    <input
-                                        {{ isset($brandSlugAsso[$br->slug]) && $brandSlugAsso[$br->slug] == 1 ? 'checked' : '' }}
-                                        class="brand-filter" type="checkbox" value="{{ $br->slug }}">
-                                    <label>{{ $br->name }}</label>
+                            {{-- Brand --}}
+                            <div>
+                                <label class="font-semibold">Brand</label>
+                                @foreach ($paras as $key => $p)
+                                    @if ($key != 'brand_slug')
+                                        <input type="hidden" name="{{ $key }}" value="{{ $p }}" />
+                                    @endif
+                                @endforeach
+                                <input type="hidden" class="brand-slug" name="brand_slug" />
+                                @foreach ($brands as $br)
+                                    <div class="flex gap-2 items-center my-3">
+                                        <input
+                                            {{ isset($brandSlugAsso[$br->slug]) && $brandSlugAsso[$br->slug] == 1 ? 'checked' : '' }}
+                                            class="brand-filter" type="checkbox" value="{{ $br->slug }}">
+                                        <label>{{ $br->name }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            {{-- Price --}}
+                            <div class="">
+                                <label class="font-semibold">Price</label>
+                                <div class="flex my-3 gap-2 items-center">
+                                    <input value="{{ isset($paras['price_range']) ? $paras['price_range'] : ' ' }}"
+                                        type="hidden" name="price_range" class="price-range" />
+                                    <input value="{{ $from ? $from : '' }}" placeholder="$ From" type="text"
+                                        class="price-from w-[50%]"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                                    <span class="text-2xl">-</span>
+                                    <input value="{{ $to ? $to : '' }}" placeholder="$ To" type="text"
+                                        class="price-to w-[50%]" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                                 </div>
-                            @endforeach
+                            </div>
                             <button
-                                class="hover:bg-sky-700 filter-btn my-2 rounded-sm bg-sky-600 text-white py-1 px-4">Filter</button>
+                                class="w-full hover:bg-sky-700 filter-btn my-2 rounded-sm bg-sky-600 text-white py-1 px-4">Filter</button>
+
                         </form>
                     </div>
                 </div>
+
             </div>
         </div>
         <div>
@@ -93,7 +125,7 @@
             <div class="grid grid-cols-5 gap-3 z-[1] relative">
                 @foreach ($products as $p)
                     <li
-                        class= "bg-slate-200 shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between  leading-8  ">
+                        class= "bg-slate-200 border-slate-400 border-2 shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between  leading-8  ">
                         <img class="min-h-[180px] w-full" src="{{ asset($p->thumb_image) }}" />
                         <div class="absolute w-full flex justify-between">
                             <span class="bg-sky-600 rounded-sm text-white text-sm  py-1 px-2">
@@ -124,9 +156,11 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Filter on Type
             $(".type-filter").on("click", function() {
                 window.location.replace($(this).data("url"));
             });
+            // Filter on brand
 
             $(".brand-filter").on("click", function(e) {
                 const brands = $(".brand-filter:checked");
@@ -137,6 +171,20 @@
                 $brandsIDStr = brandsID.join(",");
                 $(".brand-slug").val($brandsIDStr);
             })
+            // Filter on price 
+            str = $(".price-range").val()
+            const priceRange = str.split(",");
+            $(".price-from").on("change", function() {
+                $price = $(this).val();
+                priceRange[0] = $price;
+                $(".price-range").val(priceRange);
+
+            });
+            $(".price-to").on("change", function() {
+                $price = $(this).val();
+                priceRange[1] = $price;
+                $(".price-range").val(priceRange);
+            });
         });
     </script>
 @endpush

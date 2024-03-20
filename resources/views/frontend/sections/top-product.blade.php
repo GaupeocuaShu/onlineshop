@@ -4,7 +4,7 @@
     <ul class="grid  grid-cols-6 py-5 gap-3 cursor-pointer ">
         @foreach ($topProducts as $t)
             <li
-                class="relative hover:shadow-xl hover:-translate-y-1 transition-all hover:border-cyan-600 flex flex-col justify-between border-2 leading-8  border-slate-100">
+                class= "bg-slate-200 shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between  leading-8  ">
                 <img class="min-h-[180px] w-full" src="{{ asset($t->thumb_image) }}" />
                 <div class="absolute w-full flex justify-between">
                     <span class="bg-sky-700 rounded-sm text-white text-sm  py-1 px-2">

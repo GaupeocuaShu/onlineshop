@@ -34,6 +34,11 @@ class HomeController extends Controller
         $activeSub = null; 
         $brandSlugs = null; 
         $brandSlugsID = null; 
+        $priceRange = null; 
+        // If Price was chosen 
+        if($request->price_range){ 
+            $priceRange = explode(",",$request->price_range);  
+        }
         // if brand filter was chosen 
 
         if($request->brand_slug) {
@@ -69,6 +74,18 @@ class HomeController extends Controller
             ->where(function($query) use ($brandSlugsID){
                 if($brandSlugsID) $query->whereIn('brand_id',array_merge(...$brandSlugsID));
             })
+            ->where(function ($query) use ($priceRange){
+                if($priceRange){
+                    if(isset($priceRange[0]) && isset($priceRange[1])) 
+                        $query->whereBetween('price',$priceRange); 
+                    else if(isset($priceRange[0])) 
+                        $query->where('price',">=",$priceRange); 
+                    else
+                        $query->where('price',"<=",$priceRange); 
+                }; 
+            })
+            ->where("is_approved",1) 
+            ->where("status",1)
             ->get();
         return view("frontend.pages.category",[
             "categories" => $allCategories,
