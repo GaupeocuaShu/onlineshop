@@ -34,7 +34,9 @@ class HomeController extends Controller
         $activeSub = null; 
         $brandSlugs = null; 
         $brandSlugsID = null; 
-        $priceRange = null; 
+        $priceRange = null;  
+        // if Price Order was chosen 
+        $order = $request->order;
         // If Price was chosen 
         if($request->price_range){ 
             $priceRange = explode(",",$request->price_range);  
@@ -86,6 +88,7 @@ class HomeController extends Controller
             })
             ->where("is_approved",1) 
             ->where("status",1)
+            ->orderBy("price",$order ? $order : "")
             ->get();
         return view("frontend.pages.category",[
             "categories" => $allCategories,

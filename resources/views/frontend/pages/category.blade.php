@@ -12,7 +12,16 @@
     $from = null;
     $to = null;
     if (isset($paras['price_range'])) {
-        [$from, $to] = explode(',', $paras['price_range']);
+        $array = explode(',', $paras['price_range']);
+        $from = $array[0];
+        if (isset($array[1])) {
+            $to = $array[1];
+        }
+    }
+    // check if price order is filtered
+    $order = 'asc';
+    if (isset($paras['order'])) {
+        $order = $paras['order'];
     }
 @endphp
 @extends('frontend.layout.master')
@@ -109,8 +118,8 @@
             </div>
         </div>
         <div>
-            {{-- Type  --}}
             <div class=  " bg-slate-200 p-4 rounded-lg flex gap-5 text-center mb-7 cursor-pointer">
+                {{-- Type  --}}
                 @foreach (getAllType() as $key => $type)
                     @php
                         $paras_2 = $paras;
@@ -121,6 +130,22 @@
                         <a href="{{ route('product', $paras_2) }}">{{ $type }}</a>
                     </span>
                 @endforeach
+                {{-- Price --}}
+                @php
+                    $paras_2 = $paras;
+
+                @endphp
+                <div>
+                    <select class="price-order-filter">
+                        <option {{ $order == 'asc' ? 'selected' : ' ' }}
+                            value="{{ route('product', [...$paras_2, 'order' => 'asc']) }}">
+                            Price:&ensp; From Low To High
+                        </option>
+                        <option {{ $order == 'desc' ? 'selected' : ' ' }}
+                            value="{{ route('product', [...$paras_2, 'order' => 'desc']) }}">
+                            Price:&ensp; From High To Low </option>
+                    </select>
+                </div>
             </div>
             <div class="grid grid-cols-5 gap-3 z-[1] relative">
                 @foreach ($products as $p)
@@ -156,12 +181,13 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // Filter on Type
+            // Filter on Type -----------------------
             $(".type-filter").on("click", function() {
                 window.location.replace($(this).data("url"));
             });
-            // Filter on brand
+            // Filter on Type -----------------------
 
+            // Filter on brand -----------------------
             $(".brand-filter").on("click", function(e) {
                 const brands = $(".brand-filter:checked");
                 const brandsID = [];
@@ -171,7 +197,9 @@
                 $brandsIDStr = brandsID.join(",");
                 $(".brand-slug").val($brandsIDStr);
             })
-            // Filter on price 
+            // Filter on brand -----------------------
+
+            // Filter on price ------------------------
             str = $(".price-range").val()
             const priceRange = str.split(",");
             $(".price-from").on("change", function() {
@@ -180,11 +208,22 @@
                 $(".price-range").val(priceRange);
 
             });
+
             $(".price-to").on("change", function() {
                 $price = $(this).val();
                 priceRange[1] = $price;
                 $(".price-range").val(priceRange);
             });
+            // Filter on price ------------------------
+
+            // Filter on price order ------------------------
+
+            $(".price-order-filter").on("change", function() {
+                const url = $(this).val();
+                window.location.replace(url);
+            })
+            // Filter on price order ------------------------
+
         });
     </script>
 @endpush
