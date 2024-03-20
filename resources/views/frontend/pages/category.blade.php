@@ -117,34 +117,51 @@
 
             </div>
         </div>
-        <div>
-            <div class=  " bg-slate-200 p-4 rounded-lg flex gap-5 text-center mb-7 cursor-pointer">
-                {{-- Type  --}}
-                @foreach (getAllType() as $key => $type)
+        <div class="flex-1">
+            <div
+                class="justify-between items-center bg-slate-200 p-4 rounded-lg flex text-center mb-7 cursor-pointer w-full">
+                <div class="flex gap-5 ">
+                    {{-- Type  --}}
+                    @foreach (getAllType() as $key => $type)
+                        @php
+                            $paras_2 = $paras;
+                            $paras_2['type'] = $key;
+                        @endphp
+                        <span data-url="{{ route('product', $paras_2) }}"
+                            class=" type-filter rounded-sm p-2 min-w-[80px] {{ $key == $activeType ? 'bg-sky-600 text-white' : 'bg-white text-black' }}">
+                            <a href="{{ route('product', $paras_2) }}">{{ $type }}</a>
+                        </span>
+                    @endforeach
+                    {{-- Price --}}
                     @php
                         $paras_2 = $paras;
-                        $paras_2['type'] = $key;
-                    @endphp
-                    <span data-url="{{ route('product', $paras_2) }}"
-                        class=" type-filter rounded-sm p-2 min-w-[80px] {{ $key == $activeType ? 'bg-sky-600 text-white' : 'bg-white text-black' }}">
-                        <a href="{{ route('product', $paras_2) }}">{{ $type }}</a>
-                    </span>
-                @endforeach
-                {{-- Price --}}
-                @php
-                    $paras_2 = $paras;
 
-                @endphp
+                    @endphp
+                    <div>
+                        <select class="price-order-filter">
+                            <option {{ $order == 'asc' ? 'selected' : ' ' }}
+                                value="{{ route('product', [...$paras_2, 'order' => 'asc']) }}">
+                                Price:&ensp; From Low To High
+                            </option>
+                            <option {{ $order == 'desc' ? 'selected' : ' ' }}
+                                value="{{ route('product', [...$paras_2, 'order' => 'desc']) }}">
+                                Price:&ensp; From High To Low </option>
+                        </select>
+                    </div>
+                </div>
+                {{-- pagination --}}
                 <div>
-                    <select class="price-order-filter">
-                        <option {{ $order == 'asc' ? 'selected' : ' ' }}
-                            value="{{ route('product', [...$paras_2, 'order' => 'asc']) }}">
-                            Price:&ensp; From Low To High
-                        </option>
-                        <option {{ $order == 'desc' ? 'selected' : ' ' }}
-                            value="{{ route('product', [...$paras_2, 'order' => 'desc']) }}">
-                            Price:&ensp; From High To Low </option>
-                    </select>
+                    @php
+                        $currentPage = $products->currentPage();
+                        $lastPage = $products->lastPage();
+                    @endphp
+                    <span>{{ $currentPage }}/{{ $lastPage }}</span>&emsp;
+                    <a href="{{ route('product', [...$paras, 'page' => $currentPage == 1 ? $currentPage : $currentPage - 1]) }}"
+                        class="border-2 border-slate-200 bg-slate-300 py-2 px-3 hover:bg-slate-400">
+                        < </a>
+                            <a href="{{ route('product', [...$paras, 'page' => $currentPage == $lastPage ? $currentPage : $currentPage + 1]) }}"
+                                class=" border-2 border-slate-200 bg-slate-300 py-2 px-3 hover:bg-slate-400">
+                                > </a>
                 </div>
             </div>
             <div class="grid grid-cols-5 gap-3 z-[1] relative">
@@ -152,12 +169,12 @@
                     <li
                         class= "bg-slate-200 border-slate-400 border-2 shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between  leading-8  ">
                         <img class="min-h-[180px] w-full" src="{{ asset($p->thumb_image) }}" />
-                        <div class="absolute w-full flex justify-between">
-                            <span class="bg-sky-600 rounded-sm text-white text-sm  py-1 px-2">
+                        <div class="absolute w-full text-xs flex justify-between">
+                            <span class="bg-sky-600 rounded-sm text-white  p-1 ">
                                 {{ getProductType($p) }}
                             </span>
                             @if (checkSale($p))
-                                <span class="bg-sky-700 rounded-sm text-white text-sm py-1 px-2">
+                                <span class="bg-sky-700 rounded-sm text-white p-1 ">
                                     {{ calculateSalePercent($p) . '%' }}
                                 </span>
                             @endif

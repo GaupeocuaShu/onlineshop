@@ -4,14 +4,14 @@
     <ul class="grid  grid-cols-6 py-5 gap-3 cursor-pointer ">
         @foreach ($topProducts as $t)
             <li
-                class= "bg-slate-200 shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between  leading-8  ">
+                class= "bg-slate-200 border-slate-400 border-2 shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between  leading-8  ">
                 <img class="min-h-[180px] w-full" src="{{ asset($t->thumb_image) }}" />
-                <div class="absolute w-full flex justify-between">
-                    <span class="bg-sky-700 rounded-sm text-white text-sm  py-1 px-2">
+                <div class="absolute w-full text-xs flex justify-between">
+                    <span class="bg-sky-600 rounded-sm text-white  p-1 ">
                         {{ getProductType($t) }}
                     </span>
                     @if (checkSale($t))
-                        <span class="bg-sky-700 rounded-sm text-white text-sm py-1 px-2">
+                        <span class="bg-sky-700 rounded-sm text-white p-1 ">
                             {{ calculateSalePercent($t) . '%' }}
                         </span>
                     @endif
