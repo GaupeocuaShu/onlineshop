@@ -35,7 +35,7 @@ class HomeController extends Controller
 
         // Product Detail 
         $product = Product::where("slug",$request->product)->first();
-        $shop = ShopProfile::findOrFail($product->shop_profile_id);
+        if($product) $shop = ShopProfile::findOrFail($product->shop_profile_id);
         if($request->product) return view("frontend.pages.product",[
             "categories" => $allCategories,
             "product" => $product,

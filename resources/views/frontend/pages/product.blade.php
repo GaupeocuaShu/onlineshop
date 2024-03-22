@@ -139,6 +139,38 @@
                 </div>
             </div>
         </div>
+
+        <div class="bg-white p-5 my-7  gap-5">
+            <div>
+                <div class="bg-slate-100 p-3 font-semibold text-lg">PRODUCT DETAIL</div>
+                <div class="my-10 leading-10 p-3">
+                    <div class="flex gap-16">
+                        <span class="font-light min-w-[100px]">Category</span>
+                        <span>{{ $product->category->name }} - {{ $product->subCategory->name }}</span>
+                    </div>
+                    <div class="flex gap-16">
+                        <span class="font-light min-w-[100px]">Quantity</span>
+                        <span>{{ $product->qty }}</span>
+                    </div>
+                    <div class="flex gap-16">
+                        <span class="font-light min-w-[100px]">Brand</span>
+                        <span>{{ $product->brand->name }}</span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="bg-slate-100 p-3 font-semibold text-lg">PRODUCT DESCRIPTION</div>
+                <div class="my-10 leading-10 p-3">
+                    <div class="gap-16">
+                        {!! $product->short_description !!}
+                    </div>
+                    <div class="gap-16">
+                        {!! $product->long_description !!}
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -149,7 +181,7 @@
 @endpush
 @push('scripts')
     <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
