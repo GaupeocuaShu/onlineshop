@@ -50,30 +50,40 @@
 
                     </div>
                     @foreach ($product->productVariants as $variant)
-                        <div class="flex  my-10 ">
-                            <span class="font-light  min-w-[100px] capitalize">{{ $variant->name }}</span>
-                            <div class="flex flex-wrap gap-4 ">
-                                @foreach ($variant->product_variant_item as $item)
-                                    <p data-name="{{ $item->name }}"
-                                        class=" variant-item-button border-2  text-sm border-slate-200 px-3 py-1 cursor-pointer">
-                                        {{ $item->name }} </p>
-                                @endforeach
+                        @if ($variant->status == 1)
+                            <div class="flex  my-10 ">
+                                <span class="font-light  min-w-[100px] capitalize">{{ $variant->name }}</span>
+                                <div class="flex flex-wrap gap-4 ">
+                                    @foreach ($variant->product_variant_item as $item)
+                                        @if ($item->status == 1)
+                                            <p data-isswipe={{ $variant->is_swipe }} data-variantid="{{ $variant->id }}"
+                                                data-name="{{ $item->name }}"
+                                                class="variant-{{ $variant->id }} variant-item-button border-2  text-sm border-slate-200 px-3 py-1 cursor-pointer">
+                                                {{ $item->name }} </p>
+                                        @endif
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     @endforeach
-                    <div class="flex  my-10 ">
+                    <div class="flex  my-10 items-center">
                         <span class="font-light min-w-[100px] capitalize">Quantity</span>
                         <div class="flex">
-                            <p class="cursor-pointer border-2 border-slate-200 py-1 px-3">-</p>
-                            <p class="cursor-pointer border-y-2 border-slate-200 py-1 px-5">1</p>
-                            <p class="cursor-pointer border-2 border-slate-200 py-1 px-3">+</p>
+                            <p class="decrease cursor-pointer border-2 border-slate-200 py-1 px-3">-</p>
+                            <input value="1" type="text"
+                                class="quantity text-center w-[80px] border-x-0 border-y-2 border-slate-200 focus:ring-0 focus:border-slate-200"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+
+                            <p data-max="{{ $product->qty }}"
+                                class="increase cursor-pointer border-2 border-slate-200 py-1 px-3">+</p>
                         </div>
+                        <p class="text-sm font-light">&emsp;{{ $product->qty }} is Available</p>
                     </div>
                     <div class="flex gap-7">
-                        <button class="text-white bg-sky-600 text-xl rounded-lg border-sky-800 py-2 px-6"><i
+                        <button class="text-white bg-sky-600 text-xl rounded-sm border-sky-600 py-2 px-6"><i
                                 class="fa-solid fa-cart-shopping "></i>&ensp;Add To
                             Cart</button>
-                        <button class="text-xl rounded-lg bg-sky-700 text-white border-sky-600 py-2 px-6">
+                        <button class="text-xl rounded-sm text-sky-600 border-2 border-sky-600 py-2 px-6">
                             <i class="fa-solid fa-money-bill-wave"></i>&ensp;Check Out</button>
 
                     </div>
@@ -93,7 +103,7 @@
 @endpush
 @push('scripts')
     <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
@@ -115,11 +125,7 @@
                 swiper: swiper,
             },
         });
-        $(".variant-item-button").on("click", function() {
-            const name = $(this).data("name");
-            moveToSlide(name)
-        });
-
+        // Move slide 
         function moveToSlide(name) {
             var slides = $('.swiper-slide');
             slides.each(function(index) {
@@ -129,5 +135,40 @@
                 }
             });
         }
+        // Variant item handle 
+        $(".variant-item-button").on("click", function() {
+            // Move slide 
+            if ($(this).data("isswipe")) {
+                const name = $(this).data("name");
+                moveToSlide(name)
+            }
+            // Handle active
+            const variantId = $(this).data("variantid");
+            $(".variant-" + variantId).removeClass("border-sky-600");
+            $(this).addClass("border-sky-600");
+        });
+        // Quantity item handle  
+        $(".increase").on("click", function() {
+            let qty = parseInt($(".quantity").val());
+            let max = $(this).data("max");
+            console.log(max);
+            if (qty + 1 > max) return;
+            qty = qty + 1;
+            $(".quantity").val(qty);
+        })
+        $(".decrease").on("click", function() {
+            let qty = parseInt($(".quantity").val());
+            if (qty <= 1) return;
+            qty = qty - 1;
+            $(".quantity").val(qty);
+        })
+        $(".quantity").on("change", function() {
+            const max = $(".increase").data("max");
+            let value = $(this).val();
+            console.log(value);
+            if (value <= 0) value = 1;
+            else if (value > max) value = max;
+            $(this).val(value);
+        })
     </script>
 @endpush
