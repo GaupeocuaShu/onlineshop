@@ -105,7 +105,18 @@ class ProductVariantController extends Controller
         $variant->update(["status" => $newStatus]);
         return response([
             "status" => "success",
-            "message" => "Update Product Variant Successfullt",
+            "message" => "Update Product Variant Successfully",
         ]);
     }
+    public function changeIsSwipe(string $id)
+    {
+        $variant = ProductVariant::findOrFail($id);
+        $newStatus = $variant->is_swipe == 0 ? 1 : 0;
+        $variant->update(["is_swipe" => $newStatus]);
+        return response([
+            "status" => "success",
+            "message" => "Update Product Variant Successfully",
+        ]);
+    }
+
 }

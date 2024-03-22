@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Vendor\ShopProfileController;
 use Illuminate\Http\Request;
 use App\Models\Brand;
+use App\Models\ProductImageGallery;
+
 // Profile -------------------------------------------------
 Route::post("profile-update",[ProfileController::class,"profileUpdate"])->name("profile-update");
 
@@ -47,11 +49,13 @@ Route::resource("product", ProductController::class);
 
 
 // Product Gallery  -------------------------------------------------
+Route::put("product/{id}/image-gallery",[ProductImageGalleryController::class,"updateName"])->name("product.image-gallery");
 Route::resource("product.image-gallery", ProductImageGalleryController::class);
 // Product Gallery  -------------------------------------------------
 
 
 // Product Variants -------------------------------------------------
+Route::put("product/variant/{id}/change-is-swipe", [ProductVariantController::class, 'changeIsSwipe'])->name("product.variant.change_is_swipe");
 Route::put("product/variant/{id}/change-status", [ProductVariantController::class, 'changeStatus'])->name("product.variant.change_status");
 Route::resource("product.variant", ProductVariantController::class);
 // Product Variants -------------------------------------------------

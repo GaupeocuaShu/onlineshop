@@ -69,6 +69,7 @@ Route::get("product-from-vendor/index", [ProductFromVendorController::class, "in
 
 
 // Product Gallery  -------------------------------------------------
+Route::put("product/{id}/image-gallery",[ProductImageGalleryController::class,"updateName"])->name("product.image-gallery");
 Route::resource("product.image-gallery", ProductImageGalleryController::class);
 // Product Gallery  -------------------------------------------------
 

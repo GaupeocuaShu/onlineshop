@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("name");
             $table->boolean("status");
             $table->integer("product_id");
+            $table->boolean("is_swipe");
             $table->timestamps();
         });
     }

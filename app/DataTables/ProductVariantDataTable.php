@@ -39,13 +39,28 @@ class ProductVariantDataTable extends DataTable
                     </label>';
                 }
             })
+            ->addColumn('is_swipe', function ($query) use ($role) {
+                if ($query->is_swipe == 1) {
+                    return
+                        '<label class="custom-switch mt-2">
+                        <input type="checkbox" checked data-url=" ' . route("$role.product.variant.change_is_swipe", $query->id) . '" class="status custom-switch-input">
+                        <span class="custom-switch-indicator"></span>
+                    </label>';
+                } else {
+                    return
+                        '<label class="custom-switch mt-2">
+                        <input type="checkbox" data-url=" ' . route("$role.product.variant.change_is_swipe", $query->id) . '"  class="status custom-switch-input">
+                        <span class="custom-switch-indicator"></span>
+                    </label>';
+                }
+            })
             ->addColumn('action', function ($query) use ($role){
                 $moreBtn = "<a href = '" . route("$role.product.variant.item.index", [$query->product_id, $query->id]) . " ' class='ml-3 btn btn-primary'><i class='fa-solid fa-list'></i> </a> &emsp;";
                 $updateBtn = "<a href = '" . route("$role.product.variant.edit", [$query->product_id, $query->id]) . " ' class='btn btn-primary'><i class='fa-solid fa-pen-to-square'></i> </a> &emsp;";
                 $deleteBtn = "<button class='delete btn btn-danger' data-url='". route("$role.product.variant.destroy",  [$query->product_id, $query->id]) ."'><i class='fa-solid fa-trash-can-arrow-up'></i></button>"; 
                 return  $moreBtn.$updateBtn . $deleteBtn  ;
             })
-            ->rawColumns(["action", "status"])
+            ->rawColumns(["action", "status","is_swipe"])
             ->setRowId('id');
     }
 
@@ -88,7 +103,8 @@ class ProductVariantDataTable extends DataTable
             Column::make('id')->width(50),
             Column::make('name'),
             Column::computed('status'),
-            Column::computed('action')
+            Column::computed('is_swipe'),
+            Column::computed('action') 
                 ->exportable(false)
                 ->printable(false)
                 ->width(200)

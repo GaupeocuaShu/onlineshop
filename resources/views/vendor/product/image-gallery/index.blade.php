@@ -60,4 +60,32 @@
 @endsection
 @push('scripts')
     {{ $dataTable->scripts() }}
+    <script>
+        $("body").on("change", ".input", function() {
+            input = $(this).val();
+            url = $(this).data("url");
+            $.ajax({
+                type: "PUT",
+                url: url,
+                data: {
+                    input: input
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    if (response.status == 'success') {
+                        Toastify({
+                            text: response.message,
+                            className: "info",
+                            style: {
+                                background: "linear-gradient(to right, #00b09b, #96c93d)",
+                            }
+                        }).showToast();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert("error");
+                }
+            });
+        });
+    </script>
 @endpush

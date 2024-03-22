@@ -7,7 +7,7 @@
                 <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper mySwiper2">
                     <div class="swiper-wrapper">
                         @foreach ($product->productImageGalleries as $image)
-                            <div class="swiper-slide">
+                            <div class="swiper-slide " data-name="{{ $image->name }}">
                                 <img src="{{ $image->image }}" />
                             </div>
                         @endforeach
@@ -33,7 +33,8 @@
                     @if (checkSale($product))
                         <span class="text-slate-400 text-xl line-through">
                             ${{ $product->price }}</span>${{ $product->offer_price }}
-                        <span class="text-sm bg-sky-500 text-white p-1">{{ calculateSalePercent($product) }}% Sale</span>
+                        <span class="text-sm bg-sky-500 text-white p-1">{{ calculateSalePercent($product) }}%
+                            Sale</span>
                     @else
                         ${{ $product->price }}
                     @endif
@@ -53,7 +54,8 @@
                             <span class="font-light  min-w-[100px] capitalize">{{ $variant->name }}</span>
                             <div class="flex flex-wrap gap-4 ">
                                 @foreach ($variant->product_variant_item as $item)
-                                    <p class="border-2  text-sm border-slate-200 px-3 py-1 cursor-pointer">
+                                    <p data-name="{{ $item->name }}"
+                                        class=" variant-item-button border-2  text-sm border-slate-200 px-3 py-1 cursor-pointer">
                                         {{ $item->name }} </p>
                                 @endforeach
                             </div>
@@ -91,7 +93,7 @@
 @endpush
 @push('scripts')
     <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
@@ -113,5 +115,19 @@
                 swiper: swiper,
             },
         });
+        $(".variant-item-button").on("click", function() {
+            const name = $(this).data("name");
+            moveToSlide(name)
+        });
+
+        function moveToSlide(name) {
+            var slides = $('.swiper-slide');
+            slides.each(function(index) {
+                if ($(this).data('name').toLowerCase() === name.toLowerCase()) {
+                    swiper2.slideTo(index);
+                    return false; // Exit the loop once the slide is found
+                }
+            });
+        }
     </script>
 @endpush

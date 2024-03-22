@@ -78,4 +78,13 @@ class ProductImageGalleryController extends Controller
             "is_empty" => isTableEmpty(ProductImageGallery::where("product_id",$product_id)->get())
         ]);
     }
+    public function updateName(Request $request,string $id){
+        $input = $request->input; 
+        $productImage = ProductImageGallery::findOrFail($id);
+        $productImage->update(['name' => $input]);
+        return response([
+            "status" => "success",
+            "message" => "Update Image Name Successfully",
+        ]);
+    }
 }
