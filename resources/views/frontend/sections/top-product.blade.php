@@ -3,8 +3,8 @@
     <h1 class="text-2xl p-2">TOP PRODUCT</h1>
     <ul class="grid  grid-cols-6 py-5 gap-3 cursor-pointer ">
         @foreach ($topProducts as $t)
-            <li
-                class= "bg-slate-200 border-slate-400 border-2 shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between  leading-8  ">
+            <li data-url="{{ route('product', ['product' => $t->slug]) }}"
+                class= "bg-slate-200 product border-slate-400 border-2 shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between  leading-8  ">
                 <img class="min-h-[180px] w-full" src="{{ asset($t->thumb_image) }}" />
                 <div class="absolute w-full text-xs flex justify-between">
                     <span class="bg-sky-600 rounded-sm text-white  p-1 ">
@@ -28,3 +28,13 @@
         @endforeach
     </ul>
 </div>
+
+
+@push('scripts')
+    <script>
+        $(".product").on("click", function() {
+            const url = $(this).data("url");
+            window.location.replace(url);
+        });
+    </script>
+@endpush
