@@ -32,11 +32,11 @@
                 <div class="rounded-lg text-3xl text-sky-600 my-4 flex items-center gap-3 bg-slate-200 p-4">
                     @if (checkSale($product))
                         <span class="text-slate-400 text-xl line-through">
-                            ${{ $product->price }}</span>${{ $product->offer_price }}
+                            ${{ $product->price }}</span> <span class="price">${{ $product->offer_price }}</span>
                         <span class="text-sm bg-sky-500 text-white p-1">{{ calculateSalePercent($product) }}%
                             Sale</span>
                     @else
-                        ${{ $product->price }}
+                        <span class="price"> ${{ $product->price }}</span>
                     @endif
                 </div>
                 <div class="">
@@ -56,8 +56,9 @@
                                 <div class="flex flex-wrap gap-4 ">
                                     @foreach ($variant->product_variant_item as $item)
                                         @if ($item->status == 1)
-                                            <p data-isswipe={{ $variant->is_swipe }} data-variantid="{{ $variant->id }}"
-                                                data-name="{{ $item->name }}"
+                                            <p data-price="{{ $item->price }}" data-isswipe={{ $variant->is_swipe }}
+                                                data-variantid="{{ $variant->id }}" data-name="{{ $item->name }}"
+                                                data-id = "{{ $item->id }}"
                                                 class="variant-{{ $variant->id }} variant-item-button border-2  text-sm border-slate-200 px-3 py-2 cursor-pointer">
                                                 {{ $item->name }} </p>
                                         @endif
@@ -80,13 +81,22 @@
                         <p class="text-sm font-light">&emsp;{{ $product->qty }} is Available</p>
                     </div>
                     <div class="flex gap-7">
-                        <button
-                            class="hover:bg-white hover:text-sky-600 border-2 hover:border-sky-600 transition-all text-white bg-sky-600 text-xl rounded-sm border-sky-600 py-2 px-6"><i
-                                class="fa-solid fa-cart-shopping "></i>&ensp;Add To
-                            Cart</button>
-                        <button
-                            class="hover:bg-sky-600 transition-all hover:text-white text-xl rounded-sm text-sky-600 border-2 border-sky-600 py-2 px-6">
-                            <i class="fa-solid fa-money-bill-wave"></i>&ensp;Check Out</button>
+                        <form>
+                            <input type="hidden" name="temp_id" value="{{ $product->id }}" />
+                            <input type="hidden" name="id" />
+                            <input type="hidden" name="name" value="{{ $product->name }}" />
+                            <input type="hidden" name="price"
+                                value="{{ checkSale($product) ? $product->offer_price : $product->price }}" />
+                            <input type="hidden" name="qty" value="1" />
+                            <input type="hidden" name="variants[]" />
+                            <button
+                                class="add-to-cart hover:bg-white hover:text-sky-600 border-2 hover:border-sky-600 transition-all text-white bg-sky-600 text-xl rounded-sm border-sky-600 py-2 px-6"><i
+                                    class="fa-solid fa-cart-shopping "></i>&ensp;Add To
+                                Cart</button>
+                            <button
+                                class="hover:bg-sky-600 transition-all hover:text-white text-xl rounded-sm text-sky-600 border-2 border-sky-600 py-2 px-6">
+                                <i class="fa-solid fa-money-bill-wave"></i>&ensp;Check Out</button>
+                        </form>
 
                     </div>
                     <div class="text-sm my-3">
@@ -181,7 +191,7 @@
 @endpush
 @push('scripts')
     <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
@@ -213,19 +223,45 @@
                 }
             });
         }
-        // Variant item handle 
+        // Variant item handle --------------------------
         $(".variant-item-button").on("click", function() {
+            const variantId = $(this).data("variantid");
+
             // Move slide 
             if ($(this).data("isswipe")) {
                 const name = $(this).data("name");
                 moveToSlide(name)
             }
+            // Add variant Price
+            if ($(this).data("price") > 0) {
+                let price = parseInt($(".price").html());
+                price += parseInt((this).data("price"));
+                $(".price").html(price);
+                $("input[name='price']").val(price);
+            }
+
+
             // Handle active
-            const variantId = $(this).data("variantid");
-            $(".variant-" + variantId).removeClass("border-sky-600");
-            $(this).addClass("border-sky-600");
+            $(".variant-" + variantId).removeClass("active border-sky-600");
+            $(this).addClass("active border-sky-600");
+
+            // Handle input id and input variants 
+
+            const id = $('input[name="temp_id"]').val();
+            let newid = id;
+            let allVarNames = [];
+            $(".variant-item-button.active").each(function(i, v) {
+                newid += $(v).data("id");
+                $('input[name="id"]').val(newid);
+                allVarNames.push($(v).data("name"))
+            });
+            $('input[name="variants[]"]').val(allVarNames);
+            console.log(newid);
+
         });
-        // Quantity item handle  
+        // Variant item handle --------------------------
+
+        // Quantity item handle  ---------------------------
         $(".increase").on("click", function() {
             let qty = parseInt($(".quantity").val());
             let max = $(this).data("max");
@@ -233,20 +269,45 @@
             if (qty + 1 > max) return;
             qty = qty + 1;
             $(".quantity").val(qty);
+            $("input[name='qty']").val(qty);
         })
         $(".decrease").on("click", function() {
             let qty = parseInt($(".quantity").val());
             if (qty <= 1) return;
             qty = qty - 1;
             $(".quantity").val(qty);
+            $("input[name='qty']").val(qty);
+
         })
         $(".quantity").on("change", function() {
             const max = $(".increase").data("max");
-            let value = $(this).val();
-            console.log(value);
-            if (value <= 0) value = 1;
-            else if (value > max) value = max;
-            $(this).val(value);
+            let qty = $(this).val();
+            console.log(qty);
+            if (qty <= 0) qty = 1;
+            else if (qty > max) qty = max;
+            $(this).val(qty);
+            $("input[name='qty']").val(qty);
+
         })
+        // Quantity item handle  ---------------------------
+
+        // Add to cart 
+        $(".add-to-cart").on("click", function(e) {
+            e.preventDefault();
+            const data = $(this).closest("form").serialize();
+            // Send form by ajax 
+            $.ajax({
+                type: "POST",
+                url: "{{ route('add-to-cart') }}",
+                data: data,
+                dataType: "JSON",
+                success: function(response, textStatus, jqXHR) {
+                    //Do anything
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.table(jqXHR)
+                }
+            });
+        });
     </script>
 @endpush

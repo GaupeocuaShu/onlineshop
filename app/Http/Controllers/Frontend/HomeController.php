@@ -112,4 +112,9 @@ class HomeController extends Controller
             ]);
         }
     }
+
+    // Add to cart 
+    public function addToCart(Request $request){
+        dd($request->all());
+    }
 }
