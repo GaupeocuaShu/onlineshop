@@ -80,16 +80,62 @@
                         <p class="text-sm font-light">&emsp;{{ $product->qty }} is Available</p>
                     </div>
                     <div class="flex gap-7">
-                        <button class="text-white bg-sky-600 text-xl rounded-sm border-sky-600 py-2 px-6"><i
+                        <button
+                            class="hover:bg-white hover:text-sky-600 border-2 hover:border-sky-600 transition-all text-white bg-sky-600 text-xl rounded-sm border-sky-600 py-2 px-6"><i
                                 class="fa-solid fa-cart-shopping "></i>&ensp;Add To
                             Cart</button>
-                        <button class="text-xl rounded-sm text-sky-600 border-2 border-sky-600 py-2 px-6">
+                        <button
+                            class="hover:bg-sky-600 transition-all hover:text-white text-xl rounded-sm text-sky-600 border-2 border-sky-600 py-2 px-6">
                             <i class="fa-solid fa-money-bill-wave"></i>&ensp;Check Out</button>
 
                     </div>
                     <div class="text-sm my-3">
                         <i class="fa-regular fa-circle-check"></i>&ensp;Free return in 15 days !
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 my-7 flex items-center gap-5">
+
+            <div class="flex items-center gap-5">
+                <div><img src="{{ asset($shop->banner) }}" width="100" /></div>
+                <div class="flex flex-col justify-between border-r-2 pr-5 border-slate-200">
+                    <span class="text-2xl">{{ $shop->name }}</span>
+                    <span class="text-sm">Online 2 hours ago</span>
+                    <span class="my-3 flex">
+                        <button class="text-sky-600 border-sky-600 border-2 w-[150px] py-1 px-3"><i
+                                class="fa-brands fa-rocketchat"></i>&ensp;Chat</button>&ensp;
+                        <button class="text-sky-600 border-sky-600 border-2 w-[150px] py-1 px-3"><i
+                                class="fa-solid fa-shop"></i>&ensp;View Shop</button>
+                    </span>
+
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-x-10 gap-y-5 ">
+                <div>
+                    <span>Vote</span> &emsp;
+                    <span class="text-sky-600">94K</span>
+                </div>
+                <div>
+                    <span>Feedback Rate</span>&emsp;
+                    <span class="text-sky-600">85%</span>
+                </div>
+                <div>
+                    <span>Join</span>&emsp;
+                    <span class="text-sky-600">5 Years ago</span>
+                </div>
+                <div>
+                    <span>Products</span>&emsp;
+                    <span class="text-sky-600">94</span>
+                </div>
+                <div>
+                    <span>Response Time</span>&emsp;
+                    <span class="text-sky-600">In hours</span>
+                </div>
+                <div>
+                    <span>Follower</span>&emsp;
+                    <span class="text-sky-600">100K</span>
                 </div>
             </div>
         </div>
@@ -103,7 +149,7 @@
 @endpush
 @push('scripts')
     <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->

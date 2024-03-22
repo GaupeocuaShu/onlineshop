@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\FlashSellItem;
 use App\Models\Product;
+use App\Models\ShopProfile;
 use App\Models\Slider;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
@@ -34,9 +35,11 @@ class HomeController extends Controller
 
         // Product Detail 
         $product = Product::where("slug",$request->product)->first();
+        $shop = ShopProfile::findOrFail($product->shop_profile_id);
         if($request->product) return view("frontend.pages.product",[
             "categories" => $allCategories,
             "product" => $product,
+            "shop" => $shop,
         ]);
         // Product based on category filter
         else {
