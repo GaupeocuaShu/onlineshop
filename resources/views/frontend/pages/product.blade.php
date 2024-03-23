@@ -59,7 +59,7 @@
                                             <p data-price="{{ $item->price }}" data-isswipe={{ $variant->is_swipe }}
                                                 data-variantid="{{ $variant->id }}" data-name="{{ $item->name }}"
                                                 data-id = "{{ $item->id }}"
-                                                class="variant-{{ $variant->id }} variant-item-button border-2  text-sm border-slate-200 px-3 py-2 cursor-pointer">
+                                                class="variant-{{ $variant->id }} variant-item-button border-2  text-sm  px-3 py-2 cursor-pointer">
                                                 {{ $item->name }} </p>
                                         @endif
                                     @endforeach
@@ -87,8 +87,8 @@
                             <input type="hidden" name="name" value="{{ $product->name }}" />
                             <input type="hidden" name="price"
                                 value="{{ checkSale($product) ? $product->offer_price : $product->price }}" />
-                            <input type="hidden" name="qty" value="1" />
-                            <input type="hidden" name="variants[]" />
+                            <input type="hidden" name="quantity" value="1" />
+                            <input type="hidden" name="attributes[]" />
                             <button
                                 class="add-to-cart hover:bg-white hover:text-sky-600 border-2 hover:border-sky-600 transition-all text-white bg-sky-600 text-xl rounded-sm border-sky-600 py-2 px-6"><i
                                     class="fa-solid fa-cart-shopping "></i>&ensp;Add To
@@ -191,7 +191,7 @@
 @endpush
 @push('scripts')
     <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
@@ -242,20 +242,20 @@
 
 
             // Handle active
-            $(".variant-" + variantId).removeClass("active border-sky-600");
-            $(this).addClass("active border-sky-600");
+            $(".variant-" + variantId).removeClass("act border-sky-600");
+            $(this).addClass("act border-sky-600");
 
             // Handle input id and input variants 
 
             const id = $('input[name="temp_id"]').val();
             let newid = id;
             let allVarNames = [];
-            $(".variant-item-button.active").each(function(i, v) {
+            $(".variant-item-button.act").each(function(i, v) {
                 newid += $(v).data("id");
                 $('input[name="id"]').val(newid);
                 allVarNames.push($(v).data("name"))
             });
-            $('input[name="variants[]"]').val(allVarNames);
+            $('input[name="attributes[]"]').val(allVarNames);
             console.log(newid);
 
         });
@@ -269,14 +269,14 @@
             if (qty + 1 > max) return;
             qty = qty + 1;
             $(".quantity").val(qty);
-            $("input[name='qty']").val(qty);
+            $("input[name='quantity']").val(qty);
         })
         $(".decrease").on("click", function() {
             let qty = parseInt($(".quantity").val());
             if (qty <= 1) return;
             qty = qty - 1;
             $(".quantity").val(qty);
-            $("input[name='qty']").val(qty);
+            $("input[name='quantity']").val(qty);
 
         })
         $(".quantity").on("change", function() {
@@ -286,7 +286,7 @@
             if (qty <= 0) qty = 1;
             else if (qty > max) qty = max;
             $(this).val(qty);
-            $("input[name='qty']").val(qty);
+            $("input[name='quantity']").val(qty);
 
         })
         // Quantity item handle  ---------------------------
@@ -301,8 +301,14 @@
                 url: "{{ route('add-to-cart') }}",
                 data: data,
                 dataType: "JSON",
-                success: function(response, textStatus, jqXHR) {
-                    //Do anything
+                success: function(response) {
+                    if (response.status == 'success') {
+                        Swal.fire({
+                            icon: "success",
+                            text: response.message,
+                        });
+                        $(".cart-qty").html(response.cart);
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.table(jqXHR)

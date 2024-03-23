@@ -11,7 +11,8 @@ use App\Models\ShopProfile;
 use App\Models\Slider;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
+use \Cart;
 class HomeController extends Controller
 {
     public function home(){
@@ -113,8 +114,5 @@ class HomeController extends Controller
         }
     }
 
-    // Add to cart 
-    public function addToCart(Request $request){
-        dd($request->all());
-    }
+
 }

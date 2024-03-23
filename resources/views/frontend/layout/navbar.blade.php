@@ -170,7 +170,13 @@
                 <a class="flex items-center gap-x-2">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <p class="hidden md:block">Cart</p>
-                    <div class="text-black bg-white p-1 border-1 rounded-sm border-black">0</div>
+                    <div class="cart-qty text-black bg-white p-1 border-1 rounded-sm border-black">
+                        @if (Auth::check())
+                            {{ \Cart::Session(Auth::user()->id)->getTotalQuantity() }}
+                        @else
+                            0
+                        @endif
+                    </div>
                 </a>
             </div>
 

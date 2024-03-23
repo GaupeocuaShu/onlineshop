@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -33,5 +34,5 @@ Route::get("/product",[HomeController::class,"product"])->name("product");
 
 // Add to cart 
 
-Route::post("/add-to-cart",[HomeController::class,"addToCart"])->name("add-to-cart");
+Route::post("/add-to-cart",[CartController::class,"addToCart"])->name("add-to-cart");
 require __DIR__.'/auth.php';
