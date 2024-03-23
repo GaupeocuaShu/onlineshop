@@ -16,6 +16,7 @@ use \Cart;
 class HomeController extends Controller
 {
     public function home(){
+
         $sliders = Slider::get()->sortBy("serial"); 
         $categoryBanners = Category::get()->take(6);  
         $categories = Category::with("subCategories")->get();

@@ -8,7 +8,7 @@
                     <div class="swiper-wrapper">
                         @foreach ($product->productImageGalleries as $image)
                             <div class="swiper-slide " data-name="{{ $image->name }}">
-                                <img src="{{ $image->image }}" />
+                                <img data-imageurl ="{{ $image->image }}" src="{{ $image->image }}" />
                             </div>
                         @endforeach
 
@@ -191,7 +191,7 @@
 @endpush
 @push('scripts')
     <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
@@ -226,12 +226,18 @@
         // Variant item handle --------------------------
         $(".variant-item-button").on("click", function() {
             const variantId = $(this).data("variantid");
+            let allVarNames = [];
 
-            // Move slide 
+            // Move slide and handle input image 
             if ($(this).data("isswipe")) {
                 const name = $(this).data("name");
-                moveToSlide(name)
+                moveToSlide(name);
             }
+            var activeIndex = swiper2.activeIndex;
+            var activeSlide = swiper2.slides[activeIndex];
+            var activeImage = $(activeSlide).find('img');
+            const imageURL = $(activeImage).data("imageurl");
+            allVarNames.push(imageURL);
             // Add variant Price
             if ($(this).data("price") > 0) {
                 let price = parseInt($(".price").html());
@@ -249,7 +255,6 @@
 
             const id = $('input[name="temp_id"]').val();
             let newid = id;
-            let allVarNames = [];
             $(".variant-item-button.act").each(function(i, v) {
                 newid += $(v).data("id");
                 $('input[name="id"]').val(newid);
@@ -308,6 +313,24 @@
                             text: response.message,
                         });
                         $(".cart-qty").html(response.cart);
+
+                        // Append new item to mini cart 
+                        if (response.isShowInMiniCart) {
+                            let variantsHTML = '';
+                            $.each(response.variants, function(i, v) {
+                                if (i != 0) variantsHTML += `  <span>${v}</span>`
+                            });
+                            const li = `
+                                <li class="flex hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
+                                    <span class="flex gap-2">
+                                        <span><img width="50" src="${response.variants[0]}" /></span>
+                                        <span>${ response.name }</span>
+                                    </span>|${variantsHTML}|
+                                    <span class="text-sky-600">$${response.price }</span>
+                                </li>
+                        `
+                            $(".cart-mini").append(li);
+                        }
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
