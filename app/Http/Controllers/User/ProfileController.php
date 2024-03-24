@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,8 @@ class ProfileController extends Controller
     public function index(){
         $title = "Profile";
         $user = Auth::user();
-        return view("frontend.home.pages.profile",compact("title","user"));
+        $categories = Category::get();
+        return view("frontend.pages.profile",compact("title","user","categories"));
     }
     // Update Profile
     public function updateProfile(Request $request){

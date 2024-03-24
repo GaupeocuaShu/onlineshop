@@ -172,7 +172,7 @@
                 @endif
             </div>
             <div class="relative group/minicart border-2 border-white py-2 px-4 md:px-6 rounded-lg cursor-pointer">
-                <a class="flex items-center gap-x-2">
+                <a class="flex items-center gap-x-2" href="{{ route('user.cart') }}">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <p class="hidden md:block">Cart</p>
                     <div class="cart-qty text-black bg-white p-1 border-1 rounded-sm border-black">
@@ -183,30 +183,41 @@
                         @endif
                     </div>
                 </a>
+
+                {{-- Cart  --}}
                 <div
-                    class="absolute rounded-xl group-hover/minicart:block hidden border-2 border-slate-300 shadow-2xl p-3 right-0 top-[50px] bg-white text-black w-[450px]">
+                    class="absolute z-[100]  rounded-xl group-hover/minicart:block hidden border-2 border-slate-300 shadow-2xl p-3 right-0 top-[50px] bg-white text-black w-[450px]">
                     <h1 class="font-light p-3">New Added Item</h1>
                     <ul class="cart-mini">
-                        @if (!\Cart::isEmpty())
-                            @foreach (\Cart::getContent() as $item)
-                                <li class="flex hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
-                                    <span class="flex gap-2 items-center">
-                                        <span><img width="50" src="{{ asset($item->attributes[0]) }}" /></span>
-                                        <span>{{ $item->name }}</span>
-                                    </span>|
-                                    @foreach ($item->attributes as $v)
-                                        @if ($loop->index != 0)
-                                            <span>{{ $v }}</span>
-                                        @endif
-                                    @endforeach|
-                                    <span class="text-sky-600">${{ $item->price }}</span>
-                                </li>
-                            @endforeach
+                        @if (Auth::check())
+                            @if (!\Cart::isEmpty())
+                                @foreach (\Cart::getContent() as $item)
+                                    <li
+                                        class="flex hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
+                                        <span class="flex gap-2 items-center">
+                                            <span><img width="50"
+                                                    src="{{ asset($item->attributes['imageURL']) }}" /></span>
+                                            <span>{{ $item->name }}</span>
+                                        </span>|
+                                        @foreach ($item->attributes as $key => $v)
+                                            @if ($key != 'imageURL' && $key != 'brand_id' && $key != 'product_id' && $key != 'vendor_id')
+                                                <span>{{ $v }}</span>
+                                            @endif
+                                        @endforeach|
+                                        <span class="text-sky-600">${{ $item->price }}</span>
+                                    </li>
+                                @endforeach
+                            @endif
+                        @else
+                            <div class="text-center">Please <a href="{{ route('login') }}"
+                                    class="text-sky-600 underline">login</a> to see your
+                                cart</div>
                         @endif
 
                     </ul>
                     <div class="pt-5 mt-5 border-t-2 border-slate-200 text-right">
-                        <button class="bg-sky-600 rounded-sm hover:bg-sky-700  text-white py-2 px-4">View Cart</button>
+                        <a href="{{ route('user.cart') }}"
+                            class="bg-sky-600 rounded-sm hover:bg-sky-700  text-white py-2 px-4">View Cart</a>
                     </div>
                 </div>
             </div>

@@ -3,7 +3,7 @@
     <div
         class=" shadow-xl  row-start-1 col-start-1 col-span-4 row-span-1 bg-white rounded-xl p-4
     md:col-span-1 md:row-span-2">
-        <h1 class="gradient_text uppercase  text-4xl  ">Hot Category</h1>
+        <h1 class="gradient_text uppercase  text-3xl  ">Hot Category</h1>
         <ul class="mt-3 text-lg">
             @foreach ($hotCategories as $cate)
                 <li class="p-2 hover:bg-slate-200 rounded-lg"><a class="block"
