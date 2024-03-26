@@ -49,26 +49,36 @@
                         </span>
 
                     </div>
-                    @foreach ($product->productVariants as $variant)
-                        @if ($variant->status == 1)
-                            <div class="flex  my-10 ">
-                                <span class="font-light  min-w-[100px] capitalize">{{ $variant->name }}</span>
-                                <div class="flex flex-wrap gap-4 ">
-                                    @foreach ($variant->product_variant_item as $item)
-                                        @if ($item->status == 1)
-                                            <p data-price="{{ $item->price }}" data-isswipe={{ $variant->is_swipe }}
-                                                data-variantid="{{ $variant->id }}" data-name="{{ $item->name }}"
-                                                data-id = "{{ $item->id }}" data-variantname = "{{ $variant->name }}"
-                                                data-brandid = "{{ $product->brand->id }}"
-                                                data-vendorid = "{{ $product->shopProfile->id }}"
-                                                class="variant-{{ $variant->id }} variant-item-button border-2  text-sm  px-3 py-2 cursor-pointer">
-                                                {{ $item->name }} </p>
-                                        @endif
-                                    @endforeach
+                    {{-- Variant --}}
+                    <div class="relative">
+                        <div
+                            class="variant-select hidden absolute rounded-lg top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] w-[110%] h-[140%] bg-[#ffc3c34d]">
+                            <div class="absolute bottom-0 w-full text-center text-red-600">Please Select Variant First</div>
+
+                        </div>
+                        @foreach ($product->productVariants as $variant)
+                            @if ($variant->status == 1)
+                                <div class="flex  my-10 variant">
+                                    <span class="font-light  min-w-[100px] capitalize">{{ $variant->name }}</span>
+                                    <div class="flex flex-wrap gap-4 ">
+                                        @foreach ($variant->product_variant_item as $item)
+                                            @if ($item->status == 1)
+                                                <p data-price="{{ $item->price }}" data-isswipe={{ $variant->is_swipe }}
+                                                    data-variantid="{{ $variant->id }}" data-name="{{ $item->name }}"
+                                                    data-id = "{{ $item->id }}"
+                                                    data-variantname = "{{ $variant->name }}"
+                                                    data-brandid = "{{ $product->brand->id }}"
+                                                    data-vendorid = "{{ $product->shopProfile->id }}"
+                                                    class="variant-{{ $variant->id }} variant-item-button border-2  text-sm  px-3 py-2 cursor-pointer">
+                                                    {{ $item->name }} </p>
+                                            @endif
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
-                        @endif
-                    @endforeach
+                            @endif
+                        @endforeach
+                    </div>
+                    {{-- Variant --}}
                     <div class="flex  my-10 items-center">
                         <span class="font-light min-w-[100px] capitalize">Quantity</span>
                         <div class="flex">
@@ -193,151 +203,164 @@
 @endpush
 @push('scripts')
     <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
     <script>
-        var swiper = new Swiper(".mySwiper", {
-            spaceBetween: 10,
-            slidesPerView: 4,
-            freeMode: true,
-            watchSlidesProgress: true,
-        });
+        $(document).ready(function() {
+            function init() {
+                $('input[name="attributes"]').val('');
+            }
+            init();
+            var swiper = new Swiper(".mySwiper", {
+                spaceBetween: 10,
+                slidesPerView: 4,
+                freeMode: true,
+                watchSlidesProgress: true,
+            });
 
-        var swiper2 = new Swiper(".mySwiper2", {
-            spaceBetween: 10,
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-            thumbs: {
-                swiper: swiper,
-            },
-        });
-        // Move slide 
-        function moveToSlide(name) {
-            var slides = $('.swiper-slide');
-            slides.each(function(index) {
-                if ($(this).data('name').toLowerCase() === name.toLowerCase()) {
-                    swiper2.slideTo(index);
-                    return false; // Exit the loop once the slide is found
+            var swiper2 = new Swiper(".mySwiper2", {
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                thumbs: {
+                    swiper: swiper,
+                },
+            });
+            // Move slide 
+            function moveToSlide(name) {
+                var slides = $('.swiper-slide');
+                slides.each(function(index) {
+                    if ($(this).data('name').toLowerCase() === name.toLowerCase()) {
+                        swiper2.slideTo(index);
+                        return false; // Exit the loop once the slide is found
+                    }
+                });
+            }
+            // Variant item handle --------------------------
+            $(".variant-item-button").on("click", function() {
+                const variantId = $(this).data("variantid");
+                let allVarNames = [];
+                const id = $('input[name="temp_id"]').val();
+                // Move slide and handle input image, brand_id, product_id
+                if ($(this).data("isswipe")) {
+                    const name = $(this).data("name");
+                    moveToSlide(name);
                 }
+                var activeIndex = swiper2.activeIndex;
+                var activeSlide = swiper2.slides[activeIndex];
+                var activeImage = $(activeSlide).find('img');
+                const imageURL = $(activeImage).data("imageurl");
+                var brandID = $(this).data("brandid");
+                var vendorID = $(this).data("vendorid");
+
+                allVarNames.push({
+                    imageURL: imageURL
+                }, {
+                    brand_id: brandID
+                }, {
+                    product_id: id
+                }, {
+                    vendor_id: vendorID
+                });
+                // Add variant Price
+                if ($(this).data("price") > 0) {
+                    let price = parseInt($(".price").html());
+                    price += parseInt((this).data("price"));
+                    $(".price").html(price);
+                    $("input[name='price']").val(price);
+                }
+
+
+                // Handle active
+                $(".variant-" + variantId).removeClass("act border-sky-600");
+                $(this).addClass("act border-sky-600");
+
+                // Handle input id and input variants 
+
+
+                let newid = id;
+                $(".variant-item-button.act").each(function(i, v) {
+                    newid += $(v).data("id");
+                    $('input[name="id"]').val(newid);
+                    const variantName = $(v).data('variantname')
+                    let variantPair = {}
+                    variantPair[variantName] = $(v).data("name")
+                    allVarNames.push(variantPair)
+                });
+                const allVarNamesJson = JSON.stringify(allVarNames);
+                $('input[name="attributes"]').val(allVarNamesJson);
             });
-        }
-        // Variant item handle --------------------------
-        $(".variant-item-button").on("click", function() {
-            const variantId = $(this).data("variantid");
-            let allVarNames = [];
-            const id = $('input[name="temp_id"]').val();
-            // Move slide and handle input image, brand_id, product_id
-            if ($(this).data("isswipe")) {
-                const name = $(this).data("name");
-                moveToSlide(name);
-            }
-            var activeIndex = swiper2.activeIndex;
-            var activeSlide = swiper2.slides[activeIndex];
-            var activeImage = $(activeSlide).find('img');
-            const imageURL = $(activeImage).data("imageurl");
-            var brandID = $(this).data("brandid");
-            var vendorID = $(this).data("vendorid");
+            // Variant item handle --------------------------
 
-            allVarNames.push({
-                imageURL: imageURL
-            }, {
-                brand_id: brandID
-            }, {
-                product_id: id
-            }, {
-                vendor_id: vendorID
-            });
-            // Add variant Price
-            if ($(this).data("price") > 0) {
-                let price = parseInt($(".price").html());
-                price += parseInt((this).data("price"));
-                $(".price").html(price);
-                $("input[name='price']").val(price);
-            }
+            // Quantity item handle  ---------------------------
+            $(".increase").on("click", function() {
+                let qty = parseInt($(".quantity").val());
+                let max = $(this).data("max");
+                console.log(max);
+                if (qty + 1 > max) return;
+                qty = qty + 1;
+                $(".quantity").val(qty);
+                $("input[name='quantity']").val(qty);
+            })
+            $(".decrease").on("click", function() {
+                let qty = parseInt($(".quantity").val());
+                if (qty <= 1) return;
+                qty = qty - 1;
+                $(".quantity").val(qty);
+                $("input[name='quantity']").val(qty);
 
+            })
+            $(".quantity").on("change", function() {
+                const max = $(".increase").data("max");
+                let qty = $(this).val();
+                console.log(qty);
+                if (qty <= 0) qty = 1;
+                else if (qty > max) qty = max;
+                $(this).val(qty);
+                $("input[name='quantity']").val(qty);
 
-            // Handle active
-            $(".variant-" + variantId).removeClass("act border-sky-600");
-            $(this).addClass("act border-sky-600");
+            })
+            // Quantity item handle  ---------------------------
 
-            // Handle input id and input variants 
+            // Add to cart 
+            $(".add-to-cart").on("click", function(e) {
+                e.preventDefault();
 
+                // Check all variant selected
+                let flag = true;
+                $(".variant").each(function(i, v) {
+                    if ($(v).find(".act").length == 0) flag = false;
+                })
+                if (flag == true) {
+                    const data = $(this).closest("form").serialize();
+                    // Send form by ajax 
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('add-to-cart') }}",
+                        data: data,
+                        dataType: "JSON",
+                        success: function(response) {
+                            if (response.status == 'success') {
+                                Swal.fire({
+                                    icon: "success",
+                                    text: response.message,
+                                });
+                                $(".cart-qty").html(response.cart);
 
-            let newid = id;
-            $(".variant-item-button.act").each(function(i, v) {
-                newid += $(v).data("id");
-                $('input[name="id"]').val(newid);
-                const variantName = $(v).data('variantname')
-                let variantPair = {}
-                variantPair[variantName] = $(v).data("name")
-                allVarNames.push(variantPair)
-            });
-            const allVarNamesJson = JSON.stringify(allVarNames);
-            $('input[name="attributes"]').val(allVarNamesJson);
-        });
-        // Variant item handle --------------------------
+                                // Append new item to mini cart 
+                                if (response.isShowInMiniCart) {
+                                    let variantsHTML = '';
+                                    $.each(response.variants, function(i, v) {
 
-        // Quantity item handle  ---------------------------
-        $(".increase").on("click", function() {
-            let qty = parseInt($(".quantity").val());
-            let max = $(this).data("max");
-            console.log(max);
-            if (qty + 1 > max) return;
-            qty = qty + 1;
-            $(".quantity").val(qty);
-            $("input[name='quantity']").val(qty);
-        })
-        $(".decrease").on("click", function() {
-            let qty = parseInt($(".quantity").val());
-            if (qty <= 1) return;
-            qty = qty - 1;
-            $(".quantity").val(qty);
-            $("input[name='quantity']").val(qty);
-
-        })
-        $(".quantity").on("change", function() {
-            const max = $(".increase").data("max");
-            let qty = $(this).val();
-            console.log(qty);
-            if (qty <= 0) qty = 1;
-            else if (qty > max) qty = max;
-            $(this).val(qty);
-            $("input[name='quantity']").val(qty);
-
-        })
-        // Quantity item handle  ---------------------------
-
-        // Add to cart 
-        $(".add-to-cart").on("click", function(e) {
-            e.preventDefault();
-            const data = $(this).closest("form").serialize();
-            // Send form by ajax 
-            $.ajax({
-                type: "POST",
-                url: "{{ route('add-to-cart') }}",
-                data: data,
-                dataType: "JSON",
-                success: function(response) {
-                    if (response.status == 'success') {
-                        Swal.fire({
-                            icon: "success",
-                            text: response.message,
-                        });
-                        $(".cart-qty").html(response.cart);
-
-                        // Append new item to mini cart 
-                        if (response.isShowInMiniCart) {
-                            let variantsHTML = '';
-                            $.each(response.variants, function(i, v) {
-
-                                if (i != 'imageURL' && i != 'brand_id' && i != 'product_id')
-                                    variantsHTML += `  <span>${v}</span>`
-                            });
-                            const li = `
+                                        if (i != 'imageURL' && i != 'brand_id' && i !=
+                                            'product_id')
+                                            variantsHTML += `  <span>${v}</span>`
+                                    });
+                                    const li = `
                                 <li class="flex hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
                                     <span class="flex gap-2">
                                         <span><img width="50" src="${response.variants['imageURL']}" /></span>
@@ -346,14 +369,21 @@
                                     <span class="text-sky-600">$${response.price }</span>
                                 </li>
                         `
-                            $(".cart-mini").append(li);
+                                    $(".cart-mini").append(li);
+                                }
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.table(jqXHR)
                         }
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.table(jqXHR)
+                    });
+                } else {
+                    $(".variant-select").removeClass("hidden");
                 }
             });
+            $(".variant-select").on("click", function() {
+                $(this).addClass("hidden");
+            })
         });
     </script>
 @endpush
