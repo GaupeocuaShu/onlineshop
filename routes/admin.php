@@ -75,6 +75,7 @@ Route::resource("product.image-gallery", ProductImageGalleryController::class);
 
 
 // Product Variants -------------------------------------------------
+Route::put("product/variant/{id}/change-is-swipe", [ProductVariantController::class, 'changeIsSwipe'])->name("product.variant.change_is_swipe");
 Route::put("product/variant/{id}/change-status", [ProductVariantController::class, 'changeStatus'])->name("product.variant.change_status");
 Route::resource("product.variant", ProductVariantController::class);
 // Product Variants -------------------------------------------------

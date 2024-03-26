@@ -17,11 +17,22 @@ class CartController extends Controller
         $userID = Auth::user()->id; 
         Cart::session($userID); 
         $vendors = array(); 
-        foreach(Cart::getContent() as $item){ 
+        $vendorCounts = array();
+        foreach(Cart::getContent() as $item){  
+            $vendorCounts[] =  ShopProfile::select('id')->findOrFail($item->attributes['vendor_id'])->toArray();
             $vendors[] = ShopProfile::findOrFail($item->attributes['vendor_id'])->toArray();
+        } 
+ 
+        $vendorCountsID = array();
+        foreach( $vendorCounts as $v) {
+            $vendorCountsID[] = $v['id'];
         }
+        $vendorsCollection = collect($vendors); 
+        $uniqueVendorsCollection = $vendorsCollection->unique("id");
+        $uniqueVendorsArray =   $uniqueVendorsCollection->toArray();
         return view("frontend.pages.cart",[
-            'vendors' => $vendors
+            'vendors' => $uniqueVendorsArray ,
+            'vendorCountsID' => $vendorCountsID
         ]);
     }
 
@@ -43,5 +54,47 @@ class CartController extends Controller
             "name" => $request->name,
             "isShowInMiniCart" => $isShowInMiniCart,
         ]);
+    }
+
+    // Update Cart  
+    public function update(Request $request){
+        Cart::session(Auth::user()->id);
+        Cart::update($request->id,['quantity' =>  array(
+            'relative' => false,
+            'value' => $request->quantity,
+        )]);
+        return response(['status' => "success"]);
+    }
+    public function get(Request $request){ 
+        Cart::session(Auth::user()->id);
+        if($request->type == "all") {  
+            if($request->isCheck == 'true') {
+                $quantity = Cart::getTotalQuantity();  
+                $totalPrice = Cart::getTotal();
+                return response([
+                    "total" => $totalPrice, 
+                    "quantity" => $quantity
+                ]);
+            }
+            else {
+                return response([
+                    "total" => 0, 
+                    "quantity" => 0,
+                ]);
+            }
+        }
+        else { 
+            $sum = 0;  
+            $quantity = 0 ;
+            $idArray = json_decode($request->ids);
+            foreach($idArray as $id) { 
+                $sum += Cart::get($id)->getPriceSum();  
+                $quantity += Cart::get($id)->quantity; 
+            }
+            return response([
+                'total' => $sum, 
+                "quantity" =>  $quantity, 
+            ]);
+        }    
     }
 }

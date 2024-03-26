@@ -10,5 +10,7 @@ Route::post("update-profile",[ProfileController::class,"updateProfile"])->name("
 Route::get("profile",[ProfileController::class,"index"])->name("profile");
 // Profile -------------------------------------------------
 
-// Cart 
+// Cart  
+Route::put("/cart",[CartController::class,"update"])->name("cart.update");
+Route::get("/cart/get",[CartController::class,"get"])->name("cart.get");
 Route::get("/cart",[CartController::class,"index"])->name("cart");

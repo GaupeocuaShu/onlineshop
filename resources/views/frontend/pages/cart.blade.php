@@ -1,10 +1,26 @@
 @extends('frontend.layout.mastercart')
 @section('content')
-    <div class ="py-8">
-        <div class="bg-white py-3 px-10 ">
+    <div class ="py-8 relative">
+        {{-- Loading --}}
+        <div role="status" class="loading absolute w-full h-full hidden items-center justify-center bg-[#eeeeee7d]">
+            <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="currentColor" />
+                <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentFill" />
+            </svg>
+            <div class=" text-black">&emsp;Loading...</div>
+        </div>
+        {{-- Loading --}}
+
+        <div class="bg-white py-3 px-5 ">
             <ul class="flex justify-between">
+
                 <li class="w-[45%]">
-                    Item
+                    <input type="checkbox" data-select="all" data-vendorcount = "{{ count($vendors) }}" /> &emsp;Product
                 </li>
                 <li>Price Quotation</li>
                 <li>Quantity </li>
@@ -17,42 +33,50 @@
         @foreach ($vendors as $vendor)
             <div class="bg-white py-3 my-3 px-5">
                 <h1 class="border-b-2 border-slate-200 py-4">
-                    <i class="fa-solid fa-shop"></i>&emsp;{{ $vendor['name'] }}
+                    <input type="checkbox" data-productcount ="{{ $vendorCountsID[$vendor['id']] }}" data-select="shop"
+                        data-id="{{ $vendor['id'] }}" /> &emsp;<i class="fa-solid fa-shop"></i>&emsp;{{ $vendor['name'] }}
                 </h1>
-                <div class="my-5 flex justify-between items-center">
+                <div>
                     @foreach (Cart::getContent() as $cartItem)
                         @php
                             $product = App\Models\Product::findOrFail($cartItem->attributes['product_id']);
-
                         @endphp
                         @if ($cartItem->attributes['vendor_id'] == $vendor['id'])
-                            <div class="w-[50%] flex items-center gap-10">
-                                <span class="w-[15%]"><img width="100"
-                                        src="{{ asset($cartItem->attributes['imageURL']) }}" /></span>
-                                <span class="flex-1">{{ $cartItem->name }}</span>
-                                <div class="flex-1">
-                                    @foreach ($cartItem->attributes as $key => $item)
-                                        @if ($key != 'brand_id' && $key != 'product_id' && $key != 'vendor_id' && $key != 'imageURL')
-                                            <span>{{ $item }}</span> </br />
-                                        @endif
-                                    @endforeach
+                            <div class="my-5 flex justify-between items-center pb-3 border-b-2 border-slate-200">
+                                <div class="w-[50%] flex items-center gap-10">
+                                    <span class="w-[15%] flex items-center"> <input type="checkbox" data-select="item"
+                                            class="vendor-{{ $vendor['id'] }} vendor-item" data-id="{{ $cartItem->id }}" />
+                                        &emsp;<img width="100"
+                                            src="{{ asset($cartItem->attributes['imageURL']) }}" /></span>
+                                    <span class="flex-1">{{ $cartItem->name }}</span>
+                                    <div class="flex-1">
+                                        @foreach ($cartItem->attributes as $key => $item)
+                                            @if ($key != 'brand_id' && $key != 'product_id' && $key != 'vendor_id' && $key != 'imageURL')
+                                                <span>{{ $item }}</span> </br />
+                                            @endif
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
 
-                            $<span class="price-quotation-{{ $cartItem->id }}">{{ $cartItem->price }}</span>
-                            <div class="flex">
-                                <p data-id="{{ $cartItem->id }}"
-                                    class="decrease cursor-pointer border-2 border-slate-200 py-1 px-3">-</p>
-                                <input data-id="{{ $cartItem->id }}" value="{{ $cartItem->quantity }}" type="text"
-                                    class="quantity-{{ $cartItem->id }} text-center w-[80px] border-x-0 border-y-2 border-slate-200 focus:ring-0 focus:border-slate-200"
-                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                                <span>$<span
+                                        class="price-quotation-{{ $cartItem->id }}">{{ $cartItem->price }}</span></span>
+                                <div class="flex">
+                                    <p data-id="{{ $cartItem->id }}"
+                                        class="decrease decrease-{{ $cartItem->id }} cursor-pointer border-2 border-slate-200 py-1 px-3">
+                                        -</p>
+                                    <input data-id="{{ $cartItem->id }}" data-max="{{ $product->qty }}"
+                                        value="{{ $cartItem->quantity }}" type="text"
+                                        class="quantity quantity-{{ $cartItem->id }} text-center w-[80px] border-x-0 border-y-2 border-slate-200 focus:ring-0 focus:border-slate-200"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
 
-                                <p data-id="{{ $cartItem->id }}" data-max="{{ $product->qty }}"
-                                    class="increase cursor-pointer border-2 border-slate-200 py-1 px-3">+</p>
+                                    <p data-id="{{ $cartItem->id }}" data-max="{{ $product->qty }}"
+                                        class="increase increase-{{ $cartItem->id }} cursor-pointer border-2 border-slate-200 py-1 px-3">
+                                        +</p>
+                                </div>
+                                <span class="text-sky-600">$<span
+                                        class="price-sum price-sum-{{ $cartItem->id }}">{{ $cartItem->getPriceSum() }}</span></span>
+                                <button class="text-red-500">Delete</button class="text-red-500">
                             </div>
-                            <span class="text-sky-600">$<span
-                                    class="price-sum price-sum-{{ $cartItem->id }}">{{ $cartItem->getPriceSum() }}</span></span>
-                            <button class="text-red-500">Delete</button class="text-red-500">
                         @endif
                     @endforeach
 
@@ -60,44 +84,161 @@
             </div>
         @endforeach
     </div>
+
+    <div class="bg-slate-800 text-white flex justify-between p-5 items-center fixed bottom-0 w-[1200px]">
+        <div class="flex items-center">
+            <input type="checkbox" data-select="all" />&emsp;
+            <label>Select All</label>
+        </div>
+        <div class="relative w-[300px] h-[50px] ">
+            <input type="text" class="p-3 w-full text-black" placeholder="Enter Shuty's Shop Voucher" />&emsp;
+            <button class="right-0 top-0  h-full absolute bg-sky-600 px-3 py-3 rounded-sm hover:bg-sky-800">Apply</button>
+        </div>
+        <div>
+            Total (<span class="total-quantity">0</span> item): $<span class="total-price">0</span>&emsp;
+            <button class="bg-sky-600 px-10 py-3 rounded-sm hover:bg-sky-800">Check out</button>
+        </div>
+
+    </div>
 @endsection
 @push('scripts')
     <script>
-        // Quantity item handle  ---------------------------
         $(document).ready(function() {
-            $(".increase").on("click", function() {
-                let qty = parseInt($(".quantity").val());
-                let max = $(this).data("max");
-                console.log(max);
-                if (qty + 1 > max) return;
-                qty = qty + 1;
-                const id = $(this).data("id")
-                $("quantity-" + id).val(qty);
+            function init() {
+                $($("input[type= 'checkbox']")).each(function(i, v) {
+                    $(v).prop('checked', false);
+                });
+            }
+
+            init()
+            // Get Cart Item 
+            function getCart(type = null, check = null, itemIDArray = null) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('user.cart.get') }}",
+                    data: {
+                        type: type,
+                        isCheck: check,
+                        ids: JSON.stringify(itemIDArray),
+                    },
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        $(".loading").removeClass("hidden");
+                        $(".loading").addClass("flex");
+                    },
+                    success: function(response) {
+                        $(".total-quantity").html(response.quantity);
+                        $(".total-price").html(response.total);
+                        $(".loading").removeClass("flex");
+                        $(".loading").addClass("hidden");
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.table(jqXHR);
+                        $(".loading").removeClass("flex");
+                        $(".loading").addClass("hidden");
+                    }
+                });
+            }
+            // Update Cart by sending ajax
+            function updateCart(id, quantity) {
+                $.ajax({
+                    type: "PUT",
+                    url: "{{ route('user.cart.update') }}",
+                    data: {
+                        id: id,
+                        quantity: quantity,
+                    },
+
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        $(".loading").removeClass("hidden");
+                        $(".loading").addClass("flex");
+                    },
+                    success: function(response) {
+                        if (response.status == 'success') checkOnItem();
+                        $(".loading").removeClass("flex");
+                        $(".loading").addClass("hidden");
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.table(jqXHR);
+                        $(".loading").removeClass("flex");
+                        $(".loading").addClass("hidden");
+                    }
+                });
+            }
+            // Quantity item handle  --------------------------- 
+            function changeQuantity(id, type = null, max = null) {
+                let qty = parseInt($(".quantity-" + id).val());
+
+                // Type filter
+                if (type == 'inc') {
+                    if (qty + 1 > max) return;
+                    qty = qty + 1;
+                } else if (type == 'dec') {
+                    if (qty <= 1) return;
+                    qty = qty - 1;
+                } else {
+                    if (qty <= 0) qty = 1;
+                    else if (qty > max) qty = max;
+                }
+
+                $(".quantity-" + id).val(qty);
                 const priceQuotation = parseInt($(".price-quotation-" + id).html());
                 $(".price-sum-" + id).html(qty * priceQuotation);
+                return qty;
+            }
+
+            $(".increase").on("click", function() {
+                const id = $(this).data("id")
+                let max = $(this).data("max");
+                const quantity = changeQuantity(id, 'inc', max);
+                updateCart(id, quantity)
             })
             $(".decrease").on("click", function() {
-                let qty = parseInt($(".quantity").val());
-                if (qty <= 1) return;
-                qty = qty - 1;
                 const id = $(this).data("id")
-                $("quantity-" + id).val(qty);
-                const priceQuotation = parseInt($(".price-quotation-" + id).html());
-                $(".price-sum-" + id).html(qty * priceQuotation);
+                const quantity = changeQuantity(id, 'dec');
+                updateCart(id, quantity)
             })
             $(".quantity").on("change", function() {
-                const max = $(".increase").data("max");
-                let qty = $(this).val();
-                console.log(qty);
-                if (qty <= 0) qty = 1;
-                else if (qty > max) qty = max;
-                $(this).val(qty);
                 const id = $(this).data("id")
-                $("quantity-" + id).val(qty);
-                const priceQuotation = parseInt($(".price-quotation-" + id).html());
-                $(".price-sum-" + id).html(qty * priceQuotation);
+                const max = $(this).data("max");
+                const quantity = changeQuantity(id, null, max);
+                updateCart(id, quantity)
             })
+            // Quantity item handle  --------------------------- 
+            function checkOnItem() {
+                let itemIDArray = [];
+                $($("input[type= 'checkbox'].vendor-item")).each(function(i, v) {
+                    if ($(v).prop("checked") == true) {
+                        itemIDArray.push($(v).data('id'));
+                    }
+                });
+                getCart(null, null, itemIDArray);
+            }
+
+            $("input[type= 'checkbox']").on("click", function() {
+                const type = $(this).data('select');
+                const check = $(this).prop("checked");
+
+
+                if (type == 'all') {
+                    $($("input[type= 'checkbox']")).each(function(i, v) {
+                        $(v).prop('checked', check);
+                    });
+                    getCart(type, check);
+
+                } else if (type == 'shop') {
+                    const vendorID = $(this).data("id");
+                    $($(`input[type= 'checkbox'].vendor-${vendorID}`)).each(function(i, v) {
+                        $(v).prop('checked', check);
+                    });
+                    checkOnItem();
+
+                } else {
+                    checkOnItem()
+                }
+
+            });
         });
-        // Quantity item handle  ---------------------------
     </script>
 @endpush
