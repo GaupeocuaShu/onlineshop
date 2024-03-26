@@ -139,6 +139,7 @@
                                         icon: "success"
                                     });
                                     hidden();
+                                    checkOnItem();
                                 }
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
@@ -229,12 +230,11 @@
             function checkOnItem() {
                 let itemIDArray = [];
                 let count = 0;
-                $($("input[type= 'checkbox'].vendor-item")).each(function(i, v) {
+                $($("input[type= 'checkbox'].vendor-item:visible")).each(function(i, v) {
                     if ($(v).prop("checked") == true) {
                         count += $(v).data("quantity");
                         itemIDArray.push($(v).data('id'));
                     }
-
                 });
                 const checkboxAll = $("input[type ='checkbox'][data-select ='all']");
                 if (count == $(checkboxAll).data("total")) $(checkboxAll).prop("checked", true);
