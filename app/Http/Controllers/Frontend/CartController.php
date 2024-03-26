@@ -17,22 +17,15 @@ class CartController extends Controller
         $userID = Auth::user()->id; 
         Cart::session($userID); 
         $vendors = array(); 
-        $vendorCounts = array();
         foreach(Cart::getContent() as $item){  
-            $vendorCounts[] =  ShopProfile::select('id')->findOrFail($item->attributes['vendor_id'])->toArray();
             $vendors[] = ShopProfile::findOrFail($item->attributes['vendor_id'])->toArray();
         } 
- 
-        $vendorCountsID = array();
-        foreach( $vendorCounts as $v) {
-            $vendorCountsID[] = $v['id'];
-        }
         $vendorsCollection = collect($vendors); 
         $uniqueVendorsCollection = $vendorsCollection->unique("id");
-        $uniqueVendorsArray =   $uniqueVendorsCollection->toArray();
+        $uniqueVendorsArray =   $uniqueVendorsCollection->toArray(); 
         return view("frontend.pages.cart",[
-            'vendors' => $uniqueVendorsArray ,
-            'vendorCountsID' => $vendorCountsID
+            'vendors' => $uniqueVendorsArray , 
+            'totalQuantity' => Cart::getTotalQuantity(),
         ]);
     }
 
@@ -61,7 +54,7 @@ class CartController extends Controller
         Cart::session(Auth::user()->id);
         Cart::update($request->id,['quantity' =>  array(
             'relative' => false,
-            'value' => $request->quantity,
+            'value' => intval($request->quantity),
         )]);
         return response(['status' => "success"]);
     }
@@ -96,5 +89,11 @@ class CartController extends Controller
                 "quantity" =>  $quantity, 
             ]);
         }    
+    }
+    // Delete 
+    public function delete(string $id){
+        Cart::session(Auth::user()->id);
+        Cart::remove($id); 
+        return response(["status" => "success"]);
     }
 }

@@ -11,6 +11,7 @@ Route::get("profile",[ProfileController::class,"index"])->name("profile");
 // Profile -------------------------------------------------
 
 // Cart  
+Route::delete("/{id}/cart",[CartController::class,"delete"])->name("cart.delete");
 Route::put("/cart",[CartController::class,"update"])->name("cart.update");
 Route::get("/cart/get",[CartController::class,"get"])->name("cart.get");
 Route::get("/cart",[CartController::class,"index"])->name("cart");

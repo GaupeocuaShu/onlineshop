@@ -1,6 +1,6 @@
 @extends('frontend.layout.mastercart')
 @section('content')
-    <div class ="py-8 relative">
+    <div class ="py-8 relative h-screen">
         {{-- Loading --}}
         <div role="status" class="loading absolute w-full h-full hidden items-center justify-center bg-[#eeeeee7d]">
             <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
@@ -20,7 +20,7 @@
             <ul class="flex justify-between">
 
                 <li class="w-[45%]">
-                    <input type="checkbox" data-select="all" data-vendorcount = "{{ count($vendors) }}" /> &emsp;Product
+                    <input type="checkbox" data-select="all" data-total = "{{ $totalQuantity }}" /> &emsp;Product
                 </li>
                 <li>Price Quotation</li>
                 <li>Quantity </li>
@@ -33,10 +33,10 @@
         @foreach ($vendors as $vendor)
             <div class="bg-white py-3 my-3 px-5">
                 <h1 class="border-b-2 border-slate-200 py-4">
-                    <input type="checkbox" data-productcount ="{{ $vendorCountsID[$vendor['id']] }}" data-select="shop"
-                        data-id="{{ $vendor['id'] }}" /> &emsp;<i class="fa-solid fa-shop"></i>&emsp;{{ $vendor['name'] }}
+                    <input type="checkbox" data-select="shop" data-id="{{ $vendor['id'] }}" /> &emsp;<i
+                        class="fa-solid fa-shop"></i>&emsp;{{ $vendor['name'] }}
                 </h1>
-                <div>
+                <div class="vendor-items">
                     @foreach (Cart::getContent() as $cartItem)
                         @php
                             $product = App\Models\Product::findOrFail($cartItem->attributes['product_id']);
@@ -44,10 +44,14 @@
                         @if ($cartItem->attributes['vendor_id'] == $vendor['id'])
                             <div class="my-5 flex justify-between items-center pb-3 border-b-2 border-slate-200">
                                 <div class="w-[50%] flex items-center gap-10">
-                                    <span class="w-[15%] flex items-center"> <input type="checkbox" data-select="item"
+                                    <span class="w-[15%] flex items-center">
+
+                                        <input type="checkbox" data-select="item" data-quantity="{{ $cartItem->quantity }}"
+                                            data-vendorid ="{{ $vendor['id'] }}"
                                             class="vendor-{{ $vendor['id'] }} vendor-item" data-id="{{ $cartItem->id }}" />
-                                        &emsp;<img width="100"
-                                            src="{{ asset($cartItem->attributes['imageURL']) }}" /></span>
+
+                                        &emsp;
+                                        <img width="100" src="{{ asset($cartItem->attributes['imageURL']) }}" /></span>
                                     <span class="flex-1">{{ $cartItem->name }}</span>
                                     <div class="flex-1">
                                         @foreach ($cartItem->attributes as $key => $item)
@@ -75,7 +79,9 @@
                                 </div>
                                 <span class="text-sky-600">$<span
                                         class="price-sum price-sum-{{ $cartItem->id }}">{{ $cartItem->getPriceSum() }}</span></span>
-                                <button class="text-red-500">Delete</button class="text-red-500">
+                                <button class="text-red-500 remove remove-{{ $cartItem->id }}"
+                                    data-url="{{ route('user.cart.delete', $cartItem->id) }}">Delete</button
+                                    class="text-red-500">
                             </div>
                         @endif
                     @endforeach
@@ -111,6 +117,38 @@
             }
 
             init()
+            // Remove Item 
+            function removeItem(url, hidden) {
+                Swal.fire({
+                    title: "You Want To Remove This Item",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: url,
+                            dataType: "JSON",
+                            success: function(response) {
+                                if (response.status == 'success') {
+                                    Swal.fire({
+                                        title: "Removed",
+                                        icon: "success"
+                                    });
+                                    hidden();
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.table(jqXHR)
+                            }
+                        });
+                    }
+
+                });
+            }
             // Get Cart Item 
             function getCart(type = null, check = null, itemIDArray = null) {
                 $.ajax({
@@ -172,10 +210,10 @@
 
                 // Type filter
                 if (type == 'inc') {
-                    if (qty + 1 > max) return;
+                    if (qty + 1 > max) return null;
                     qty = qty + 1;
                 } else if (type == 'dec') {
-                    if (qty <= 1) return;
+                    if (qty <= 1) return null;
                     qty = qty - 1;
                 } else {
                     if (qty <= 0) qty = 1;
@@ -187,17 +225,47 @@
                 $(".price-sum-" + id).html(qty * priceQuotation);
                 return qty;
             }
+            // Quantity item handle  --------------------------- 
+            function checkOnItem() {
+                let itemIDArray = [];
+                let count = 0;
+                $($("input[type= 'checkbox'].vendor-item")).each(function(i, v) {
+                    if ($(v).prop("checked") == true) {
+                        count += $(v).data("quantity");
+                        itemIDArray.push($(v).data('id'));
+                    }
+
+                });
+                const checkboxAll = $("input[type ='checkbox'][data-select ='all']");
+                if (count == $(checkboxAll).data("total")) $(checkboxAll).prop("checked", true);
+                else $(checkboxAll).prop("checked", false);
+                getCart(null, null, itemIDArray);
+            }
 
             $(".increase").on("click", function() {
                 const id = $(this).data("id")
                 let max = $(this).data("max");
                 const quantity = changeQuantity(id, 'inc', max);
-                updateCart(id, quantity)
+                if (quantity == null) {
+                    Swal.fire({
+                        icon: "error",
+                        text: "This product is limited by quantity",
+                    });
+                } else updateCart(id, quantity)
             })
             $(".decrease").on("click", function() {
                 const id = $(this).data("id")
                 const quantity = changeQuantity(id, 'dec');
-                updateCart(id, quantity)
+                if (quantity == null) {
+                    const removeBtn = $(".remove-" + id);
+                    const url = $(removeBtn).data("url");
+                    console.log(url);
+                    hidden = () => {
+                        $(removeBtn).parent().hide();
+
+                    }
+                    removeItem(url, hidden);
+                } else updateCart(id, quantity)
             })
             $(".quantity").on("change", function() {
                 const id = $(this).data("id")
@@ -205,16 +273,21 @@
                 const quantity = changeQuantity(id, null, max);
                 updateCart(id, quantity)
             })
-            // Quantity item handle  --------------------------- 
-            function checkOnItem() {
-                let itemIDArray = [];
-                $($("input[type= 'checkbox'].vendor-item")).each(function(i, v) {
-                    if ($(v).prop("checked") == true) {
-                        itemIDArray.push($(v).data('id'));
-                    }
-                });
-                getCart(null, null, itemIDArray);
-            }
+
+            $(".remove").on("click", function() {
+                const url = $(this).data("url");
+                hidden = () => {
+                    $(this).parent().hide();
+                    const items = $($(this).parents().eq(1).find(
+                        "input[data-select = 'item']:visible"));
+                    console.log(items.length);
+                    if (items.length == 0) $(this).parents().eq(2).hide();
+
+                }
+                removeItem(url, hidden);
+
+
+            })
 
             $("input[type= 'checkbox']").on("click", function() {
                 const type = $(this).data('select');
@@ -235,10 +308,22 @@
                     checkOnItem();
 
                 } else {
+                    const vendorID = $(this).data('vendorid');
+                    const vendorsParent = $(this).parents(".vendor-items");
+                    let flag = true;
+                    $($(vendorsParent).find("input[data-select ='item']")).each(function(i, v) {
+                        if ($(v).prop("checked") == false) flag = false;
+                    });
+                    if (flag == true)
+                        $(`input[data-select="shop"][data-id="${vendorID}"]`).prop("checked", true);
+                    else
+                        $(`input[data-select="shop"][data-id="${vendorID}"]`).prop("checked", false);
                     checkOnItem()
                 }
 
             });
+
+
         });
     </script>
 @endpush
