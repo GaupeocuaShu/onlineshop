@@ -1,5 +1,8 @@
 @extends('frontend.layout.master')
 @section('content')
+    <div class="hidden product-information" data-brandid = "{{ $product->brand->id }}"
+        data-vendorid = "{{ $product->shopProfile->id }}" data-imageurl = "{{ $product->thumb_image }}">
+    </div>
     <div class="py-10 ">
 
         <div class="relative grid grid-cols-[450px_500px] gap-x-10 bg-white p-5">
@@ -81,10 +84,7 @@
                                             @if ($item->status == 1)
                                                 <p data-price="{{ $item->price }}" data-isswipe={{ $variant->is_swipe }}
                                                     data-variantid="{{ $variant->id }}" data-name="{{ $item->name }}"
-                                                    data-id = "{{ $item->id }}"
                                                     data-variantname = "{{ $variant->name }}"
-                                                    data-brandid = "{{ $product->brand->id }}"
-                                                    data-vendorid = "{{ $product->shopProfile->id }}"
                                                     class="variant-{{ $variant->id }} variant-item-button border-2  text-sm  px-3 py-2 cursor-pointer">
                                                     {{ $item->name }} </p>
                                             @endif
@@ -111,7 +111,7 @@
                     <div class="flex gap-7">
                         <form>
                             <input type="hidden" name="temp_id" value="{{ $product->id }}" />
-                            <input type="hidden" name="id" />
+                            <input type="hidden" name="id" value="{{ $product->id }}" />
                             <input type="hidden" name="name" value="{{ $product->name }}" />
                             <input type="hidden" name="price"
                                 value="{{ checkSale($product) ? $product->offer_price : $product->price }}" />
@@ -219,23 +219,37 @@
 @endpush
 @push('scripts')
     <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
     <script>
         $(document).ready(function() {
             function init() {
-                $('input[name="attributes"]').val('');
+                let allVarNames = [];
+                const imageURL = $(".product-information").data("imageurl");
+                const brandID = $(".product-information").data("brandid");
+                const vendorID = $(".product-information").data("vendorid");
+                const id = $('input[name="temp_id"]').val();
+                allVarNames.push({
+                    imageURL: imageURL
+                }, {
+                    brand_id: brandID
+                }, {
+                    product_id: id
+                }, {
+                    vendor_id: vendorID
+                });
+                const allVarNamesJson = JSON.stringify(allVarNames);
+                $('input[name="attributes"]').val(allVarNamesJson);
             }
-            init();
+            init()
             var swiper = new Swiper(".mySwiper", {
                 spaceBetween: 10,
                 slidesPerView: 4,
                 freeMode: true,
                 watchSlidesProgress: true,
             });
-
             var swiper2 = new Swiper(".mySwiper2", {
                 spaceBetween: 10,
                 navigation: {
@@ -270,8 +284,8 @@
                 var activeSlide = swiper2.slides[activeIndex];
                 var activeImage = $(activeSlide).find('img');
                 const imageURL = $(activeImage).data("imageurl");
-                var brandID = $(this).data("brandid");
-                var vendorID = $(this).data("vendorid");
+                var brandID = $(".product-information").data("brandid");
+                var vendorID = $(".product-information").data("vendorid");
 
                 allVarNames.push({
                     imageURL: imageURL
@@ -356,7 +370,7 @@
                     // Send form by ajax 
                     $.ajax({
                         type: "POST",
-                        url: "{{ route('add-to-cart') }}",
+                        url: "{{ route('user.add-to-cart') }}",
                         data: data,
                         dataType: "JSON",
                         beforeSend: function() {
@@ -365,7 +379,6 @@
                         },
                         success: function(response) {
                             if (response.status == 'success') {
-
                                 $(".loading").addClass("hidden");
                                 $(".loading").removeClass("flex");
 
@@ -377,19 +390,12 @@
 
                                 // Append new item to mini cart 
                                 if (response.isShowInMiniCart) {
-                                    let variantsHTML = '';
-                                    $.each(response.variants, function(i, v) {
-
-                                        if (i != 'imageURL' && i != 'brand_id' && i !=
-                                            'product_id')
-                                            variantsHTML += `  <span>${v}</span>`
-                                    });
                                     const li = `
                                 <li class="flex hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
                                     <span class="flex gap-2">
                                         <span><img width="50" src="${response.variants['imageURL']}" /></span>
                                         <span>${ response.name }</span>
-                                    </span>|${variantsHTML}|
+                                    </span>
                                     <span class="text-sky-600">$${response.price }</span>
                                 </li>
                         `
@@ -398,7 +404,7 @@
                             }
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
-                            console.table(jqXHR)
+                            window.location.replace("/login");
                         }
                     });
                 } else {

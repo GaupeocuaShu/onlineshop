@@ -16,79 +16,96 @@
         </div>
         {{-- Loading --}}
 
-        <div class="bg-white py-3 px-5 ">
-            <ul class="flex justify-between">
+        @if (\Cart::getTotalQuantity() > 0)
+            <div class="bg-white py-3 px-5 ">
+                <ul class="flex justify-between">
 
-                <li class="w-[45%]">
-                    <input type="checkbox" data-select="all" data-total = "{{ $totalQuantity }}" /> &emsp;Product
-                </li>
-                <li>Price Quotation</li>
-                <li>Quantity </li>
-                <li>Price</li>
-                <li>Action</li>
+                    <li class="w-[45%]">
+                        <input type="checkbox" data-select="all" data-total = "{{ $totalQuantity }}" /> &emsp;Product
+                    </li>
+                    <li>Price Quotation</li>
+                    <li>Quantity </li>
+                    <li>Price</li>
+                    <li>Action</li>
 
-            </ul>
+                </ul>
 
-        </div>
-        @foreach ($vendors as $vendor)
-            <div class="bg-white py-3 my-3 px-5">
-                <h1 class="border-b-2 border-slate-200 py-4">
-                    <input type="checkbox" data-select="shop" data-id="{{ $vendor['id'] }}" /> &emsp;<i
-                        class="fa-solid fa-shop"></i>&emsp;{{ $vendor['name'] }}
-                </h1>
-                <div class="vendor-items">
-                    @foreach (Cart::getContent() as $cartItem)
-                        @php
-                            $product = App\Models\Product::findOrFail($cartItem->attributes['product_id']);
-                        @endphp
-                        @if ($cartItem->attributes['vendor_id'] == $vendor['id'])
-                            <div class="my-5 flex justify-between items-center pb-3 border-b-2 border-slate-200">
-                                <div class="w-[50%] flex items-center gap-10">
-                                    <span class="w-[15%] flex items-center">
-
-                                        <input type="checkbox" data-select="item" data-quantity="{{ $cartItem->quantity }}"
-                                            data-vendorid ="{{ $vendor['id'] }}"
-                                            class="vendor-{{ $vendor['id'] }} vendor-item" data-id="{{ $cartItem->id }}" />
-
-                                        &emsp;
-                                        <img width="100" src="{{ asset($cartItem->attributes['imageURL']) }}" /></span>
-                                    <span class="flex-1">{{ $cartItem->name }}</span>
-                                    <div class="flex-1">
-                                        @foreach ($cartItem->attributes as $key => $item)
-                                            @if ($key != 'brand_id' && $key != 'product_id' && $key != 'vendor_id' && $key != 'imageURL')
-                                                <span>{{ $item }}</span> </br />
-                                            @endif
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                                <span>$<span
-                                        class="price-quotation-{{ $cartItem->id }}">{{ $cartItem->price }}</span></span>
-                                <div class="flex">
-                                    <p data-id="{{ $cartItem->id }}"
-                                        class="decrease decrease-{{ $cartItem->id }} cursor-pointer border-2 border-slate-200 py-1 px-3">
-                                        -</p>
-                                    <input data-id="{{ $cartItem->id }}" data-max="{{ $product->qty }}"
-                                        value="{{ $cartItem->quantity }}" type="text"
-                                        class="quantity quantity-{{ $cartItem->id }} text-center w-[80px] border-x-0 border-y-2 border-slate-200 focus:ring-0 focus:border-slate-200"
-                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
-
-                                    <p data-id="{{ $cartItem->id }}" data-max="{{ $product->qty }}"
-                                        class="increase increase-{{ $cartItem->id }} cursor-pointer border-2 border-slate-200 py-1 px-3">
-                                        +</p>
-                                </div>
-                                <span class="text-sky-600">$<span
-                                        class="price-sum price-sum-{{ $cartItem->id }}">{{ $cartItem->getPriceSum() }}</span></span>
-                                <button class="text-red-500 remove remove-{{ $cartItem->id }}"
-                                    data-url="{{ route('user.cart.delete', $cartItem->id) }}">Delete</button
-                                    class="text-red-500">
-                            </div>
-                        @endif
-                    @endforeach
-
-                </div>
             </div>
-        @endforeach
+            @foreach ($vendors as $vendor)
+                <div class="bg-white py-3 my-3 px-5">
+                    <h1 class="border-b-2 border-slate-200 py-4">
+                        <input type="checkbox" data-select="shop" data-id="{{ $vendor['id'] }}" /> &emsp;<i
+                            class="fa-solid fa-shop"></i>&emsp;{{ $vendor['name'] }}
+                    </h1>
+                    <div class="vendor-items">
+                        @foreach (Cart::getContent() as $cartItem)
+                            @php
+                                $product = App\Models\Product::findOrFail($cartItem->attributes['product_id']);
+                            @endphp
+                            @if ($cartItem->attributes['vendor_id'] == $vendor['id'])
+                                <div class="my-5 flex justify-between items-center pb-3 border-b-2 border-slate-200">
+                                    <div class="w-[50%] flex items-center gap-10">
+                                        <span class="w-[15%] flex items-center">
+
+                                            <input type="checkbox" data-select="item"
+                                                data-quantity="{{ $cartItem->quantity }}"
+                                                data-vendorid ="{{ $vendor['id'] }}"
+                                                class="vendor-{{ $vendor['id'] }} vendor-item"
+                                                data-id="{{ $cartItem->id }}" />
+
+                                            &emsp;
+                                            <img width="100"
+                                                src="{{ asset($cartItem->attributes['imageURL']) }}" /></span>
+                                        <span class="flex-1">{{ $cartItem->name }}</span>
+                                        <div class="flex-1">
+                                            @foreach ($cartItem->attributes as $key => $item)
+                                                @if ($key != 'brand_id' && $key != 'product_id' && $key != 'vendor_id' && $key != 'imageURL')
+                                                    <span
+                                                        class="capitalize">{{ $key }}:&emsp;{{ $item }}</span>
+                                                    </br />
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                    <span>$<span
+                                            class="price-quotation-{{ $cartItem->id }}">{{ $cartItem->price }}</span></span>
+                                    <div class="flex">
+                                        <p data-id="{{ $cartItem->id }}"
+                                            class="decrease decrease-{{ $cartItem->id }} cursor-pointer border-2 border-slate-200 py-1 px-3">
+                                            -</p>
+                                        <input data-id="{{ $cartItem->id }}" data-max="{{ $product->qty }}"
+                                            value="{{ $cartItem->quantity }}" type="text"
+                                            class="quantity quantity-{{ $cartItem->id }} text-center w-[80px] border-x-0 border-y-2 border-slate-200 focus:ring-0 focus:border-slate-200"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+
+                                        <p data-id="{{ $cartItem->id }}" data-max="{{ $product->qty }}"
+                                            class="increase increase-{{ $cartItem->id }} cursor-pointer border-2 border-slate-200 py-1 px-3">
+                                            +</p>
+                                    </div>
+                                    <span class="text-sky-600">$<span
+                                            class="price-sum price-sum-{{ $cartItem->id }}">{{ $cartItem->getPriceSum() }}</span></span>
+                                    <button class="text-red-500 remove remove-{{ $cartItem->id }}"
+                                        data-url="{{ route('user.cart.delete', $cartItem->id) }}">Delete</button
+                                        class="text-red-500">
+                                </div>
+                            @endif
+                        @endforeach
+
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <div class="bg-white flex justify-center flex-col items-center h-[30vh] text-2xl">
+                <p>
+                    <i class="fa-solid fa-circle-xmark"></i> &ensp;Your Cart Is Empty &ensp;<i
+                        class="fa-regular fa-face-sad-tear"></i>
+                </p>
+                <a class="bg-sky-600 hover:bg-sky-700 hover:-translate-y-1 text-white py-3 px-4 my-5 text-xl rounded-lg "
+                    href="/">Go
+                    Shopping</a>
+            </div>
+        @endif
     </div>
 
     <div class="bg-slate-800 text-white flex justify-between p-5 items-center fixed bottom-0 w-[1200px]">

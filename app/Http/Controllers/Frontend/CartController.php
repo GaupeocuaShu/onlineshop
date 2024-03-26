@@ -32,12 +32,15 @@ class CartController extends Controller
 
     // Add to cart 
     public function addToCart(Request $request){  
-        $variants=array_merge(...json_decode($request->input("attributes"),true));
+      
         Cart::session(Auth::user()->id);
         $item = $request->except('temp_id','attributes');  
         $isShowInMiniCart =Cart::get($request->id) ? false : true ;
         Cart::add($item); 
-        Cart::update($item['id'],["attributes" =>  $variants]); 
+        if($request->input("attributes")){
+            $variants=array_merge(...json_decode($request->input("attributes"),true));
+            Cart::update($item['id'],["attributes" =>  $variants]); 
+        }
         return response([
             "status" => 'success', 
             "message" => "Product was added to your cart", 

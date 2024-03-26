@@ -166,8 +166,10 @@
             </div>
             <div class="grid grid-cols-5 gap-3 z-[1] relative">
                 @foreach ($products as $p)
-                    <li
-                        class= "bg-slate-200 border-slate-400 border-2 shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all hover:border-sky-600 flex flex-col justify-between  leading-8  ">
+                    <li data-url="{{ route('product', ['product' => $p->slug]) }}"
+                        class= "product cursor-pointer
+                        shadow-lg relative hover:shadow-lg hover:-translate-y-1 transition-all hover:border-sky-600 flex
+                        flex-col justify-between leading-6 ">
                         <img class="min-h-[180px] w-full" src="{{ asset($p->thumb_image) }}" />
                         <div class="absolute w-full text-xs flex justify-between">
                             <span class="bg-sky-600 rounded-sm text-white  p-1 ">
@@ -181,7 +183,7 @@
                         </div>
                         <div class=" p-2">
                             <h1>{{ $p->name }}</h1>
-                            <p class="flex justify-between items-center">
+                            <p class="flex justify-between items-center mt-3">
                                 <span class="text-orange-500 font-bold">${{ $p->price }}</span>
                                 <span class="text-sm ">30 Sold</span>
                             </p>
@@ -198,6 +200,10 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            $(".product").on("click", function() {
+                const url = $(this).data("url");
+                window.location.replace(url);
+            });
             // Filter on Type -----------------------
             $(".type-filter").on("click", function() {
                 window.location.replace($(this).data("url"));

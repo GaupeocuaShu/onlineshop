@@ -32,7 +32,5 @@ Route::get("get-slug-url/",[HomeController::class,"getSlugUrl"])->name("get-slug
 
 Route::get("/product",[HomeController::class,"product"])->name("product");
 
-// Add to cart 
 
-Route::post("/add-to-cart",[CartController::class,"addToCart"])->name("add-to-cart");
 require __DIR__.'/auth.php';

@@ -186,35 +186,44 @@
 
                 {{-- Cart  --}}
                 <div
-                    class="absolute z-[100]  rounded-xl group-hover/minicart:block hidden border-2 border-slate-300 shadow-2xl p-3 right-0 top-[50px] bg-white text-black w-[450px]">
-                    <h1 class="font-light p-3">New Added Item</h1>
-                    <ul class="cart-mini">
-                        @if (Auth::check())
-                            @if (!\Cart::isEmpty())
-                                @foreach (\Cart::getContent() as $item)
-                                    <li
-                                        class="flex hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
-                                        <span class="flex gap-2 items-center">
-                                            <span><img width="50"
-                                                    src="{{ asset($item->attributes['imageURL']) }}" /></span>
-                                            <span>{{ $item->name }}</span>
-                                        </span>|
-                                        @foreach ($item->attributes as $key => $v)
-                                            @if ($key != 'imageURL' && $key != 'brand_id' && $key != 'product_id' && $key != 'vendor_id')
-                                                <span>{{ $v }}</span>
-                                            @endif
-                                        @endforeach|
-                                        <span class="text-sky-600">${{ $item->price }}</span>
-                                    </li>
-                                @endforeach
-                            @endif
-                        @else
-                            <div class="text-center">Please <a href="{{ route('login') }}"
-                                    class="text-sky-600 underline">login</a> to see your
-                                cart</div>
-                        @endif
+                    class="absolute z-[100]  rounded-xl group-hover/minicart:block hidden border-2 border-slate-300 shadow-2xl p-3 right-0 top-[50px] bg-white text-black w-[400px]">
+                    @if (\Cart::getTotalQuantity() > 0)
+                        <div>
+                            <h1 class="font-light p-3">New Added Item</h1>
+                            <ul class="cart-mini">
+                                @if (Auth::check())
+                                    @if (!\Cart::isEmpty())
+                                        @foreach (\Cart::getContent() as $item)
+                                            <li
+                                                class="flex hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
+                                                <span class="flex gap-2 items-center">
+                                                    <span><img width="50"
+                                                            src="{{ asset($item->attributes['imageURL']) }}" /></span>
+                                                    <span>{{ $item->name }}</span>
+                                                </span>
+                                                {{-- |
+                                                @foreach ($item->attributes as $key => $v)
+                                                    @if ($key != 'imageURL' && $key != 'brand_id' && $key != 'product_id' && $key != 'vendor_id')
+                                                        <span>{{ $v }}</span>
+                                                    @endif
+                                                @endforeach| --}}
+                                                <span class="text-sky-600">${{ $item->price }}</span>
+                                            </li>
+                                        @endforeach
+                                    @endif
+                                @else
+                                    <div class="text-center">Please <a href="{{ route('login') }}"
+                                            class="text-sky-600 underline">login</a> to see your
+                                        cart</div>
+                                @endif
 
-                    </ul>
+                            </ul>
+                        </div>
+                    @else
+                        <p class="text-center font-thin">
+                            <i class="fa-solid fa-circle-xmark"></i> Your Cart Is Empty
+                        </p>
+                    @endif
                     <div class="pt-5 mt-5 border-t-2 border-slate-200 text-right">
                         <a href="{{ route('user.cart') }}"
                             class="bg-sky-600 rounded-sm hover:bg-sky-700  text-white py-2 px-4">View Cart</a>
