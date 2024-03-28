@@ -12,10 +12,14 @@
 
     {{-- Brand --}}
     @include('frontend.sections.brand')
+    {{-- Best product --}}
+    @include('frontend.sections.best')
 
     {{-- top product --}}
     @include('frontend.sections.top-product')
 
     {{-- New Arrival product --}}
     @include('frontend.sections.new-arrival')
+    {{-- Featured product --}}
+    @include('frontend.sections.featured-product')
 @endsection

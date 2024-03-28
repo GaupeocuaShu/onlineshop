@@ -22,12 +22,28 @@ class HomeController extends Controller
         $categories = Category::with("subCategories")->get();
         $hotCategories = Category::get()->take(6);  
         $brands = Brand::get()->take(10); 
-        $topProducts = Product::where("product_type","top")->where("is_approved",1)->get()->take(12);
-        $newProducts = Product::where("product_type","new_arrival")->where("is_approved",1)->get()->take(12);
+
+        $featuredProducts = Product::where("product_type","featured")
+                        ->where("status",1)
+                        ->where("is_approved",1)
+                        ->get()->take(12);
+        $topProducts = Product::where("product_type","top")
+                        ->where("status",1)
+                        ->where("is_approved",1)
+                        ->get()->take(12);
+        $newProducts = Product::where("product_type","new_arrival")
+                        ->where("status",1)
+                        ->where("is_approved",1)
+                        ->get()->take(12);
+        $bestProducts = Product::where("product_type","best")
+                        ->where("status",1)
+                        ->where("is_approved",1)
+                        ->get()->take(12);                
+
         $flashSellProducts = FlashSellItem::with("product")->get();
         return view("frontend.pages.home",
         compact("sliders","categoryBanners","categories","hotCategories","brands"
-        ,"topProducts","newProducts","flashSellProducts"));
+        ,"topProducts","newProducts","flashSellProducts","featuredProducts","bestProducts"));
     }
     // return product page 
     // {product?}/{type?}/{subcategory?}/{category?}/{brand?}/{vendor?}
