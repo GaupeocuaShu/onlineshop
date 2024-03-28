@@ -45,12 +45,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Start date</label>
-                                    <input value="{{ $coupon->start_date }}" name="start_date" type="text"
+                                    <input value="{{ $coupon->start_date }}" name="start_date" type="date"
                                         class="datepicker form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="">End date</label>
-                                    <input value="{{ $coupon->end_date }}" name="end_date" type="text"
+                                    <input value="{{ $coupon->end_date }}" name="end_date" type="date"
                                         class="datepicker form-control">
                                 </div>
                                 <div class="row ">

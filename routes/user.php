@@ -10,11 +10,14 @@ Route::post("update-profile",[ProfileController::class,"updateProfile"])->name("
 Route::get("profile",[ProfileController::class,"index"])->name("profile");
 // Profile -------------------------------------------------
 
-// Cart  
+// Cart   -------------------------------------------------
 Route::delete("/{id}/cart",[CartController::class,"delete"])->name("cart.delete");
 Route::put("/cart",[CartController::class,"update"])->name("cart.update");
 Route::get("/cart/get",[CartController::class,"get"])->name("cart.get");
 Route::get("/cart",[CartController::class,"index"])->name("cart");
 // Add to cart 
 Route::post("/add-to-cart",[CartController::class,"addToCart"])->name("add-to-cart");
+// apply coupon 
+Route::put("/apply-coupon",[CartController::class,"applyCoupon"])->name("apply-coupon");
 
+// Cart   ------------------------------------------------- 

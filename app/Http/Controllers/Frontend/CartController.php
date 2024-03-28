@@ -1,12 +1,14 @@
 <?php
 namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
+use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Cart;
 use Darryldecode\Cart\Cart as CartCart;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\ShopProfile;
+use Carbon\Carbon;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -14,6 +16,8 @@ class CartController extends Controller
 {
     // return cart view 
     public function index(){  
+        Cart::session("checked")->clearCartConditions();
+        Cart::session("checked")->clear();
         $userID = Auth::user()->id; 
         Cart::session($userID); 
         $vendors = array(); 
@@ -62,14 +66,19 @@ class CartController extends Controller
         return response(['status' => "success"]);
     }
     public function get(Request $request){ 
-        Cart::session(Auth::user()->id);
+        Cart::session("checked")->clear();
+        Cart::session("checked")->clear();
+        Cart::session(Auth::user()->id);  
         if($request->type == "all") {  
             if($request->isCheck == 'true') {
                 $quantity = Cart::getTotalQuantity();  
-                $totalPrice = Cart::getTotal();
+                $totalPrice = Cart::getTotal(); 
+                foreach(Cart::getContent() as $item){
+                    Cart::session("checked")->add($item->toArray());
+                }
                 return response([
-                    "total" => $totalPrice, 
-                    "quantity" => $quantity
+                    'total' =>Cart::session("checked")->getTotal(), 
+                    "quantity" =>Cart::session("checked")->getTotalQuantity(), 
                 ]);
             }
             else {
@@ -80,16 +89,14 @@ class CartController extends Controller
             }
         }
         else { 
-            $sum = 0;  
-            $quantity = 0 ;
             $idArray = json_decode($request->ids);
-            foreach($idArray as $id) { 
-                $sum += Cart::get($id)->getPriceSum();  
-                $quantity += Cart::get($id)->quantity; 
+            foreach($idArray as $id) {  
+                $item = Cart::session(Auth::user()->id)->get($id)->toArray();
+                Cart::session("checked")->add($item);
             }
             return response([
-                'total' => $sum, 
-                "quantity" =>  $quantity, 
+                'total' =>Cart::session("checked")->getTotal(), 
+                "quantity" =>Cart::session("checked")->getTotalQuantity(), 
             ]);
         }    
     }
@@ -99,4 +106,69 @@ class CartController extends Controller
         Cart::remove($id); 
         return response(["status" => "success","total" => Cart::getTotalQuantity()]);
     }
+
+    // Check coupon 
+    public function applyCoupon(Request $request){
+        Cart::session("checked");
+        // Check is Cart session checked empty 
+        if(count(Cart::getContent()) <= 0){
+            return response([
+                "status" => "unsuccess",
+                "title" => "Please Select The Item", 
+            ]);
+        }    
+        $coupon = Coupon::where("code",$request->code)->first();  
+
+        if($coupon){  
+            // Check is coupon active 
+            if(!$coupon->status) {
+                return response([
+                    "status" => "unsuccess",
+                    "title" => "Sorry :(( Your Coupon Is Not Available", 
+                    "text" => "Let's Join Our Events To Get Coupon"
+                ]);
+            }
+            // Check is coupon expired 
+            $currentTime = Carbon::now();
+            if(!$currentTime->between($coupon->start_date,$coupon->end_date)){
+                return response([
+                    "status" => "unsuccess",
+                    "title" => "Sorry :(( Your Coupon Is Expired", 
+                    "text" => "Let's Join Our Events To Get Coupon"
+                ]);
+            };
+            // Check is coupon applied  
+            $cartConditions = Cart::getConditions();
+            foreach($cartConditions as $condition) {
+                if($condition->getName() == $coupon->name){
+                    return response([
+                        "status" => "unsuccess",
+                        "title" => "Sorry :(( Your Coupon was applied", 
+                    ]);
+                }
+            } 
+            
+            // Filter coupon
+            if($coupon->discount == "percentage") $value = '-'.strval($coupon->discount).'%'; 
+            else $value = '-'.strval($coupon->discount);
+            $condition = new \Darryldecode\Cart\CartCondition(array(
+                'name' => $coupon->name,
+                'type' => 'coupon',
+                'target' => 'total',
+                'value' =>$value,
+            ));
+            Cart::condition($condition);
+            return response([
+                "status" => "success",
+                "title" => "Applied Coupon",
+                "total" => Cart::getTotal(),
+                "subtotal" => Cart::getSubTotal(),
+            ]); 
+        }
+        else return response([
+            "status" => "unsuccess",
+            "title" => "Sorry :(( Your Coupon Is Invalid", 
+            "text" => "Let's Join Our Events To Get Coupon"
+        ]);
+    }   
 }

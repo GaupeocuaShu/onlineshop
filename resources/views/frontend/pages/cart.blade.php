@@ -114,11 +114,16 @@
             <label>Select All</label>
         </div>
         <div class="relative w-[300px] h-[50px] ">
-            <input type="text" class="p-3 w-full text-black" placeholder="Enter Shuty's Shop Voucher" />&emsp;
-            <button class="right-0 top-0  h-full absolute bg-sky-600 px-3 py-3 rounded-sm hover:bg-sky-800">Apply</button>
+            <input type="text" class="coupon p-3 w-full text-black" placeholder="Enter Shuty's Shop Voucher" />&emsp;
+            <button
+                class="cursor-pointer apply right-0 top-0  h-full absolute bg-sky-600 px-3 py-3 rounded-sm hover:bg-sky-800">Apply</button>
         </div>
-        <div>
-            Total (<span class="total-quantity">0</span> item): $<span class="total-price">0</span>&emsp;
+
+        <div class="flex gap-x-5 items-center">
+            <div class="flex flex-col"><code class="message text-sky-400"></code>
+                <p class="text-center">Total (<span class="total-quantity">0</span> item): $<span
+                        class="total-price text-xl">0</span></p>
+            </div>
             <button class="bg-sky-600 px-10 py-3 rounded-sm hover:bg-sky-800">Check out</button>
         </div>
 
@@ -128,12 +133,59 @@
     <script>
         $(document).ready(function() {
             function init() {
+                $(".coupon").val("");
                 $($("input[type= 'checkbox']")).each(function(i, v) {
                     $(v).prop('checked', false);
                 });
             }
+            // Apply Coupon
+            $(".apply").on("click", function() {
+                const code = $(".coupon").val();
+                if (code == "") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Please Enter Valid Coupon",
+                    });
+                    return;
+                }
+                $.ajax({
+                    type: "PUT",
+                    url: "{{ route('user.apply-coupon') }}",
+                    data: {
+                        code: code,
+                    },
+                    dataType: "JSON",
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            $(".total-price").html(
+                                `<span class='line-through'>${response.subtotal}</span> <span class='text-xl text-sky-500'>${response.total}</span>`
+                            );
 
+                            Swal.fire({
+                                icon: "success",
+                                title: response.title,
+                            });
+                            $(".apply").attr("disabled", true);
+                            $(".apply").removeClass("hover:bg-sky-800", true);
+                            $(".coupon").attr("disabled", true);
+                            $(".message").html("Your coupon was applied !");
+
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: response.title,
+                                text: response.text,
+                            });
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.table(jqXHR)
+                    }
+                });
+            });
             init()
+            // Apply coupon 
+
             // Remove Item 
             function removeItem(url, hidden) {
                 Swal.fire({
@@ -247,6 +299,8 @@
                 return qty;
             }
             // Quantity item handle  --------------------------- 
+
+            // Find Checked Item -------------------
             function checkOnItem() {
                 let itemIDArray = [];
                 let count = 0;
@@ -262,6 +316,7 @@
                 else $(checkboxAll).prop("checked", false);
                 getCart(null, null, itemIDArray);
             }
+            // Find Checked Item -------------------
 
             $(".increase").on("click", function() {
                 const id = $(this).data("id")
