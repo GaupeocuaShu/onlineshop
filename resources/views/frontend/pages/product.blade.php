@@ -85,6 +85,7 @@
                                                 <p data-price="{{ $item->price }}" data-isswipe={{ $variant->is_swipe }}
                                                     data-variantid="{{ $variant->id }}" data-name="{{ $item->name }}"
                                                     data-variantname = "{{ $variant->name }}"
+                                                    data-id = "{{ $item->id }}"
                                                     class="variant-{{ $variant->id }} variant-item-button border-2  text-sm  px-3 py-2 cursor-pointer">
                                                     {{ $item->name }} </p>
                                             @endif
@@ -219,7 +220,7 @@
 @endpush
 @push('scripts')
     <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
@@ -316,11 +317,13 @@
                 $(".variant-item-button.act").each(function(i, v) {
                     newid += $(v).data("id");
                     $('input[name="id"]').val(newid);
+
                     const variantName = $(v).data('variantname')
                     let variantPair = {}
                     variantPair[variantName] = $(v).data("name")
                     allVarNames.push(variantPair)
                 });
+                console.log(newid);
                 const allVarNamesJson = JSON.stringify(allVarNames);
                 $('input[name="attributes"]').val(allVarNamesJson);
             });
@@ -387,12 +390,13 @@
                                     text: response.message,
                                 });
                                 $(".cart-qty").html(response.cart);
-
+                                $(".cart-show").removeClass("hidden");
+                                $(".cart-hidden").addClass("hidden");
                                 // Append new item to mini cart 
                                 if (response.isShowInMiniCart) {
                                     const li = `
                                 <li class="flex hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
-                                    <span class="flex gap-2">
+                                    <span class="flex gap-2 items-center">
                                         <span><img width="50" src="${response.variants['imageURL']}" /></span>
                                         <span>${ response.name }</span>
                                     </span>

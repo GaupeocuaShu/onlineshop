@@ -1,6 +1,6 @@
 @extends('frontend.layout.mastercart')
 @section('content')
-    <div class ="py-8 relative h-screen">
+    <div class ="py-8 relative min-h-screen">
         {{-- Loading --}}
         <div role="status" class="loading absolute w-full h-full hidden items-center justify-center bg-[#eeeeee7d]">
             <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
