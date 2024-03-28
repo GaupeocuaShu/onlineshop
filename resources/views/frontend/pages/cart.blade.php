@@ -155,6 +155,9 @@
                                         title: "Removed",
                                         icon: "success"
                                     });
+                                    const checkboxAll = $(
+                                        "input[type ='checkbox'][data-select ='all']");
+                                    $(checkboxAll).data("total", response.total);
                                     hidden();
                                     checkOnItem();
                                 }
@@ -254,6 +257,7 @@
                     }
                 });
                 const checkboxAll = $("input[type ='checkbox'][data-select ='all']");
+                console.log(count + " " + $(checkboxAll).data("total"));
                 if (count == $(checkboxAll).data("total")) $(checkboxAll).prop("checked", true);
                 else $(checkboxAll).prop("checked", false);
                 getCart(null, null, itemIDArray);
@@ -290,6 +294,8 @@
                 const quantity = changeQuantity(id, null, max);
                 updateCart(id, quantity)
             })
+
+            // Remove item 
 
             $(".remove").on("click", function() {
                 const url = $(this).data("url");

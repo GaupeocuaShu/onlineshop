@@ -16,6 +16,7 @@ use App\Http\Controllers\Vendor\ProductImageGalleryController;
 use App\Http\Controllers\Vendor\ProductVariantController; 
 use App\Http\Controllers\Vendor\ProductVariantItemController; 
 use App\Http\Controllers\Vendor\ProductController;
+use App\Http\Controllers\backend\CouponController;
 // Profile -------------------------------------------------
 Route::post("profile-update",[ProfileController::class,"profileUpdate"])->name("profile.profile-update");
 
@@ -116,3 +117,11 @@ Route::put("flash-sell/store", [FlashSellController::class, "store"])->name("fla
 Route::get("flash-sell/index", [FlashSellController::class, "index"])->name("flash_sell.index");
 Route::put("flash-sell/update", [FlashSellController::class, "update"])->name("flash_sell.update");
 // Flash Sell  -------------------------------------------------
+
+
+
+// Coupons  -------------------------------------------------
+Route::put("coupons/{id}/change-status", [CouponController::class, "changeStatus"])->name("coupons.change_status");
+Route::resource("coupons", CouponController::class);
+
+// Coupons  -------------------------------------------------

@@ -16,7 +16,7 @@
                 </ul>
             </li>
             <li
-                class="dropdown {{ setActive(['admin.flash_sell.*', 'admin.product.*', 'admin.slider.*', 'admin.brand.*', 'admin.category.*', 'admin.product_from_vendor.*']) }}">
+                class="dropdown {{ setActive(['admin.coupons.*', 'admin.flash_sell.*', 'admin.product.*', 'admin.slider.*', 'admin.brand.*', 'admin.category.*', 'admin.product_from_vendor.*']) }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Website
                         Management</span></a>
                 <ul class="dropdown-menu">
@@ -29,6 +29,9 @@
                     </li>
                     <li class="{{ setActive(['admin.flash_sell.*']) }}"><a class=" nav-link"
                             href="{{ route('admin.flash_sell.index') }}">Flash Sell Products </a>
+                    </li>
+                    <li class="{{ setActive(['admin.coupons.*']) }}"><a class=" nav-link"
+                            href="{{ route('admin.coupons.index') }}">Coupon</a>
                     </li>
                 </ul>
             </li>

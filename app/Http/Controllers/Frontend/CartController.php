@@ -97,6 +97,6 @@ class CartController extends Controller
     public function delete(string $id){
         Cart::session(Auth::user()->id);
         Cart::remove($id); 
-        return response(["status" => "success"]);
+        return response(["status" => "success","total" => Cart::getTotalQuantity()]);
     }
 }
