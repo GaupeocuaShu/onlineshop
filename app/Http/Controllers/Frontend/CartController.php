@@ -16,6 +16,7 @@ class CartController extends Controller
 {
     // return cart view 
     public function index(){  
+        $title = "Cart";
         Cart::session("checked")->clearCartConditions();
         Cart::session("checked")->clear();
         $userID = Auth::user()->id; 
@@ -30,6 +31,7 @@ class CartController extends Controller
         return view("frontend.pages.cart",[
             'vendors' => $uniqueVendorsArray , 
             'totalQuantity' => Cart::getTotalQuantity(),
+            'title' =>  $title,
         ]);
     }
 

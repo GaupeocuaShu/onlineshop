@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\User\CheckOutController;
 use App\Http\Controllers\User\ProfileController;
 
 // Profile -------------------------------------------------
@@ -21,3 +22,9 @@ Route::post("/add-to-cart",[CartController::class,"addToCart"])->name("add-to-ca
 Route::put("/apply-coupon",[CartController::class,"applyCoupon"])->name("apply-coupon");
 
 // Cart   ------------------------------------------------- 
+
+
+// Check out   ------------------------------------------------- 
+Route::get("/check-out",[CheckOutController::class,"index"])->name("check-out");
+// Check out   ------------------------------------------------- 
+

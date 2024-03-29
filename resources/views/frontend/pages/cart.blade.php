@@ -25,7 +25,7 @@
                     </li>
                     <li>Price Quotation</li>
                     <li>Quantity </li>
-                    <li>Price</li>
+                    <li>Sub Total</li>
                     <li>Action</li>
 
                 </ul>
@@ -124,7 +124,8 @@
                 <p class="text-center">Total (<span class="total-quantity">0</span> item): $<span
                         class="total-price text-xl">0</span></p>
             </div>
-            <button class="bg-sky-600 px-10 py-3 rounded-sm hover:bg-sky-800">Check out</button>
+            <a href="{{ route('user.check-out') }}"
+                class="check-out bg-sky-600 px-10 py-3 rounded-sm hover:bg-sky-800">Check out</a>
         </div>
 
     </div>
@@ -138,6 +139,18 @@
                     $(v).prop('checked', false);
                 });
             }
+            // Go To Check out Page
+            $(".check-out").on("click", function(e) {
+                e.preventDefault();
+                const item = parseInt($('.total-quantity').html());
+                if (item > 0) window.location.replace($(this).attr('href'));
+                else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Please Select Item",
+                    });
+                }
+            });
             // Apply Coupon
             $(".apply").on("click", function() {
                 const code = $(".coupon").val();
