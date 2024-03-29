@@ -6,19 +6,22 @@
         <div id="tabs" class="flex flex-col md:flex-row  gap-6 ">
             <ul class="rounded-xl">
                 <li data-id="1"
-                    class="w-[280px] tab-link-1 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
-                    <a class="w-[100%] block p-5" href="#tabs-1"><i class="fa-solid fa-circle-user"></i>&emsp;Account</a></li>
+                    class="w-[350px] tab-link-1 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    <a class="w-[100%] block p-5" href="#tabs-1"><i class="fa-solid fa-circle-user"></i>&emsp;Account</a>
+                </li>
                 <li data-id="2"
-                    class="w-[280px] tab-link-2 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
-                    <a class="w-[100%] block p-5" href="#tabs-2"><i class="fa-solid fa-cart-shopping"></i>&emsp;Historic
-                        Order</a></li>
+                    class="w-[350px] tab-link-2 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    <a class="w-[100%] block p-5" href="#tabs-2"><i
+                            class="fa-solid fa-cart-shopping"></i>&emsp;Addresses</a>
+                </li>
                 <li data-id="3"
-                    class="w-[280px] tab-link-3 tab-link duration-100 hover:duratio100-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    class="w-[350px] tab-link-3 tab-link duration-100 hover:duratio100-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
                     <a class="w-[100%] block p-5" href="#tabs-3"><i class="fa-solid fa-lock"></i>&emsp;Password And
-                        Security</a></li>
-                <li data-id="4"
-                    class="w-[280px] tab-link-4 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
-                    <a class="w-[100%] block p-5" href="#tabs-3"><i class="fa-solid fa-heart"></i>&emsp;Favorite Items</a>
+                        Security</a>
+                </li>
+                <li data-id="5"
+                    class="w-[350px] tab-link-5 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    <a class="w-[100%] block p-5" href="#tabs-5"><i class="fa-solid fa-heart"></i>&emsp;Favorite Items</a>
                 </li>
             </ul>
             <div class="w-[100vw]">
@@ -87,15 +90,17 @@
                         </div>
                     </div>
                 </div>
-                <div id="tabs-2">
+                <div id="tabs-2" class="p-5 bg-white">
+                    <div class="flex justify-between border-b-2 border-slate-200 pb-5">
+                        <span class="text-xl">My Addresses</span>
+                        <button class="bg-sky-600 rounded-sm py-2 px-5 text-white">+ Add New Address</button>
+                    </div>
+                    <div class="py-5">
+                        <h1 class="text-xl">Address</h1>
+                        <div>
 
-                    <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id
-                        nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros
-                        molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula
-                        in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis.
-                        Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat.
-                        Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod
-                        felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+                        </div>
+                    </div>
                 </div>
                 <div id="tabs-3" class=" bg-white p-8 h-[100vh]">
                     <div>

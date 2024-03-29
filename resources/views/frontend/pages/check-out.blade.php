@@ -1,3 +1,6 @@
+@php
+    \Cart::session('checked');
+@endphp
 @extends('frontend.layout.mastercart')
 @section('content')
     <div class ="py-8 relative min-h-screen">
@@ -83,18 +86,26 @@
             </div>
             <div class="my-10 flex flex-col items-end border-y-2 border-slate-200 py-5 gap-y-6">
                 <div class="w-[300px] flex justify-between"><span>Merchandise Subtotal </span><span
-                        class="ml-10">$375.000</span> </div>
-                <div class="w-[300px] flex justify-between"><span>Voucher</span><span class="ml-10 text-red-600">-$5</span>
-                </div>
+                        class="ml-10">${{ \Cart::getSubTotal() }}</span> </div>
+
+                @if (count(\Cart::getConditions()) > 0)
+                    @foreach (\Cart::getConditions() as $con)
+                        <div class="w-[300px] flex justify-between capitalize"><span>{{ $con->getType() }}</span><span
+                                class="ml-10 text-red-600">
+                                {{ $con->getValue() }}
+                            </span>
+                        </div>
+                    @endforeach
+                @endif
                 <div class="w-[300px] flex justify-between"><span>Total </span><span
-                        class="ml-10 text-sky-600 text-xl">$375.000</span> </div>
+                        class="ml-10 text-sky-600 text-xl">${{ \Cart::getTotal() }}</span> </div>
             </div>
             <div class="flex justify-between items-center">
                 <p>
                     By clicking "Place Order", you are agreeing to <a class="text-sky-700" href="#">ShuTy's Shop
                         General Transaction Terms</a>
                 </p>
-                <button class="bg-sky-600 text-white py-3 px-10">
+                <button class="bg-sky-600 text-white py-3 px-10 hover:bg-sky-800 rounded-sm">
                     Place Order
                 </button>
             </div>
