@@ -3,24 +3,24 @@
 
     <div class="py-5 relative min-h-screen ">
         {{-- Account sidebar --}}
-        <div id="tabs" class="flex flex-col md:flex-row   gap-6 ">
+        <div id="tabs" class="flex flex-col md:flex-row gap-6 ">
             <ul class="rounded-xl">
                 <li data-id="1"
-                    class="w-[350px] tab-link-1 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    class="w-[350px] tab-link-1 tab-link duration-100 hover:duration-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
                     <a class="w-[100%] block p-5" href="#tabs-1"><i class="fa-solid fa-circle-user"></i>&emsp;Account</a>
                 </li>
                 <li data-id="2"
-                    class="w-[350px] tab-link-2 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    class="w-[350px] tab-link-2 tab-link duration-100 hover:duration-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
                     <a class="w-[100%] block p-5" href="#tabs-2"><i
                             class="fa-solid fa-cart-shopping"></i>&emsp;Addresses</a>
                 </li>
                 <li data-id="3"
-                    class="w-[350px] tab-link-3 tab-link duration-100 hover:duratio100-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    class="w-[350px] tab-link-3 tab-link duration-100 hover:duratio100-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
                     <a class="w-[100%] block p-5" href="#tabs-3"><i class="fa-solid fa-lock"></i>&emsp;Password And
                         Security</a>
                 </li>
                 <li data-id="5"
-                    class="w-[350px] tab-link-5 tab-link duration-100 hover:duration-100 hover:font-semibold text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    class="w-[350px] tab-link-5 tab-link duration-100 hover:duration-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
                     <a class="w-[100%] block p-5" href="#tabs-5"><i class="fa-solid fa-heart"></i>&emsp;Favorite Items</a>
                 </li>
             </ul>
@@ -28,7 +28,7 @@
                 <div id="tabs-1" class=" bg-white p-8">
                     <div>
                         {{-- Overview --}}
-                        <h1 class="text-2xl pb-2 font-semibold border-b-2 border-slate-300">Overview</h1>
+                        <h1 class="text-2xl pb-2 font-semibold border-b-2 text-sky-600 border-slate-300">Overview</h1>
                         <div class="my-5 flex flex-col md:flex-row justify-between flex-wrap gap-y-4 ">
                             <div class="md:w-[300px]">
                                 <h1>Name</h1>
@@ -92,14 +92,14 @@
                 </div>
                 <div id="tabs-2" class="p-5 bg-white">
                     <div class="flex justify-between items-center border-b-2 border-slate-200 pb-5">
-                        <span class="text-xl">My Addresses</span>
+                        <span class="text-2xl text-sky-600 font-semibold">My Addresses</span>
                         <button class="register-address bg-sky-600 hover:bg-sky-700 rounded-sm py-3 px-5 text-white">+ Add
                             New Address
                         </button>
                     </div>
                     <div class="py-5">
-                        <h1 class="text-2xl">Address</h1>
-                        <div>
+                        <h1 class="text-2xl text-sky-600">Address</h1>
+                        <div class="addresses">
                             @foreach ($addresses as $addr)
                                 <div class="py-5 flex address justify-between border-b-2 borde-slate-200">
                                     <div class="leading-[30px]">
@@ -110,7 +110,8 @@
                                             {{ $addr->country . ', ' . $addr->state . ' State, ' . $addr->city . ' City, ' . $addr->zip }}
                                         </p>
                                         @if ($addr->is_default == 1)
-                                            <span class="text-sm border-sky-500 border-2 p-2  text-sky-500">Default</span>
+                                            <span
+                                                class="default text-sm border-sky-500 border-2 p-2  text-sky-500">Default</span>
                                         @endif
                                     </div>
                                     <div class="flex flex-col items-end gap-y-3">
@@ -120,7 +121,7 @@
                                                 class="delete text-red-600 hover:underline">Delete</button>
                                         </div>
                                         <button
-                                            class="{{ !$addr->is_default == 1 ? 'border-2 border-sky-500 text-sky-500' : 'bg-slate-200' }} py-2 px-4  ">Set
+                                            class="{{ !$addr->is_default == 1 ? 'border-2 border-sky-600 text-sky-600' : 'bg-slate-200' }} py-2 px-4 set-default ">Set
                                             As Default</button>
                                     </div>
                                 </div>
@@ -134,7 +135,7 @@
                         {{-- Change Password --}}
 
                         <div class="gap-y-10">
-                            <h1 class="text-2xl pb-2 font-semibold border-b-2 border-slate-300">
+                            <h1 class="text-2xl pb-2 font-semibold border-b-2 text-sky-600 border-slate-300">
                                 Password & Security <br />
                                 <span class="text-base font-normal">For your safety, We recommend you to use a strong
                                     password </span>
@@ -257,7 +258,7 @@
             });
 
             // Delete Address 
-            $(".delete").on("click", function() {
+            $("body").on("click", ".delete", function() {
                 const url = $(this).data("url");
 
 
@@ -306,6 +307,7 @@
                     dataType: "JSON",
                     success: function(response) {
                         if (response.status == 'success') {
+
                             Toastify({
                                 text: response.message,
                                 duration: 3000,
@@ -316,6 +318,47 @@
                             }).showToast();
                             $(".show-address").toggle();
                             $(".freeze-screen").toggle();
+                            const addr = response.address;
+                            let isDefaultHTML = '';
+                            let buttonSetDefaultHTML = `<button
+                                            class="border-2 border-sky-600 text-sky-600 py-2 px-4 ">Set
+                                            As Default</button>`;
+
+                            if (addr.is_default == 1) {
+                                $(".address").each(function(i, v) {
+                                    console.log($(v).find(".default"));
+                                    $(v).find(".default").remove();
+                                    $(v).find(".set-default").parent().append(
+                                        buttonSetDefaultHTML);
+
+                                    $(v).find(".set-default").remove();
+                                })
+                                isDefaultHTML =
+                                    `<span class="default text-sm border-sky-500 border-2 p-2  text-sky-500">Default</span>`;
+                                buttonSetDefaultHTML = `<button
+                                            class="bg-slate-200 py-2 px-4 set-default">Set
+                                            As Default</button>`
+                            }
+                            const html = `<div class="py-5 flex address justify-between border-b-2 borde-slate-200">
+                                    <div class="leading-[30px]">
+                                        <p><span class="text-2xl">${addr.name}</span> &ensp;| &ensp;<span>(+1)
+                                            ${addr.phone}</span></p>
+                                        <p>${addr.address}</p>
+                                        <p class="mb-3">
+                                            ${addr.country}, ${addr.status} State, ${addr.city} City,  ${addr.zip} 
+                                        </p>
+                                        ${isDefaultHTML}
+                                    </div>
+                                    <div class="flex flex-col items-end gap-y-3">
+                                        <div class="flex gap-3">
+                                            <button class="text-sky-600 hover:underline">Edit</button>
+                                            <button data-url="${response.deleteURL}"
+                                                class="delete text-red-600 hover:underline">Delete</button>
+                                        </div>
+                                        ${buttonSetDefaultHTML}
+                                    </div>
+                                </div>`;
+                            $(".addresses").prepend(html);
                         }
                     },
                     error: function(response) {

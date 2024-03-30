@@ -44,7 +44,7 @@ class AddressController extends Controller
             "address" => ["required",'string'],
             "type" => ["required",'string']
         ]);
-        UserAddresses::create([
+        $address = UserAddresses::create([
             "user_id" => Auth::user()->id,
             "name" => $request->name, 
             "phone" => $request->phone, 
@@ -59,6 +59,8 @@ class AddressController extends Controller
         return response([
             "status" => "success", 
             "message" => "Added New Address",
+            "address" => $address,
+            "deleteURL" => route("user.address.destroy",$address->id),
         ]) ;
     }
 
@@ -95,7 +97,8 @@ class AddressController extends Controller
         $addr->delete(); 
         return response([
             "status" => 'success', 
-            "message" => "Delete Address Successfully",
+            "message" => "Delete Address Successfully", 
+        
         ]);
     }
 }

@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 .active {
-    border-left: 5px solid rgb(52, 52, 82);
+    border-left: 5px solid rgb(26, 99, 163);
     font-weight: 600;
+    color: rgb(26, 99, 163);
 }
 
 .button-outline {
