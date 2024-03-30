@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\User\AddressController;
 use App\Http\Controllers\User\CheckOutController;
 use App\Http\Controllers\User\ProfileController;
 
@@ -28,3 +29,8 @@ Route::put("/apply-coupon",[CartController::class,"applyCoupon"])->name("apply-c
 Route::get("/check-out",[CheckOutController::class,"index"])->name("check-out");
 // Check out   ------------------------------------------------- 
 
+// Address ------------------------------------------------- 
+
+Route::resource("address",AddressController::class);
+
+// Address ------------------------------------------------- 

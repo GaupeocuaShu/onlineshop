@@ -1,7 +1,7 @@
 @extends('frontend.layout.master', ['title' => $title])
 @section('content')
 
-    <div class="py-5 relative h-screen ">
+    <div class="py-5 relative min-h-screen ">
         {{-- Account sidebar --}}
         <div id="tabs" class="flex flex-col md:flex-row   gap-6 ">
             <ul class="rounded-xl">
@@ -100,7 +100,30 @@
                     <div class="py-5">
                         <h1 class="text-xl">Address</h1>
                         <div>
-
+                            @foreach ($addresses as $addr)
+                                <div class="py-5 flex justify-between ">
+                                    <div class="leading-[30px]">
+                                        <p><span class="text-2xl">{{ $addr->name }}</span> &ensp;| &ensp;<span>(+1)
+                                                {{ $addr->phone }}</span></p>
+                                        <p>{{ $addr->address }}</p>
+                                        <p class="mb-3">
+                                            {{ $addr->country . ', ' . $addr->state . ' State, ' . $addr->city . ' City, ' . $addr->zip }}
+                                        </p>
+                                        @if ($addr->is_default == 1)
+                                            <span class="text-sm border-sky-500 border-2 p-2  text-sky-500">Default</span>
+                                        @endif
+                                    </div>
+                                    <div class="flex flex-col items-end gap-y-3">
+                                        <div class="flex gap-3">
+                                            <button class="text-sky-600 hover:underline">Edit</button>
+                                            <button class="text-red-600 hover:underline">Delete</button>
+                                        </div>
+                                        <button
+                                            class="{{ !$addr->is_default == 1 ? 'border-2 border-sky-500 text-sky-500' : 'bg-slate-200' }} py-2 px-4  ">Set
+                                            As Default</button>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -157,28 +180,33 @@
         <div class="freeze-screen hidden w-screen h-screen bg-[#3232325a] fixed top-0 left-0"></div>
         {{-- Add New Address --}}
         <div
-            class="show-address hidden rounded-lg absolute p-10 shadow-2xl bg-white w-[700px] h-[500px] top-[20%] left-[50%] -translate-y-[50%] -translate-x-[50%]">
+            class="show-address hidden rounded-lg absolute p-10 shadow-2xl bg-white w-[700px] h-[600px] top-[20%] left-[50%] -translate-y-[50%] -translate-x-[50%]">
             <h1 class="text-xl my-5">New Address</h1>
             <form>
                 <div class="flex justify-between gap-5">
-                    <input class="flex-1" type="text" placeholder="Full Name" />
-                    <input class="flex-1" type="text" placeholder="Phone Number" />
+                    <input name="name" class="flex-1" type="text" placeholder="Full Name" />
+                    <input name="phone" class="flex-1" type="text" placeholder="Phone Number" />
+                </div>
+                <div class="flex justify-between gap-5 my-5">
+                    <input name="country" class="w-full" type="text" placeholder="Country" />
+                    <input name="state" class="w-full" type="text" placeholder="State" />
+                </div>
+                <div class="flex justify-between gap-5 my-5">
+                    <input name="city" class="w-full" type="text" placeholder="City" />
+                    <input name="zip" class="w-full" type="text" placeholder="Zip Code" />
                 </div>
                 <div class="my-5">
-                    <input class="w-full" type="text" placeholder="City-District-Ward" />
-                </div>
-                <div class="my-5">
-                    <input class="w-full" type="text" placeholder="Street Name" />
+                    <input name="address" class="w-full" type="text" placeholder="Address" />
                 </div>
                 <div class="my-5">
                     <label>Label As:</label> </br>
-                    <select class="my-2 w-full">
-                        <option>Home</option>
-                        <option>Work</option>
+                    <select name="type" class="my-2 w-full">
+                        <option value="home">Home</option>
+                        <option value="work">Work</option>
                     </select>
                 </div>
                 <div class="flex items-center">
-                    <input type="checkbox" />&ensp;<label>Set As Default Address</label>
+                    <input type="checkbox" name="is_default" value="true" />&ensp;<label>Set As Default Address</label>
                 </div>
                 <div class="flex gap-5 justify-end">
                     <button class="hide-address py-2 px-7 bg-slate-200 hover:bg-slate-300 rounded-sm">Cancel</button>
@@ -226,6 +254,45 @@
                 $(".show-address").toggle();
                 $(".freeze-screen").toggle();
             });
+
+
+            // Create Address 
+            $("form").on("submit", function(e) {
+                e.preventDefault();
+                const data = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('user.address.store') }}",
+                    data: data,
+                    dataType: "JSON",
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                className: "info",
+                                style: {
+                                    background: "linear-gradient(to right, #00b09b, #96c93d)",
+                                }
+                            }).showToast();
+                            $(".show-address").toggle();
+                            $(".freeze-screen").toggle();
+                        }
+                    },
+                    error: function(response) {
+                        const message = response.responseJSON.message;
+                        Toastify({
+                            text: message,
+                            duration: 3000,
+                            className: "info",
+                            style: {
+                                background: "linear-gradient(to right, orange, red)",
+                            }
+                        }).showToast();
+
+                    }
+                });
+            })
         });
     </script>
 @endpush

@@ -8,6 +8,7 @@ use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\UserAddresses;
 use Illuminate\Support\Facades\Session;
 class ProfileController extends Controller
 {
@@ -16,7 +17,8 @@ class ProfileController extends Controller
         $title = "Profile";
         $user = Auth::user();
         $categories = Category::get();
-        return view("frontend.pages.profile",compact("title","user","categories"));
+        $addresses = UserAddresses::where("user_id",Auth::user()->id)->get();
+        return view("frontend.pages.profile",compact("title","user","categories","addresses"));
     }
     // Update Profile
     public function updateProfile(Request $request){

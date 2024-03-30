@@ -12,12 +12,12 @@ class UserAddresses extends Model
         "user_id",
         "name",
         "type",
-        "email",
         "phone",
         "country",
         "state",
         "city",
         "zip",
         "address",
+        "is_default",
     ];
 }
