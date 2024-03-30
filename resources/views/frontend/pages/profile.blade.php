@@ -101,7 +101,8 @@
                         <h1 class="text-2xl text-sky-600">Address</h1>
                         <div class="addresses">
                             @foreach ($addresses as $addr)
-                                <div class="py-5 flex address justify-between border-b-2 borde-slate-200">
+                                <div
+                                    class="py-5 flex address-{{ $addr->id }} address  justify-between border-b-2 borde-slate-200">
                                     <div class="leading-[30px]">
                                         <p><span class="text-2xl">{{ $addr->name }}</span> &ensp;| &ensp;<span>(+1)
                                                 {{ $addr->phone }}</span></p>
@@ -109,10 +110,10 @@
                                         <p class="mb-3">
                                             {{ $addr->country . ', ' . $addr->state . ' State, ' . $addr->city . ' City, ' . $addr->zip }}
                                         </p>
-                                        @if ($addr->is_default == 1)
-                                            <span
-                                                class="default text-sm border-sky-500 border-2 p-2  text-sky-500">Default</span>
-                                        @endif
+
+                                        <span
+                                            class="default {{ $addr->is_default == 1 ? 'inline' : 'hidden' }} text-sm border-sky-500 border-2 p-2  text-sky-500">Default</span>
+
                                     </div>
                                     <div class="flex flex-col items-end gap-y-3">
                                         <div class="flex gap-3">
@@ -120,7 +121,8 @@
                                             <button data-url="{{ route('user.address.destroy', $addr->id) }}"
                                                 class="delete text-red-600 hover:underline">Delete</button>
                                         </div>
-                                        <button
+                                        <button data-url="{{ route('user.address.set-default', $addr->id) }}"
+                                            {{ $addr->is_default == 1 ? 'disabled' : '' }}
                                             class="{{ !$addr->is_default == 1 ? 'border-2 border-sky-600 text-sky-600' : 'bg-slate-200' }} py-2 px-4 set-default ">Set
                                             As Default</button>
                                     </div>
@@ -228,7 +230,6 @@
             $("#tabs").tabs({
                 active: tabID - 1
             });
-            console.log(tabID);
             $(".file").on("change", function() {
                 $(this).closest("form").submit();
             })
@@ -257,6 +258,43 @@
                 $(".freeze-screen").toggle();
             });
 
+            function setDefault(id) {
+                let isDefaultHTML = '';
+                let activeClass = 'border-2 border-sky-600 text-sky-600'
+                $(".address").each(function(i, v) {
+                    $(v).find(".set-default").attr("disabled", false).removeClass("bg-slate-200").addClass(
+                        activeClass);
+                    $(v).find(".default").hide();
+                })
+
+                const addrEle = $(".address-" + id);
+                $(addrEle).find(".set-default").attr("disabled", true).addClass("bg-slate-200").removeClass(
+                    activeClass);
+                $(addrEle).find(".default").show();
+            }
+            // Set Default For Address
+            $("body").on("click", ".set-default", function() {
+                const url = $(this).data("url");
+                $.ajax({
+                    type: "PUT",
+                    url: url,
+                    dataType: "JSON",
+                    success: (response) => {
+                        if (response.status == 'success') {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                className: "info",
+                                style: {
+                                    background: "linear-gradient(to right, #00b09b, #96c93d)",
+                                }
+                            }).showToast();
+                            setDefault(response.id, response.url);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {}
+                });
+            })
             // Delete Address 
             $("body").on("click", ".delete", function() {
                 const url = $(this).data("url");
@@ -319,27 +357,13 @@
                             $(".show-address").toggle();
                             $(".freeze-screen").toggle();
                             const addr = response.address;
-                            let isDefaultHTML = '';
-                            let buttonSetDefaultHTML = `<button
-                                            class="border-2 border-sky-600 text-sky-600 py-2 px-4 ">Set
-                                            As Default</button>`;
-
-                            if (addr.is_default == 1) {
-                                $(".address").each(function(i, v) {
-                                    console.log($(v).find(".default"));
-                                    $(v).find(".default").remove();
-                                    $(v).find(".set-default").parent().append(
-                                        buttonSetDefaultHTML);
-
-                                    $(v).find(".set-default").remove();
-                                })
-                                isDefaultHTML =
-                                    `<span class="default text-sm border-sky-500 border-2 p-2  text-sky-500">Default</span>`;
-                                buttonSetDefaultHTML = `<button
-                                            class="bg-slate-200 py-2 px-4 set-default">Set
-                                            As Default</button>`
-                            }
-                            const html = `<div class="py-5 flex address justify-between border-b-2 borde-slate-200">
+                            let activeClass = 'border-2 border-sky-600 text-sky-600'
+                            const buttonUnDefault = `
+                                    <button data-url="${response.setDefaultURL}"
+                                    class="${activeClass} py-2 px-4 set-default ">Set
+                                    As Default</button>
+                                `
+                            const html = `<div class="py-5 flex address-${addr.id} address justify-between border-b-2 borde-slate-200">
                                     <div class="leading-[30px]">
                                         <p><span class="text-2xl">${addr.name}</span> &ensp;| &ensp;<span>(+1)
                                             ${addr.phone}</span></p>
@@ -347,7 +371,8 @@
                                         <p class="mb-3">
                                             ${addr.country}, ${addr.status} State, ${addr.city} City,  ${addr.zip} 
                                         </p>
-                                        ${isDefaultHTML}
+                                        <span
+                                            class="default hidden text-sm border-sky-500 border-2 p-2  text-sky-500">Default</span>
                                     </div>
                                     <div class="flex flex-col items-end gap-y-3">
                                         <div class="flex gap-3">
@@ -355,10 +380,11 @@
                                             <button data-url="${response.deleteURL}"
                                                 class="delete text-red-600 hover:underline">Delete</button>
                                         </div>
-                                        ${buttonSetDefaultHTML}
+                                        ${buttonUnDefault}
                                     </div>
                                 </div>`;
                             $(".addresses").prepend(html);
+                            if (response.is_default == true) setDefault(addr.id);
                         }
                     },
                     error: function(response) {

@@ -61,6 +61,8 @@ class AddressController extends Controller
             "message" => "Added New Address",
             "address" => $address,
             "deleteURL" => route("user.address.destroy",$address->id),
+            "setDefaultURL" => route("user.address.set-default",$address->id),
+            "is_default" =>  $request->is_default ? true :false,
         ]) ;
     }
 
@@ -99,6 +101,20 @@ class AddressController extends Controller
             "status" => 'success', 
             "message" => "Delete Address Successfully", 
         
+        ]);
+    }
+
+    public function setDefault(string $id) {
+        foreach(UserAddresses::where('user_id',Auth::user()->id)->get() as $addr ){ 
+            if($addr->is_default == 1) $addr->update(["is_default" => false]);
+        } 
+        $addr = UserAddresses::findOrFail($id); 
+        $addr->update(["is_default" => true]); 
+        return response([
+            "status" => 'success', 
+            "message" => "Set Default Successfully", 
+            "url" => route("user.address.set-default",$id),
+            "id" =>   $addr->id, 
         ]);
     }
 }

@@ -30,7 +30,7 @@ Route::get("/check-out",[CheckOutController::class,"index"])->name("check-out");
 // Check out   ------------------------------------------------- 
 
 // Address ------------------------------------------------- 
-
+Route::put("/address/{id}/set-default",[AddressController::class,"setDefault"])->name("address.set-default");
 Route::resource("address",AddressController::class);
 
 // Address ------------------------------------------------- 
