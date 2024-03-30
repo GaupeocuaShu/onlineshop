@@ -29,6 +29,11 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
+        if($request->is_default) {
+            foreach(UserAddresses::where('user_id',Auth::user()->id)->get() as $addr ){ 
+                if($addr->is_default == 1) $addr->update(["is_default" => false]);
+            }
+        }
         $request->validate([
             "name" => ["required","string"], 
             "phone" => ["required",'string'],
@@ -86,6 +91,11 @@ class AddressController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $addr = UserAddresses::findOrFail($id); 
+        $addr->delete(); 
+        return response([
+            "status" => 'success', 
+            "message" => "Delete Address Successfully",
+        ]);
     }
 }

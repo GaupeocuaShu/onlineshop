@@ -17,7 +17,7 @@ class ProfileController extends Controller
         $title = "Profile";
         $user = Auth::user();
         $categories = Category::get();
-        $addresses = UserAddresses::where("user_id",Auth::user()->id)->get();
+        $addresses = UserAddresses::orderBy("created_at",'desc')->where("user_id",Auth::user()->id)->get();
         return view("frontend.pages.profile",compact("title","user","categories","addresses"));
     }
     // Update Profile

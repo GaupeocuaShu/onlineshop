@@ -98,10 +98,10 @@
                         </button>
                     </div>
                     <div class="py-5">
-                        <h1 class="text-xl">Address</h1>
+                        <h1 class="text-2xl">Address</h1>
                         <div>
                             @foreach ($addresses as $addr)
-                                <div class="py-5 flex justify-between ">
+                                <div class="py-5 flex address justify-between border-b-2 borde-slate-200">
                                     <div class="leading-[30px]">
                                         <p><span class="text-2xl">{{ $addr->name }}</span> &ensp;| &ensp;<span>(+1)
                                                 {{ $addr->phone }}</span></p>
@@ -116,7 +116,8 @@
                                     <div class="flex flex-col items-end gap-y-3">
                                         <div class="flex gap-3">
                                             <button class="text-sky-600 hover:underline">Edit</button>
-                                            <button class="text-red-600 hover:underline">Delete</button>
+                                            <button data-url="{{ route('user.address.destroy', $addr->id) }}"
+                                                class="delete text-red-600 hover:underline">Delete</button>
                                         </div>
                                         <button
                                             class="{{ !$addr->is_default == 1 ? 'border-2 border-sky-500 text-sky-500' : 'bg-slate-200' }} py-2 px-4  ">Set
@@ -255,7 +256,45 @@
                 $(".freeze-screen").toggle();
             });
 
+            // Delete Address 
+            $(".delete").on("click", function() {
+                const url = $(this).data("url");
 
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: url,
+                            dataType: "JSON",
+                            success: (response) => {
+                                if (response.status == 'success') {
+                                    Toastify({
+                                        text: response.message,
+                                        duration: 3000,
+                                        className: "info",
+                                        style: {
+                                            background: "linear-gradient(to right, #00b09b, #96c93d)",
+                                        }
+                                    }).showToast();
+                                    $(this).parents(".address").hide();
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.table(jqXHR)
+                            }
+                        });
+                    }
+                });
+
+            });
             // Create Address 
             $("form").on("submit", function(e) {
                 e.preventDefault();
