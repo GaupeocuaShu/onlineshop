@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Cart; 
 use App\Models\ShopProfile;
+use App\Models\UserAddresses;
 use Illuminate\Support\Facades\Auth;
 class CheckOutController extends Controller
 {
@@ -19,11 +20,18 @@ class CheckOutController extends Controller
         } 
         $vendorsCollection = collect($vendors); 
         $uniqueVendorsCollection = $vendorsCollection->unique("id");
-        $uniqueVendorsArray =   $uniqueVendorsCollection->toArray();  
+        $uniqueVendorsArray =   $uniqueVendorsCollection->toArray();   
+        $address = UserAddresses::where([
+            ["user_id" ,Auth::user()->id], 
+            ["is_default",true] , 
+            ])->first();
+        $addresses = UserAddresses::where('user_id',Auth::user()->id)->get();
         return view("frontend.pages.check-out",[
             'vendors' => $uniqueVendorsArray , 
             'totalQuantity' => Cart::getTotalQuantity(),
-            'title' => $title,
+            'title' => $title, 
+            'address' => $address,
+            'addresses' =>  $addresses,
         ]);
     }
 }

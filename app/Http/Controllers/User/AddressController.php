@@ -149,4 +149,12 @@ class AddressController extends Controller
             "id" =>   $addr->id, 
         ]);
     }
+
+    public function get(Request $request){
+        $addr = UserAddresses::findOrFail($request->id); 
+        return response([
+            "address" => $addr, 
+            "status" => "success",
+        ]);
+    }
 }

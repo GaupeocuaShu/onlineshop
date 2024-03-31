@@ -4,8 +4,11 @@
 @extends('frontend.layout.mastercart')
 @section('content')
     <div class ="py-8 relative min-h-screen">
+        {{-- Freeze Screen --}}
+        <div class="freeze-screen hidden w-screen h-screen bg-[#3232325a] fixed top-0 left-0"></div>
+        {{-- Freeze Screen --}}
         {{-- Loading --}}
-        <div role="status" class="loading absolute w-full h-full hidden items-center justify-center bg-[#eeeeee7d]">
+        <div role="status" class="loading  absolute w-full h-full hidden  items-center justify-center bg-[#eeeeee7d]">
             <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                 viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -18,18 +21,66 @@
             <div class=" text-black">&emsp;Loading...</div>
         </div>
         {{-- Loading --}}
+        <div class="bg-white my-3 px-10 py-5 border-t-[3px] border-sky-700">
+            <h1 class="text-sky-600 text-xl font-semibold"><i class="fa-solid fa-globe"></i>&ensp;Delivery Address</h1>
+            <div class="py-3 text-base">
+                <span class="font-semibold deliver-name">{{ $address->name . ' (+1) ' . $address->phone }}</span> &emsp;
+                <span
+                    class="deliver-address">{{ $address->address . ', ' . $address->city . ' City, ' . $address->state . ' State, ' . $address->zip }}</span>
+                &emsp;<button class="text-sky-700 hover:underline change-address">Change</button>
+            </div>
+            {{-- Select Address --}}
+            <div
+                class="shadow-2xl hidden rounded-lg select-address-panel absolute w-[60%] min-h-[70%] bg-white top-[30%] p-10 left-[50%] -translate-y-[50%] -translate-x-[50%]">
+                <h1 class="text-2xl pb-3 border-b-2 border-slate-200">My Address</h1>
+                <form class="h-full">
+                    <div class="addresses flex flex-col h-full justify-between">
+                        <div class="pb-3">
+                            @foreach ($addresses as $addr)
+                                <div
+                                    class="py-5 flex address-{{ $addr->id }} address flex items-center  justify-between border-b-2 borde-slate-200">
+                                    <div class="leading-[30px]">
+                                        <p><span class="text-xl name">{{ $addr->name }}</span> &ensp;| &ensp;<span
+                                                class="phone">(+1)
+                                                {{ $addr->phone }}</span></p>
+                                        <p class="address">{{ $addr->address }}</p>
+                                        <p class="mb-3 country">
+                                            {{ $addr->country . ', ' . $addr->state . ' State, ' . $addr->city . ' City, ' . $addr->zip }}
+                                        </p>
 
+                                        <span
+                                            class="default {{ $addr->is_default == 1 ? 'inline' : 'hidden' }} text-sm border-sky-500 border-2 p-2  text-sky-500">Default</span>
+
+                                    </div>
+                                    <div>
+                                        <input type="radio" name="id" value="{{ $addr->id }}" />
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="my-5 self-end ">
+                            <button
+                                class="border-sky-600 close-address-panel border-2 py-2 px-10 text-sky-600 ">Cancel</button>&emsp;
+                            <button
+                                class="bg-sky-600 hover:bg-sky-700  border-sky-600 border-2  text-white py-2 px-10 confirm">Confirm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {{-- Select Address --}}
+
+        </div>
         @if (\Cart::getTotalQuantity() > 0)
             <div class="bg-white py-3 px-10 ">
-                <ul class="flex justify-between">
-                    <li class="w-[45%]">Product Ordered</li>
+                <ul class="flex justify-between items-center">
+                    <li class="w-[45%] text-2xl">Product Ordered</li>
                     <li>Price Quotation</li>
                     <li>Quantity </li>
                     <li>Sub Total</li>
                 </ul>
             </div>
             @foreach ($vendors as $vendor)
-                <div class="bg-white py-3 my-3 px-10">
+                <div class="bg-white py-3 px-10">
                     <h1 class="border-b-2 border-slate-200 py-4">
                         <i class="fa-solid fa-shop"></i>&emsp;{{ $vendor['name'] }}
                     </h1>
@@ -105,9 +156,12 @@
                     By clicking "Place Order", you are agreeing to <a class="text-sky-700" href="#">ShuTy's Shop
                         General Transaction Terms</a>
                 </p>
-                <button class="bg-sky-600 text-white py-3 px-10 hover:bg-sky-800 rounded-sm">
-                    Place Order
-                </button>
+                <form action="">
+                    <input name="address_id" value="{{ $address->id }}" type="hidden" />
+                    <button class="bg-sky-600 text-white py-3 px-10 hover:bg-sky-800 rounded-sm">
+                        Place Order
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -115,6 +169,50 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {});
+        $(document).ready(function() {
+
+            $(".change-address").on("click", function() {
+                $(".select-address-panel").show();
+                $(".freeze-screen").show();
+            });
+            $(".close-address-panel").on("click", function(e) {
+                e.preventDefault();
+                $(".select-address-panel").hide();
+                $(".freeze-screen").hide();
+            });
+            $(".confirm").on("click", function(e) {
+                e.preventDefault();
+                const id = $(this).closest('form').find('input[type="radio"]:checked').val();
+                $('input[name="address_id"]').val(id);
+                $(".select-address-panel").hide();
+                $(".freeze-screen").hide();
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('user.address.get') }}",
+                    data: {
+                        id: id
+                    },
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        $(".loading").removeClass("hidden").addClass("flex");
+                    },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            const address = response.address;
+                            $(".deliver-name").html(`
+                               ${address.name} (+1) ${address.phone } 
+                            `)
+                            $(".deliver-address").html(`
+                             ${address.address}, ${address.city} City, ${address.state} State, ${address.zip}
+                            `);
+                            $(".loading").removeClass("flex").addClass("hidden");
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.table(jqXHR)
+                    }
+                });
+            });
+        });
     </script>
 @endpush
