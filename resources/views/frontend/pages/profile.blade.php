@@ -104,10 +104,11 @@
                                 <div
                                     class="py-5 flex address-{{ $addr->id }} address  justify-between border-b-2 borde-slate-200">
                                     <div class="leading-[30px]">
-                                        <p><span class="text-2xl">{{ $addr->name }}</span> &ensp;| &ensp;<span>(+1)
+                                        <p><span class="text-2xl name">{{ $addr->name }}</span> &ensp;| &ensp;<span
+                                                class="phone">(+1)
                                                 {{ $addr->phone }}</span></p>
-                                        <p>{{ $addr->address }}</p>
-                                        <p class="mb-3">
+                                        <p class="address">{{ $addr->address }}</p>
+                                        <p class="mb-3 country">
                                             {{ $addr->country . ', ' . $addr->state . ' State, ' . $addr->city . ' City, ' . $addr->zip }}
                                         </p>
 
@@ -117,7 +118,8 @@
                                     </div>
                                     <div class="flex flex-col items-end gap-y-3">
                                         <div class="flex gap-3">
-                                            <button class="text-sky-600 hover:underline">Edit</button>
+                                            <button data-id="{{ $addr->id }}"
+                                                class="edit text-sky-600 hover:underline">Edit</button>
                                             <button data-url="{{ route('user.address.destroy', $addr->id) }}"
                                                 class="delete text-red-600 hover:underline">Delete</button>
                                         </div>
@@ -125,6 +127,58 @@
                                             {{ $addr->is_default == 1 ? 'disabled' : '' }}
                                             class="{{ !$addr->is_default == 1 ? 'border-2 border-sky-600 text-sky-600' : 'bg-slate-200' }} py-2 px-4 set-default ">Set
                                             As Default</button>
+                                    </div>
+
+
+                                    {{-- Edit Address --}}
+                                    <div
+                                        class="z-[100] hidden edit-address edit-address-{{ $addr->id }} rounded-lg absolute p-10 shadow-2xl bg-white w-[700px] h-[600px] top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%]">
+                                        <h1 class="text-xl my-5">Edit Address</h1>
+                                        <form class="update-address"
+                                            data-url="{{ route('user.address.update', $addr->id) }}">
+                                            <div class="flex justify-between gap-5">
+                                                <input name="name" class="flex-1" type="text"
+                                                    placeholder="Full Name" value="{{ $addr->name }}" />
+                                                <input name="phone" class="flex-1" type="text"
+                                                    placeholder="Phone Number" value="{{ $addr->phone }}" />
+                                            </div>
+                                            <div class="flex justify-between gap-5 my-5">
+                                                <input name="country" class="w-full" type="text"
+                                                    value="{{ $addr->country }}" placeholder="Country" />
+                                                <input name="state" class="w-full" type="text"
+                                                    value="{{ $addr->state }}" placeholder="State" />
+                                            </div>
+                                            <div class="flex justify-between gap-5 my-5">
+                                                <input name="city" class="w-full" type="text"
+                                                    value="{{ $addr->city }}" placeholder="City" />
+                                                <input name="zip" class="w-full" type="text"
+                                                    value="{{ $addr->zip }}" placeholder="Zip Code" />
+                                            </div>
+                                            <div class="my-5">
+                                                <input name="address" class="w-full" type="text"
+                                                    value="{{ $addr->address }}" placeholder="Address" />
+                                            </div>
+                                            <div class="my-5">
+                                                <label>Label As:</label> </br>
+                                                <select name="type" class="my-2 w-full">
+                                                    <option value="home" {{ $addr->type == 'home' ? 'selected' : ' ' }}>
+                                                        Home</option>
+                                                    <option value="work" {{ $addr->type == 'work' ? 'selected' : ' ' }}>
+                                                        Work</option>
+                                                </select>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" name="is_default" value="true"
+                                                    {{ $addr->is_default ? 'checked' : ' ' }} />&ensp;<label>Set As Default
+                                                    Address</label>
+                                            </div>
+                                            <div class="flex gap-5 justify-end">
+                                                <button
+                                                    class="hide-edit-address py-2 px-7 bg-slate-200 hover:bg-slate-300 rounded-sm">Cancel</button>
+                                                <button
+                                                    class=" py-2 px-7 hover:bg-sky-700 bg-sky-600 text-white rounded-sm">Update</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             @endforeach
@@ -186,7 +240,7 @@
         <div
             class="show-address hidden rounded-lg absolute p-10 shadow-2xl bg-white w-[700px] h-[600px] top-[20%] left-[50%] -translate-y-[50%] -translate-x-[50%]">
             <h1 class="text-xl my-5">New Address</h1>
-            <form>
+            <form class="add-address">
                 <div class="flex justify-between gap-5">
                     <input name="name" class="flex-1" type="text" placeholder="Full Name" />
                     <input name="phone" class="flex-1" type="text" placeholder="Phone Number" />
@@ -257,16 +311,20 @@
                 $(".show-address").toggle();
                 $(".freeze-screen").toggle();
             });
-
-            function setDefault(id) {
-                let isDefaultHTML = '';
+            // Set Undefault For All element 
+            function setUndefault() {
                 let activeClass = 'border-2 border-sky-600 text-sky-600'
                 $(".address").each(function(i, v) {
                     $(v).find(".set-default").attr("disabled", false).removeClass("bg-slate-200").addClass(
                         activeClass);
                     $(v).find(".default").hide();
                 })
-
+            }
+            // Set Default For element 
+            function setDefault(id) {
+                let isDefaultHTML = '';
+                let activeClass = 'border-2 border-sky-600 text-sky-600'
+                setUndefault()
                 const addrEle = $(".address-" + id);
                 $(addrEle).find(".set-default").attr("disabled", true).addClass("bg-slate-200").removeClass(
                     activeClass);
@@ -295,6 +353,72 @@
                     error: function(jqXHR, textStatus, errorThrown) {}
                 });
             })
+
+            // Edit Address -----------------------------------------
+            $("body").on("click", ".edit", function() {
+                const id = $(this).data("id");
+                $(".freeze-screen").toggle();
+                $(".edit-address-" + id).show();
+            });
+            // Update Address
+            $("body").on("submit", ".update-address", function(e) {
+                e.preventDefault();
+                const data = $(this).serialize();
+                const url = $(this).data("url");
+                $.ajax({
+                    type: "PUT",
+                    url: url,
+                    data: data,
+                    dataType: "JSON",
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            const address = response.address;
+                            const id = address.id;
+                            const addressEle = $(".address-" + id);
+                            $(addressEle).find(".name").html(address.name);
+                            $(addressEle).find(".phone").html(address.phone);
+                            $(addressEle).find(".address").html(address.address);
+                            $(addressEle).find(".country").html(
+                                `${address.country}, ${address.state} State, ${address.city} City, ${address.zip}`
+                            );
+                            // If Is Default 
+                            if (response.is_default == true) setDefault(id);
+                            // Else not default 
+                            else setUndefault();
+                            $(".freeze-screen").toggle();
+                            $(".edit-address ").hide();
+                            if (response.status == 'success') {
+                                Toastify({
+                                    text: response.message,
+                                    duration: 3000,
+                                    className: "info",
+                                    style: {
+                                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                                    }
+                                }).showToast();
+                            }
+                        }
+                    },
+                    error: function(response) {
+                        const message = response.responseJSON.message;
+                        Toastify({
+                            text: message,
+                            duration: 3000,
+                            className: "info",
+                            style: {
+                                background: "linear-gradient(to right, orange, red)",
+                            }
+                        }).showToast();
+                    }
+                });
+            })
+            $("body").on("click", ".hide-edit-address", function(e) {
+                e.preventDefault();
+                $(".freeze-screen").toggle();
+                $(".edit-address ").hide();
+            });
+            // Edit Address -----------------------------------------
+
             // Delete Address 
             $("body").on("click", ".delete", function() {
                 const url = $(this).data("url");
@@ -326,16 +450,14 @@
                                     $(this).parents(".address").hide();
                                 }
                             },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                console.table(jqXHR)
-                            }
+
                         });
                     }
                 });
 
             });
             // Create Address 
-            $("form").on("submit", function(e) {
+            $(".add-address").on("submit", function(e) {
                 e.preventDefault();
                 const data = $(this).serialize();
                 $.ajax({
@@ -363,12 +485,21 @@
                                     class="${activeClass} py-2 px-4 set-default ">Set
                                     As Default</button>
                                 `
+                            const selectHTML =
+                                `<select name="type" class="my-2 w-full">
+                                    <option value="home" ${response.type == 'home' ? "checked" : " "} > Home</option>
+                                    <option value="work" ${response.type == 'work' ? "checked" : " "}>Work</option>
+                                </select>`
+
+                            const checkboxHTML =
+                                `
+                                <input type="checkbox" name="is_default" value="true" ${response.is_checked ? "checked" : ""}/> `
                             const html = `<div class="py-5 flex address-${addr.id} address justify-between border-b-2 borde-slate-200">
                                     <div class="leading-[30px]">
-                                        <p><span class="text-2xl">${addr.name}</span> &ensp;| &ensp;<span>(+1)
+                                        <p><span class="text-2xl name">${addr.name}</span> &ensp;| &ensp;<span class='phone'>(+1)
                                             ${addr.phone}</span></p>
-                                        <p>${addr.address}</p>
-                                        <p class="mb-3">
+                                        <p class='address'>${addr.address}</p>
+                                        <p class="mb-3 country">
                                             ${addr.country}, ${addr.status} State, ${addr.city} City,  ${addr.zip} 
                                         </p>
                                         <span
@@ -376,15 +507,60 @@
                                     </div>
                                     <div class="flex flex-col items-end gap-y-3">
                                         <div class="flex gap-3">
-                                            <button class="text-sky-600 hover:underline">Edit</button>
+                                            <button data-id='${addr.id}' class="edit text-sky-600 hover:underline">Edit</button>
                                             <button data-url="${response.deleteURL}"
                                                 class="delete text-red-600 hover:underline">Delete</button>
                                         </div>
                                         ${buttonUnDefault}
                                     </div>
+                                    {{-- Edit Address --}}
+                                    <div
+                                        class="z-[100] hidden edit-address edit-address-${addr.id} rounded-lg absolute p-10 shadow-2xl bg-white w-[700px] h-[600px] top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%]">
+                                        <h1 class="text-xl my-5">Edit Address</h1>
+                                        <form class="update-address"
+                                            data-url="${response.updateURL}">
+                                            <div class="flex justify-between gap-5">
+                                                <input name="name" class="flex-1" type="text"
+                                                    placeholder="Full Name" value="${addr.name}" />
+                                                <input name="phone" class="flex-1" type="text"
+                                                    placeholder="Phone Number" value="${addr.phone}" />
+                                            </div>
+                                            <div class="flex justify-between gap-5 my-5">
+                                                <input name="country" class="w-full" type="text"
+                                                    value="${addr.country}" placeholder="Country" />
+                                                <input name="state" class="w-full" type="text"
+                                                    value="${addr.state}" placeholder="State" />
+                                            </div>
+                                            <div class="flex justify-between gap-5 my-5">
+                                                <input name="city" class="w-full" type="text"
+                                                    value="${addr.city}" placeholder="City" />
+                                                <input name="zip" class="w-full" type="text"
+                                                    value="${addr.zip}" placeholder="Zip Code" />
+                                            </div>
+                                            <div class="my-5">
+                                                <input name="address" class="w-full" type="text"
+                                                    value="${addr.address}" placeholder="Address" />
+                                            </div>
+                                            <div class="my-5">
+                                                <label>Label As:</label> </br>
+                                                ${selectHTML}
+                                            </div>
+                                            <div class="flex items-center">
+                                                ${checkboxHTML}&ensp;<label>Set As Default
+                                                    Address</label>
+                                            </div>
+                                            <div class="flex gap-5 justify-end">
+                                                <button
+                                                    class="hide-edit-address py-2 px-7 bg-slate-200 hover:bg-slate-300 rounded-sm">Cancel</button>
+                                                <button
+                                                    class=" py-2 px-7 hover:bg-sky-700 bg-sky-600 text-white rounded-sm">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>`;
                             $(".addresses").prepend(html);
                             if (response.is_default == true) setDefault(addr.id);
+
                         }
                     },
                     error: function(response) {

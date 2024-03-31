@@ -61,6 +61,7 @@ class AddressController extends Controller
             "message" => "Added New Address",
             "address" => $address,
             "deleteURL" => route("user.address.destroy",$address->id),
+            "updateURL" => route("user.address.update",$address->id),
             "setDefaultURL" => route("user.address.set-default",$address->id),
             "is_default" =>  $request->is_default ? true :false,
         ]) ;
@@ -87,9 +88,40 @@ class AddressController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        if($request->is_default) {
+            foreach(UserAddresses::where('user_id',Auth::user()->id)->get() as $addr ){ 
+                if($addr->is_default == 1) $addr->update(["is_default" => false]);
+            }
+        }
+        $request->validate([
+            "name" => ["required","string"], 
+            "phone" => ["required",'string'],
+            "country" => ["required",'string'],
+            "state" => ["required",'string'],
+            "city" => ["required",'string'],
+            "zip" => ["required",'string'],
+            "address" => ["required",'string'],
+            "type" => ["required",'string']
+        ]);
+        $addr = UserAddresses::findOrFail($id); 
+        $addr->update([
+            "name" => $request->name, 
+            "phone" => $request->phone, 
+            "country" => $request->country, 
+            "state" => $request->state, 
+            "city" => $request->city, 
+            "zip" => $request->zip, 
+            "address" => $request->address, 
+            "type" => $request->type,  
+            "is_default" => $request->is_default ? true :false,
+        ]); 
+        return response([
+            "status" => "success", 
+            "message" => "Updated Address",
+            "address" => $addr,
+            "is_default" =>  $request->is_default ? true :false,
+        ]) ;
     }
-
     /**
      * Remove the specified resource from storage.
      */
