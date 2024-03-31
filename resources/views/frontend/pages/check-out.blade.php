@@ -53,7 +53,8 @@
 
                                     </div>
                                     <div>
-                                        <input type="radio" name="id" value="{{ $addr->id }}" />
+                                        <input {{ $addr->is_default == 1 ? 'checked' : ' ' }} type="radio" name="id"
+                                            value="{{ $addr->id }}" />
                                     </div>
                                 </div>
                             @endforeach

@@ -189,13 +189,13 @@
                     class="absolute z-[100]  rounded-xl group-hover/minicart:block hidden border-2 border-slate-300 shadow-2xl p-3 right-0 top-[50px] bg-white text-black w-[400px]">
 
                     <div class="cart-show {{ \Cart::getTotalQuantity() <= 0 ? 'hidden' : 'block' }}">
-                        <h1 class="font-light p-3">New Added Item</h1>
+                        <h1 class="font-light py-3 text-xl text-sky-700">New Added Item</h1>
                         <ul class="cart-mini">
                             @if (Auth::check())
                                 @if (!\Cart::isEmpty())
                                     @foreach (\Cart::getContent() as $item)
-                                        <li
-                                            class="flex hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
+                                        <li data-url="{{ route('user.cart') }}"
+                                            class="flex cart-item hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
                                             <span class="flex gap-2 items-center">
                                                 <span><img width="50"
                                                         src="{{ asset($item->attributes['imageURL']) }}" /></span>
@@ -220,12 +220,15 @@
                         </ul>
                     </div>
 
-                    <div
-                        class="cart-hidden text-center font-thin {{ \Cart::getTotalQuantity() <= 0 ? 'block' : 'hidden' }}">
-                        <i class="fa-solid fa-circle-xmark"></i> Your Cart Is Empty
+                    <div style="background-image: url('{{ asset('uploads/no_product.png') }}')"
+                        class=" text-sky-800 min-h-[100px] bg-center bg-contain bg-no-repeat cart-hidden  font-thin {{ \Cart::getTotalQuantity() <= 0 ? 'block' : 'hidden' }}">
                     </div>
-
-                    <div class="pt-5 mt-5 border-t-2 border-slate-200 text-right">
+                    <p
+                        class="text-xl text-center text-slate-500 empty-cart-message {{ \Cart::getTotalQuantity() > 0 ? 'hidden' : 'block' }}">
+                        Your Cart Is Empty
+                    </p>
+                    <div
+                        class="view-cart-button mt-5 border-slate-200 text-right {{ \Cart::getTotalQuantity() <= 0 ? 'hidden' : 'block' }}">
                         <a href="{{ route('user.cart') }}"
                             class="bg-sky-600 rounded-sm hover:bg-sky-700  text-white py-2 px-4">View Cart</a>
                     </div>
@@ -285,7 +288,10 @@
             $(".show-sidebar,.close-sidebar").on("click", function() {
                 $(".sidebar").toggleClass("hidden");
             });
-
+            $(".cart-item").on("click", function() {
+                const url = $(this).data("url");
+                window.location.replace(url);
+            });
         });
     </script>
 @endpush
