@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\User\AddressController;
 use App\Http\Controllers\User\CheckOutController;
+use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\ProfileController;
 
 // Profile -------------------------------------------------
@@ -26,7 +27,8 @@ Route::put("/apply-coupon",[CartController::class,"applyCoupon"])->name("apply-c
 
 
 // Check out   ------------------------------------------------- 
-Route::get("/check-out",[CheckOutController::class,"index"])->name("check-out");
+Route::post("/check-out",[PaymentController::class,"store"])->name("check-out");
+Route::get("/check-out",[CheckOutController::class,"index"])->name("check-out"); 
 // Check out   ------------------------------------------------- 
 
 // Address ------------------------------------------------- 

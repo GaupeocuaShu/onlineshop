@@ -178,8 +178,11 @@
                     By clicking "Place Order", you are agreeing to <a class="text-sky-700" href="#">ShuTy's Shop
                         General Transaction Terms</a>
                 </p>
-                <form action="">
-                    <input name="address_id" value="{{ $address->id }}" type="hidden" />
+                <form action="{{ route('user.check-out') }}" method="POST">
+                    @csrf
+                    <input name="order_address" value="{{ $address->id }}" type="hidden" />
+                    <input name="payment_method" value="cash" type="hidden" />
+                    <input name="payment_status" value="0" type="hidden" />
                     <button class="bg-sky-600 text-white py-3 px-10 hover:bg-sky-800 rounded-sm">
                         Place Order
                     </button>
@@ -211,7 +214,7 @@
             $(".confirm").on("click", function(e) {
                 e.preventDefault();
                 const id = $(this).closest('form').find('input[type="radio"]:checked').val();
-                $('input[name="address_id"]').val(id);
+                $('input[name="order_address"]').val(id);
                 $(".select-address-panel").hide();
                 $(".freeze-screen").hide();
                 $.ajax({
