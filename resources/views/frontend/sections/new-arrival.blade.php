@@ -1,6 +1,6 @@
 <div class="bg-white p-3 shadow-xl rounded-md my-5">
 
-    <h1 class="text-2xl p-2">TOP PRODUCT</h1>
+    <h1 class="text-2xl p-2">NEW ARRIVAL PRODUCT</h1>
     <ul class="grid  grid-cols-6 py-5 gap-5 ccursor-pointer ">
         @foreach ($newProducts as $t)
             <li data-url="{{ route('product', ['product' => $t->slug]) }}"

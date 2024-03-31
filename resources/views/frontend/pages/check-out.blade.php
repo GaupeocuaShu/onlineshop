@@ -131,26 +131,47 @@
             </div>
         @endif
         <div class="bg-white py-3 px-10 ">
-            <div class="flex items-center">
-                <h1 class="text-xl mr-10">Payment Method</h1>
-                <button class="border-2 border-slate-200 py-2 mr-3 px-4">Credit Card/Debit Card</button>
-                <button class="border-2 border-slate-200 py-2 px-4">Cash On Delivery</button>
+            <div id="tabs">
+                <div class="flex gap-x-10 items-start my-5">
+                    <h1 class="text-xl">Payment Method</h1>
+                    <ul class="flex ">
+                        <li><a href="#tabs-1" class="border-2 tab border-slate-200 py-2 mr-3 px-4 active">Cash On
+                                Delivery</a>
+                        </li>
+                        <li><a href="#tabs-2" class="border-2 tab border-slate-200 py-2 mr-3 px-4">Credit Card/Debit
+                                Card</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="my-10">
+                    <div id="tabs-1">
+                        <div class="flex gap-x-10">
+                            <span class="text-sky-700">Cash on Delivery</span>
+                            <span>You will be charged extra $0 for this payment method.</span>
+                        </div>
+                    </div>
+                    <div id="tabs-2">
+                        <p>Sorry, This Method Is Not Available</p>
+                    </div>
+
+                </div>
             </div>
+
             <div class="my-10 flex flex-col items-end border-y-2 border-slate-200 py-5 gap-y-6">
-                <div class="w-[300px] flex justify-between"><span>Merchandise Subtotal </span><span
+                <div class="w-[300px] flex justify-between"><span>Merchandise Subtotal: </span><span
                         class="ml-10">${{ \Cart::getSubTotal() }}</span> </div>
 
                 @if (count(\Cart::getConditions()) > 0)
                     @foreach (\Cart::getConditions() as $con)
-                        <div class="w-[300px] flex justify-between capitalize"><span>{{ $con->getType() }}</span><span
+                        <div class="w-[300px] flex justify-between capitalize"><span>{{ $con->getType() }}:</span><span
                                 class="ml-10 text-red-600">
                                 {{ $con->getValue() }}
                             </span>
                         </div>
                     @endforeach
                 @endif
-                <div class="w-[300px] flex justify-between"><span>Total </span><span
-                        class="ml-10 text-sky-600 text-xl">${{ \Cart::getTotal() }}</span> </div>
+                <div class="w-[300px] flex justify-between"><span>Total Payment: </span><span
+                        class="ml-10 text-sky-600 text-4xl">${{ \Cart::getTotal() }}</span> </div>
             </div>
             <div class="flex justify-between items-center">
                 <p>
@@ -171,7 +192,13 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-
+            $(function() {
+                $("#tabs").tabs();
+            });
+            $(".tab").on("click", function() {
+                $(".tab").removeClass("active");
+                $(this).addClass("active");
+            })
             $(".change-address").on("click", function() {
                 $(".select-address-panel").show();
                 $(".freeze-screen").show();

@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <div class="font-serif">
+    <div style="font-family:Roboto, sans-serif;">
         {{-- Navbar --}}
         @include('frontend.layout.navbar')
 

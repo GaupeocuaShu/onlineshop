@@ -16,7 +16,8 @@
 </head>
 
 <body>
-    <div class="font-serif">
+    <div style="font-family:Roboto, sans-serif;">
+
         {{-- Navbar --}}
         <div class=" bg-slate-800  w-screen z-[100] ">
 
