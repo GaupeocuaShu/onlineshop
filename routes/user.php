@@ -6,6 +6,7 @@ use App\Http\Controllers\User\AddressController;
 use App\Http\Controllers\User\CheckOutController;
 use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\UserMessageController;
 
 // Profile -------------------------------------------------
 Route::post("update-password",[ProfileController::class,"updatePassword"])->name("update-password");
@@ -37,3 +38,11 @@ Route::get("/address/get",[AddressController::class,"get"])->name("address.get")
 Route::resource("address",AddressController::class);
 
 // Address ------------------------------------------------- 
+
+
+
+// Chat ------------------------------------------------- 
+Route::post("message/send-message",[UserMessageController::class,'sendMessage'])->name("message.send-message");
+Route::get('message/get-message',[UserMessageController::class,"getMessage"])->name("message.get-message");
+// Chat ------------------------------------------------- 
+

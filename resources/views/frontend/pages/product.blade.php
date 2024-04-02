@@ -143,7 +143,8 @@
                     <span class="text-2xl">{{ $shop->name }}</span>
                     <span class="text-sm">Online 2 hours ago</span>
                     <span class="my-3 flex">
-                        <button data-id="{{ $shop->id }}"
+                        <button data-id="{{ $shop->id }}" data-banner = "{{ $shop->banner }}"
+                            data-name = "{{ $shop->name }}"
                             class="show-chat-pannel text-sky-600 border-sky-600 border-2 w-[150px] py-1 px-3"><i
                                 class="fa-brands fa-rocketchat"></i>&ensp;Chat</button>&ensp;
                         <button class="text-sky-600 border-sky-600 border-2 w-[150px] py-1 px-3"><i
@@ -214,203 +215,72 @@
             </div>
         </div>
         {{-- Chat Pannel --}}
-        <div class="shadow-2xl bg-white w-[700px]  fixed top-0 h-full   right-0">
-            <h1 class="text-sky-600 text-xl p-5">Chat</h1>
+        <div class="chat-pannel hidden shadow-2xl bg-white w-[700px]  fixed top-0 h-full   right-0">
+            <div class="p-5 flex justify-between border-b-2 border-slate-200">
+                <p class="text-sky-600  text-2xl ">Chat</p>
+                <button class="close-chat-pannel text-sky-600 cursor-pointer text-xl"><i
+                        class="fa-solid fa-circle-chevron-down"></i></button>
+            </div>
             <div class="grid grid-cols-[250px_auto] my-3 h-full ">
                 {{-- Vendors --}}
-                <div class="overflow-y-scroll border-r-2 border-slate-100">
+                <div class="receivers overflow-y-scroll border-r-2  border-slate-100">
                     {{-- Receiver - Vendor --}}
-                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
-                        <div><img class="rounded-full" width="50"
-                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
+                    @foreach ($receivers as $receiver)
+                        <div data-id="{{ $receiver->id }}"
+                            class="receiver cursor-pointer flex items-center p-2 max-w-[250px] max-h-[100px]   ">
+                            <div><img class="rounded-full" width="50" src="{{ asset($receiver->banner) }}" />
+                            </div>
+                            <div class="flex flex-col p-1">
+                                <p class="flex justify-between"><span
+                                        class="font-semibold text-sm receiver-name">{{ $receiver->name }}</span>
+                                    <span class="text-xs">4/2/2024</span>
+                                </p>
+                                <p class="">Lorem, ipsum dolor sit
+                                </p>
+                            </div>
                         </div>
-                        <div class="flex flex-col p-1">
-                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
-                                <span>4/2/2024</span>
-                            </p>
-                            <p class="">Lorem, ipsum dolor sit
-                            </p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
-                        <div><img class="rounded-full" width="50"
-                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
-                        </div>
-                        <div class="flex flex-col p-1">
-                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
-                                <span>4/2/2024</span>
-                            </p>
-                            <p class="">Lorem, ipsum dolor sit
-                            </p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
-                        <div><img class="rounded-full" width="50"
-                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
-                        </div>
-                        <div class="flex flex-col p-1">
-                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
-                                <span>4/2/2024</span>
-                            </p>
-                            <p class="">Lorem, ipsum dolor sit
-                            </p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
-                        <div><img class="rounded-full" width="50"
-                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
-                        </div>
-                        <div class="flex flex-col p-1">
-                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
-                                <span>4/2/2024</span>
-                            </p>
-                            <p class="">Lorem, ipsum dolor sit
-                            </p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
-                        <div><img class="rounded-full" width="50"
-                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
-                        </div>
-                        <div class="flex flex-col p-1">
-                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
-                                <span>4/2/2024</span>
-                            </p>
-                            <p class="">Lorem, ipsum dolor sit
-                            </p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
-                        <div><img class="rounded-full" width="50"
-                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
-                        </div>
-                        <div class="flex flex-col p-1">
-                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
-                                <span>4/2/2024</span>
-                            </p>
-                            <p class="">Lorem, ipsum dolor sit
-                            </p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
-                        <div><img class="rounded-full" width="50"
-                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
-                        </div>
-                        <div class="flex flex-col p-1">
-                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
-                                <span>4/2/2024</span>
-                            </p>
-                            <p class="">Lorem, ipsum dolor sit
-                            </p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
-                        <div><img class="rounded-full" width="50"
-                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
-                        </div>
-                        <div class="flex flex-col p-1">
-                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
-                                <span>4/2/2024</span>
-                            </p>
-                            <p class="">Lorem, ipsum dolor sit
-                            </p>
-                        </div>
-                    </div>
+                    @endforeach
+
                 </div>
                 {{-- Message --}}
-                <div class="message overflow-y-scroll  p-5 bg-slate-200 max-h-[550px]  gap-y-3">
-                    <div class="flex flex-col gap-y-3">
+                <div class="message overflow-y-scroll  bg-slate-200 max-h-[550px]  gap-y-3">
+                    <div class="bg-white p-3 text-xl text-sky-600 cursor-pointer message-receiver-name">TonTon
+                    </div>
+                    <div class="message-area flex flex-col gap-y-3  p-5">
                         {{-- Sender --}}
-                        <div class=" flex items-end flex-col gap-y-3">
+                        <div class="sender flex items-end flex-col gap-y-3">
                             <div class=" bg-sky-600 text-white p-2 max-w-[70%] text-sm rounded-md ">
-                                <p>bên mình có thể lên đơn rồi em ck trực tiệp qua không ạ</p>
-                                <p class="text-end">10:27</p>
+                                <p class="message-content">bên mình có thể lên đơn rồi em ck trực tiệp qua không ạ</p>
+                                <p class="text-end message-time text-xs">10:27</p>
                             </div>
                         </div>
                         {{-- Receiver --}}
-                        <div class=" flex items-start flex-col gap-y-3">
+                        <div class="receiver flex items-start flex-col gap-y-3">
                             <div class="bg-white text-black p-2 max-w-[70%] text-sm rounded-md">
-                                <p>Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không biết có vấn đề gì khiến
+                                <p class="message-content">Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không
+                                    biết có vấn đề gì khiến
                                     a(chị)
                                     h.ủ.y đơn hàng, mình có thể cho Shop biết lý do được không ạ. Nếu có gì không hài lòng
                                     mong
                                     anh(chị) bỏ qua. Anh (chị) cần hỗ trợ hay thắc mắc gì cứ inb trực tiếp hoặc liên lạc qua
                                     số
                                     0983.745.368 để được hỗ trợ tân tình ạ !</p>
-                                <p class="text-end">10:27</p>
-                            </div>
-                        </div>
-                        {{-- Sender --}}
-                        <div class=" flex items-end flex-col gap-y-3">
-                            <div class=" bg-sky-600 text-white p-2 max-w-[70%] text-sm rounded-md ">
-                                <p>bên mình có thể lên đơn rồi em ck trực tiệp qua không ạ</p>
-                                <p class="text-end">10:27</p>
-                            </div>
-                        </div>
-                        {{-- Receiver --}}
-                        <div class=" flex items-start flex-col gap-y-3">
-                            <div class="bg-white text-black p-2 max-w-[70%] text-sm rounded-md">
-                                <p>Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không biết có vấn đề gì khiến
-                                    a(chị)
-                                    h.ủ.y đơn hàng, mình có thể cho Shop biết lý do được không ạ. Nếu có gì không hài lòng
-                                    mong
-                                    anh(chị) bỏ qua. Anh (chị) cần hỗ trợ hay thắc mắc gì cứ inb trực tiếp hoặc liên lạc qua
-                                    số
-                                    0983.745.368 để được hỗ trợ tân tình ạ !</p>
-                                <p class="text-end">10:27</p>
-                            </div>
-                        </div>
-                        {{-- Receiver --}}
-                        <div class=" flex items-start flex-col gap-y-3">
-                            <div class="bg-white text-black p-2 max-w-[70%] text-sm rounded-md">
-                                <p>Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không biết có vấn đề gì khiến
-                                    a(chị)
-                                    h.ủ.y đơn hàng, mình có thể cho Shop biết lý do được không ạ. Nếu có gì không hài lòng
-                                    mong
-                                    anh(chị) bỏ qua. Anh (chị) cần hỗ trợ hay thắc mắc gì cứ inb trực tiếp hoặc liên lạc qua
-                                    số
-                                    0983.745.368 để được hỗ trợ tân tình ạ !</p>
-                                <p class="text-end">10:27</p>
-                            </div>
-                        </div>
-                        {{-- Receiver --}}
-                        <div class=" flex items-start flex-col gap-y-3">
-                            <div class="bg-white text-black p-2 max-w-[70%] text-sm rounded-md">
-                                <p>Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không biết có vấn đề gì khiến
-                                    a(chị)
-                                    h.ủ.y đơn hàng, mình có thể cho Shop biết lý do được không ạ. Nếu có gì không hài lòng
-                                    mong
-                                    anh(chị) bỏ qua. Anh (chị) cần hỗ trợ hay thắc mắc gì cứ inb trực tiếp hoặc liên lạc qua
-                                    số
-                                    0983.745.368 để được hỗ trợ tân tình ạ !</p>
-                                <p class="text-end">10:27</p>
-                            </div>
-                        </div>
-                        {{-- Receiver --}}
-                        <div class=" flex items-start flex-col gap-y-3">
-                            <div class="bg-white text-black p-2 max-w-[70%] text-sm rounded-md">
-                                <p>Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không biết có vấn đề gì khiến
-                                    a(chị)
-                                    h.ủ.y đơn hàng, mình có thể cho Shop biết lý do được không ạ. Nếu có gì không hài lòng
-                                    mong
-                                    anh(chị) bỏ qua. Anh (chị) cần hỗ trợ hay thắc mắc gì cứ inb trực tiếp hoặc liên lạc qua
-                                    số
-                                    0983.745.368 để được hỗ trợ tân tình ạ !</p>
-                                <p class="text-end">10:27</p>
+                                <p class="text-end message-time">10:27</p>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
             </div>
 
             <div class="absolute bottom-0 right-0 w-[450px] max-h-[100px]">
                 <form action="" class="send-message">
-                    <textarea class="text-sm w-full h-full focus:ring-0 ring-transparent border-none resize-none">
-                        asdasd123
-                    </textarea>
-                    <div class=" text-end px-4 py-1 border-t-2 border-gray-100 text-sky-600 text-xl"><button><i
+                    <input type="hidden" name="receiver_id" />
+                    <input name="message_content" id="message_content" placeholder="Type Something ....."
+                        class="text-sm w-full h-full focus:ring-0 ring-transparent border-none " />
+
+
+                    <div class=" text-end px-4 py-1 border-t-2 border-gray-200 text-sky-600 text-xl"><button><i
                                 class="fa-solid fa-paper-plane"></i></button></div>
 
                 </form>
@@ -426,7 +296,7 @@
     @endpush
     @push('scripts')
         <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
         <!-- Initialize Swiper -->

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Chat;
 use App\Models\FlashSellItem;
 use App\Models\Product;
 use App\Models\ShopProfile;
@@ -49,15 +50,26 @@ class HomeController extends Controller
     // {product?}/{type?}/{subcategory?}/{category?}/{brand?}/{vendor?}
     public function product(Request $request){  
 
+        // Get Chat 
+
+        $receiverIDs = Chat::where("sender_id",Auth::user()->id)->groupBy("receiver_id")->get("receiver_id");
+        
+        
+        $receivers = array(); 
+        foreach($receiverIDs as $receiverID){ 
+            $receivers[] = ShopProfile::findOrFail($receiverID->receiver_id);
+        }
+
         $allCategories = Category::with("subCategories")->get();  
 
         // Product Detail 
         $product = Product::where("slug",$request->product)->first();
-        if($product) $shop = ShopProfile::findOrFail($product->shop_profile_id);
+        if($product) $shop = ShopProfile::findOrFail($product->shop_profile_id); 
         if($request->product) return view("frontend.pages.product",[
             "categories" => $allCategories,
             "product" => $product,
             "shop" => $shop,
+            "receivers" => $receivers,
         ]);
         // Product based on category filter
         else {
