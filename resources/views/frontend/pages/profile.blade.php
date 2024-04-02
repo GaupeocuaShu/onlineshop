@@ -6,21 +6,25 @@
         <div id="tabs" class="flex flex-col md:flex-row gap-6 ">
             <ul class="rounded-xl">
                 <li data-id="1"
-                    class="w-[350px] tab-link-1 tab-link duration-100 hover:duration-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    class="w-[300px] tab-link-1 tab-link duration-100 hover:duration-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
                     <a class="w-[100%] block p-5" href="#tabs-1"><i class="fa-solid fa-circle-user"></i>&emsp;Account</a>
                 </li>
                 <li data-id="2"
-                    class="w-[350px] tab-link-2 tab-link duration-100 hover:duration-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
-                    <a class="w-[100%] block p-5" href="#tabs-2"><i
-                            class="fa-solid fa-cart-shopping"></i>&emsp;Addresses</a>
+                    class="w-[300px] tab-link-2 tab-link duration-100 hover:duration-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    <a class="w-[100%] block p-5" href="#tabs-2"><i class="fa-solid fa-location-dot"></i>&emsp;Addresses</a>
                 </li>
                 <li data-id="3"
-                    class="w-[350px] tab-link-3 tab-link duration-100 hover:duratio100-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    class="w-[300px] tab-link-3 tab-link duration-100 hover:duratio100-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
                     <a class="w-[100%] block p-5" href="#tabs-3"><i class="fa-solid fa-lock"></i>&emsp;Password And
                         Security</a>
                 </li>
+                <li data-id="4"
+                    class="w-[300px] tab-link-4 tab-link duration-100 hover:duratio100-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    <a class="w-[100%] block p-5" href="#tabs-4"><i class="fa-solid fa-cart-shopping"></i>&emsp;Your
+                        Purchase</a>
+                </li>
                 <li data-id="5"
-                    class="w-[350px] tab-link-5 tab-link duration-100 hover:duration-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
+                    class="w-[300px] tab-link-5 tab-link duration-100 hover:duration-100 hover:font-semibold hover:text-sky-700 text-lg h-[60px] bg-white border-b-2 border-slate-200">
                     <a class="w-[100%] block p-5" href="#tabs-5"><i class="fa-solid fa-heart"></i>&emsp;Favorite Items</a>
                 </li>
             </ul>
@@ -231,6 +235,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div id="tabs-4" class=" bg-white p-8 h-[100vh]">
+                    Tab4
                 </div>
             </div>
         </div>

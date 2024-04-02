@@ -143,7 +143,8 @@
                     <span class="text-2xl">{{ $shop->name }}</span>
                     <span class="text-sm">Online 2 hours ago</span>
                     <span class="my-3 flex">
-                        <button class="text-sky-600 border-sky-600 border-2 w-[150px] py-1 px-3"><i
+                        <button data-id="{{ $shop->id }}"
+                            class="show-chat-pannel text-sky-600 border-sky-600 border-2 w-[150px] py-1 px-3"><i
                                 class="fa-brands fa-rocketchat"></i>&ensp;Chat</button>&ensp;
                         <button class="text-sky-600 border-sky-600 border-2 w-[150px] py-1 px-3"><i
                                 class="fa-solid fa-shop"></i>&ensp;View Shop</button>
@@ -212,191 +213,394 @@
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+        {{-- Chat Pannel --}}
+        <div class="shadow-2xl bg-white w-[700px]  fixed top-0 h-full   right-0">
+            <h1 class="text-sky-600 text-xl p-5">Chat</h1>
+            <div class="grid grid-cols-[250px_auto] my-3 h-full ">
+                {{-- Vendors --}}
+                <div class="overflow-y-scroll border-r-2 border-slate-100">
+                    {{-- Receiver - Vendor --}}
+                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
+                        <div><img class="rounded-full" width="50"
+                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
+                        </div>
+                        <div class="flex flex-col p-1">
+                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
+                                <span>4/2/2024</span>
+                            </p>
+                            <p class="">Lorem, ipsum dolor sit
+                            </p>
+                        </div>
+                    </div>
+                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
+                        <div><img class="rounded-full" width="50"
+                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
+                        </div>
+                        <div class="flex flex-col p-1">
+                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
+                                <span>4/2/2024</span>
+                            </p>
+                            <p class="">Lorem, ipsum dolor sit
+                            </p>
+                        </div>
+                    </div>
+                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
+                        <div><img class="rounded-full" width="50"
+                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
+                        </div>
+                        <div class="flex flex-col p-1">
+                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
+                                <span>4/2/2024</span>
+                            </p>
+                            <p class="">Lorem, ipsum dolor sit
+                            </p>
+                        </div>
+                    </div>
+                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
+                        <div><img class="rounded-full" width="50"
+                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
+                        </div>
+                        <div class="flex flex-col p-1">
+                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
+                                <span>4/2/2024</span>
+                            </p>
+                            <p class="">Lorem, ipsum dolor sit
+                            </p>
+                        </div>
+                    </div>
+                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
+                        <div><img class="rounded-full" width="50"
+                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
+                        </div>
+                        <div class="flex flex-col p-1">
+                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
+                                <span>4/2/2024</span>
+                            </p>
+                            <p class="">Lorem, ipsum dolor sit
+                            </p>
+                        </div>
+                    </div>
+                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
+                        <div><img class="rounded-full" width="50"
+                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
+                        </div>
+                        <div class="flex flex-col p-1">
+                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
+                                <span>4/2/2024</span>
+                            </p>
+                            <p class="">Lorem, ipsum dolor sit
+                            </p>
+                        </div>
+                    </div>
+                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
+                        <div><img class="rounded-full" width="50"
+                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
+                        </div>
+                        <div class="flex flex-col p-1">
+                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
+                                <span>4/2/2024</span>
+                            </p>
+                            <p class="">Lorem, ipsum dolor sit
+                            </p>
+                        </div>
+                    </div>
+                    <div class=" flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
+                        <div><img class="rounded-full" width="50"
+                                src="{{ asset('uploads/2024-03-10_tonton2.jpg') }}" />
+                        </div>
+                        <div class="flex flex-col p-1">
+                            <p class="flex justify-between"><span class="font-semibold">TonTon</span>
+                                <span>4/2/2024</span>
+                            </p>
+                            <p class="">Lorem, ipsum dolor sit
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {{-- Message --}}
+                <div class="message overflow-y-scroll  p-5 bg-slate-200 max-h-[550px]  gap-y-3">
+                    <div class="flex flex-col gap-y-3">
+                        {{-- Sender --}}
+                        <div class=" flex items-end flex-col gap-y-3">
+                            <div class=" bg-sky-600 text-white p-2 max-w-[70%] text-sm rounded-md ">
+                                <p>bên mình có thể lên đơn rồi em ck trực tiệp qua không ạ</p>
+                                <p class="text-end">10:27</p>
+                            </div>
+                        </div>
+                        {{-- Receiver --}}
+                        <div class=" flex items-start flex-col gap-y-3">
+                            <div class="bg-white text-black p-2 max-w-[70%] text-sm rounded-md">
+                                <p>Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không biết có vấn đề gì khiến
+                                    a(chị)
+                                    h.ủ.y đơn hàng, mình có thể cho Shop biết lý do được không ạ. Nếu có gì không hài lòng
+                                    mong
+                                    anh(chị) bỏ qua. Anh (chị) cần hỗ trợ hay thắc mắc gì cứ inb trực tiếp hoặc liên lạc qua
+                                    số
+                                    0983.745.368 để được hỗ trợ tân tình ạ !</p>
+                                <p class="text-end">10:27</p>
+                            </div>
+                        </div>
+                        {{-- Sender --}}
+                        <div class=" flex items-end flex-col gap-y-3">
+                            <div class=" bg-sky-600 text-white p-2 max-w-[70%] text-sm rounded-md ">
+                                <p>bên mình có thể lên đơn rồi em ck trực tiệp qua không ạ</p>
+                                <p class="text-end">10:27</p>
+                            </div>
+                        </div>
+                        {{-- Receiver --}}
+                        <div class=" flex items-start flex-col gap-y-3">
+                            <div class="bg-white text-black p-2 max-w-[70%] text-sm rounded-md">
+                                <p>Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không biết có vấn đề gì khiến
+                                    a(chị)
+                                    h.ủ.y đơn hàng, mình có thể cho Shop biết lý do được không ạ. Nếu có gì không hài lòng
+                                    mong
+                                    anh(chị) bỏ qua. Anh (chị) cần hỗ trợ hay thắc mắc gì cứ inb trực tiếp hoặc liên lạc qua
+                                    số
+                                    0983.745.368 để được hỗ trợ tân tình ạ !</p>
+                                <p class="text-end">10:27</p>
+                            </div>
+                        </div>
+                        {{-- Receiver --}}
+                        <div class=" flex items-start flex-col gap-y-3">
+                            <div class="bg-white text-black p-2 max-w-[70%] text-sm rounded-md">
+                                <p>Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không biết có vấn đề gì khiến
+                                    a(chị)
+                                    h.ủ.y đơn hàng, mình có thể cho Shop biết lý do được không ạ. Nếu có gì không hài lòng
+                                    mong
+                                    anh(chị) bỏ qua. Anh (chị) cần hỗ trợ hay thắc mắc gì cứ inb trực tiếp hoặc liên lạc qua
+                                    số
+                                    0983.745.368 để được hỗ trợ tân tình ạ !</p>
+                                <p class="text-end">10:27</p>
+                            </div>
+                        </div>
+                        {{-- Receiver --}}
+                        <div class=" flex items-start flex-col gap-y-3">
+                            <div class="bg-white text-black p-2 max-w-[70%] text-sm rounded-md">
+                                <p>Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không biết có vấn đề gì khiến
+                                    a(chị)
+                                    h.ủ.y đơn hàng, mình có thể cho Shop biết lý do được không ạ. Nếu có gì không hài lòng
+                                    mong
+                                    anh(chị) bỏ qua. Anh (chị) cần hỗ trợ hay thắc mắc gì cứ inb trực tiếp hoặc liên lạc qua
+                                    số
+                                    0983.745.368 để được hỗ trợ tân tình ạ !</p>
+                                <p class="text-end">10:27</p>
+                            </div>
+                        </div>
+                        {{-- Receiver --}}
+                        <div class=" flex items-start flex-col gap-y-3">
+                            <div class="bg-white text-black p-2 max-w-[70%] text-sm rounded-md">
+                                <p>Xin chào a(chị) , Shop vừa thấy anh(chị) h.ủ.y đơn hàng. Không biết có vấn đề gì khiến
+                                    a(chị)
+                                    h.ủ.y đơn hàng, mình có thể cho Shop biết lý do được không ạ. Nếu có gì không hài lòng
+                                    mong
+                                    anh(chị) bỏ qua. Anh (chị) cần hỗ trợ hay thắc mắc gì cứ inb trực tiếp hoặc liên lạc qua
+                                    số
+                                    0983.745.368 để được hỗ trợ tân tình ạ !</p>
+                                <p class="text-end">10:27</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="absolute bottom-0 right-0 w-[450px] max-h-[100px]">
+                <form action="" class="send-message">
+                    <textarea class="text-sm w-full h-full focus:ring-0 ring-transparent border-none resize-none">
+                        asdasd123
+                    </textarea>
+                    <div class=" text-end px-4 py-1 border-t-2 border-gray-100 text-sky-600 text-xl"><button><i
+                                class="fa-solid fa-paper-plane"></i></button></div>
+
+                </form>
+
+            </div>
+        </div>
+    @endsection
 
 
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('frontend/product-detail/slider.css') }}">
-@endpush
-@push('scripts')
-    <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('frontend/product-detail/slider.css') }}">
+    @endpush
+    @push('scripts')
+        <!-- Swiper JS
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <!-- Initialize Swiper -->
-    <script>
-        $(document).ready(function() {
-            function init() {
-                let allVarNames = [];
-                const imageURL = $(".product-information").data("imageurl");
-                const brandID = $(".product-information").data("brandid");
-                const vendorID = $(".product-information").data("vendorid");
-                const id = $('input[name="temp_id"]').val();
-                allVarNames.push({
-                    imageURL: imageURL
-                }, {
-                    brand_id: brandID
-                }, {
-                    product_id: id
-                }, {
-                    vendor_id: vendorID
+        <!-- Initialize Swiper -->
+        <script>
+            $(document).ready(function() {
+                function init() {
+                    let allVarNames = [];
+                    const imageURL = $(".product-information").data("imageurl");
+                    const brandID = $(".product-information").data("brandid");
+                    const vendorID = $(".product-information").data("vendorid");
+                    const id = $('input[name="temp_id"]').val();
+                    allVarNames.push({
+                        imageURL: imageURL
+                    }, {
+                        brand_id: brandID
+                    }, {
+                        product_id: id
+                    }, {
+                        vendor_id: vendorID
+                    });
+                    const allVarNamesJson = JSON.stringify(allVarNames);
+                    $('input[name="attributes"]').val(allVarNamesJson);
+                }
+                init()
+                var swiper = new Swiper(".mySwiper", {
+                    spaceBetween: 10,
+                    slidesPerView: 4,
+                    freeMode: true,
+                    watchSlidesProgress: true,
                 });
-                const allVarNamesJson = JSON.stringify(allVarNames);
-                $('input[name="attributes"]').val(allVarNamesJson);
-            }
-            init()
-            var swiper = new Swiper(".mySwiper", {
-                spaceBetween: 10,
-                slidesPerView: 4,
-                freeMode: true,
-                watchSlidesProgress: true,
-            });
-            var swiper2 = new Swiper(".mySwiper2", {
-                spaceBetween: 10,
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                },
-                thumbs: {
-                    swiper: swiper,
-                },
-            });
-            // Move slide 
-            function moveToSlide(name) {
-                var slides = $('.swiper-slide');
-                slides.each(function(index) {
-                    if ($(this).data('name').toLowerCase() === name.toLowerCase()) {
-                        swiper2.slideTo(index);
-                        return false; // Exit the loop once the slide is found
+                var swiper2 = new Swiper(".mySwiper2", {
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                    },
+                    thumbs: {
+                        swiper: swiper,
+                    },
+                });
+                // Move slide 
+                function moveToSlide(name) {
+                    var slides = $('.swiper-slide');
+                    slides.each(function(index) {
+                        if ($(this).data('name').toLowerCase() === name.toLowerCase()) {
+                            swiper2.slideTo(index);
+                            return false; // Exit the loop once the slide is found
+                        }
+                    });
+                }
+                // Variant item handle --------------------------
+                $(".variant-item-button").on("click", function() {
+                    const variantId = $(this).data("variantid");
+                    let allVarNames = [];
+                    const id = $('input[name="temp_id"]').val();
+                    // Move slide and handle input image, brand_id, product_id
+                    if ($(this).data("isswipe")) {
+                        const name = $(this).data("name");
+                        moveToSlide(name);
                     }
+                    var activeIndex = swiper2.activeIndex;
+                    var activeSlide = swiper2.slides[activeIndex];
+                    var activeImage = $(activeSlide).find('img');
+                    const imageURL = $(activeImage).data("imageurl");
+                    var brandID = $(".product-information").data("brandid");
+                    var vendorID = $(".product-information").data("vendorid");
+
+                    allVarNames.push({
+                        imageURL: imageURL
+                    }, {
+                        brand_id: brandID
+                    }, {
+                        product_id: id
+                    }, {
+                        vendor_id: vendorID
+                    });
+                    // Add variant Price
+                    if ($(this).data("price") > 0) {
+                        let price = parseInt($(".price").html());
+                        price += parseInt((this).data("price"));
+                        $(".price").html(price);
+                        $("input[name='price']").val(price);
+                    }
+
+
+                    // Handle active
+                    $(".variant-" + variantId).removeClass("act border-sky-600");
+                    $(this).addClass("act border-sky-600");
+
+                    // Handle input id and input variants 
+
+
+                    let newid = id;
+                    $(".variant-item-button.act").each(function(i, v) {
+                        newid += $(v).data("id");
+                        $('input[name="id"]').val(newid);
+
+                        const variantName = $(v).data('variantname')
+                        let variantPair = {}
+                        variantPair[variantName] = $(v).data("name")
+                        allVarNames.push(variantPair)
+                    });
+                    console.log(newid);
+                    const allVarNamesJson = JSON.stringify(allVarNames);
+                    $('input[name="attributes"]').val(allVarNamesJson);
                 });
-            }
-            // Variant item handle --------------------------
-            $(".variant-item-button").on("click", function() {
-                const variantId = $(this).data("variantid");
-                let allVarNames = [];
-                const id = $('input[name="temp_id"]').val();
-                // Move slide and handle input image, brand_id, product_id
-                if ($(this).data("isswipe")) {
-                    const name = $(this).data("name");
-                    moveToSlide(name);
-                }
-                var activeIndex = swiper2.activeIndex;
-                var activeSlide = swiper2.slides[activeIndex];
-                var activeImage = $(activeSlide).find('img');
-                const imageURL = $(activeImage).data("imageurl");
-                var brandID = $(".product-information").data("brandid");
-                var vendorID = $(".product-information").data("vendorid");
+                // Variant item handle --------------------------
 
-                allVarNames.push({
-                    imageURL: imageURL
-                }, {
-                    brand_id: brandID
-                }, {
-                    product_id: id
-                }, {
-                    vendor_id: vendorID
-                });
-                // Add variant Price
-                if ($(this).data("price") > 0) {
-                    let price = parseInt($(".price").html());
-                    price += parseInt((this).data("price"));
-                    $(".price").html(price);
-                    $("input[name='price']").val(price);
-                }
-
-
-                // Handle active
-                $(".variant-" + variantId).removeClass("act border-sky-600");
-                $(this).addClass("act border-sky-600");
-
-                // Handle input id and input variants 
-
-
-                let newid = id;
-                $(".variant-item-button.act").each(function(i, v) {
-                    newid += $(v).data("id");
-                    $('input[name="id"]').val(newid);
-
-                    const variantName = $(v).data('variantname')
-                    let variantPair = {}
-                    variantPair[variantName] = $(v).data("name")
-                    allVarNames.push(variantPair)
-                });
-                console.log(newid);
-                const allVarNamesJson = JSON.stringify(allVarNames);
-                $('input[name="attributes"]').val(allVarNamesJson);
-            });
-            // Variant item handle --------------------------
-
-            // Quantity item handle  ---------------------------
-            $(".increase").on("click", function() {
-                let qty = parseInt($(".quantity").val());
-                let max = $(this).data("max");
-                console.log(max);
-                if (qty + 1 > max) return;
-                qty = qty + 1;
-                $(".quantity").val(qty);
-                $("input[name='quantity']").val(qty);
-            })
-            $(".decrease").on("click", function() {
-                let qty = parseInt($(".quantity").val());
-                if (qty <= 1) return;
-                qty = qty - 1;
-                $(".quantity").val(qty);
-                $("input[name='quantity']").val(qty);
-
-            })
-            $(".quantity").on("change", function() {
-                const max = $(".increase").data("max");
-                let qty = $(this).val();
-                console.log(qty);
-                if (qty <= 0) qty = 1;
-                else if (qty > max) qty = max;
-                $(this).val(qty);
-                $("input[name='quantity']").val(qty);
-
-            })
-            // Quantity item handle  ---------------------------
-
-            // Add to cart 
-            $(".add-to-cart").on("click", function(e) {
-                e.preventDefault();
-
-                // Check all variant selected
-                let flag = true;
-                $(".variant").each(function(i, v) {
-                    if ($(v).find(".act").length == 0) flag = false;
+                // Quantity item handle  ---------------------------
+                $(".increase").on("click", function() {
+                    let qty = parseInt($(".quantity").val());
+                    let max = $(this).data("max");
+                    console.log(max);
+                    if (qty + 1 > max) return;
+                    qty = qty + 1;
+                    $(".quantity").val(qty);
+                    $("input[name='quantity']").val(qty);
                 })
-                if (flag == true) {
-                    const data = $(this).closest("form").serialize();
-                    // Send form by ajax 
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('user.add-to-cart') }}",
-                        data: data,
-                        dataType: "JSON",
-                        beforeSend: function() {
-                            $(".loading").removeClass("hidden");
-                            $(".loading").addClass("flex");
-                        },
-                        success: function(response) {
-                            if (response.status == 'success') {
-                                $(".loading").addClass("hidden");
-                                $(".loading").removeClass("flex");
+                $(".decrease").on("click", function() {
+                    let qty = parseInt($(".quantity").val());
+                    if (qty <= 1) return;
+                    qty = qty - 1;
+                    $(".quantity").val(qty);
+                    $("input[name='quantity']").val(qty);
 
-                                Swal.fire({
-                                    icon: "success",
-                                    text: response.message,
-                                });
-                                $(".cart-qty").html(response.cart);
-                                $(".cart-show").removeClass("hidden");
-                                $(".cart-hidden").addClass("hidden");
-                                // Append new item to mini cart 
-                                if (response.isShowInMiniCart) {
-                                    const li = `
+                })
+                $(".quantity").on("change", function() {
+                    const max = $(".increase").data("max");
+                    let qty = $(this).val();
+                    console.log(qty);
+                    if (qty <= 0) qty = 1;
+                    else if (qty > max) qty = max;
+                    $(this).val(qty);
+                    $("input[name='quantity']").val(qty);
+
+                })
+                // Quantity item handle  ---------------------------
+
+                // Add to cart 
+                $(".add-to-cart").on("click", function(e) {
+                    e.preventDefault();
+
+                    // Check all variant selected
+                    let flag = true;
+                    $(".variant").each(function(i, v) {
+                        if ($(v).find(".act").length == 0) flag = false;
+                    })
+                    if (flag == true) {
+                        const data = $(this).closest("form").serialize();
+                        // Send form by ajax 
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('user.add-to-cart') }}",
+                            data: data,
+                            dataType: "JSON",
+                            beforeSend: function() {
+                                $(".loading").removeClass("hidden");
+                                $(".loading").addClass("flex");
+                            },
+                            success: function(response) {
+                                if (response.status == 'success') {
+                                    $(".loading").addClass("hidden");
+                                    $(".loading").removeClass("flex");
+
+                                    Swal.fire({
+                                        icon: "success",
+                                        text: response.message,
+                                    });
+                                    $(".cart-qty").html(response.cart);
+                                    $(".cart-show").removeClass("hidden");
+                                    $(".cart-hidden").addClass("hidden");
+                                    // Append new item to mini cart 
+                                    if (response.isShowInMiniCart) {
+                                        const li = `
                                 <li class="flex hover:bg-slate-100 p-2 justify-between leading-[80px] items-center">
                                     <span class="flex gap-2 items-center">
                                         <span><img width="50" src="${response.variants['imageURL']}" /></span>
@@ -405,25 +609,25 @@
                                     <span class="text-sky-600">$${response.price }</span>
                                 </li>
                         `
-                                    $(".cart-mini").append(li);
-                                }
-                                $(".view-cart-button").removeClass("hidden").addClass("block");
-                                $(".empty-cart-message").removeClass("block").addClass(
-                                "hidden");
+                                        $(".cart-mini").append(li);
+                                    }
+                                    $(".view-cart-button").removeClass("hidden").addClass("block");
+                                    $(".empty-cart-message").removeClass("block").addClass(
+                                        "hidden");
 
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                window.location.replace("/login");
                             }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            window.location.replace("/login");
-                        }
-                    });
-                } else {
-                    $(".variant-select").removeClass("hidden");
-                }
+                        });
+                    } else {
+                        $(".variant-select").removeClass("hidden");
+                    }
+                });
+                $(".variant-select").on("click", function() {
+                    $(this).addClass("hidden");
+                })
             });
-            $(".variant-select").on("click", function() {
-                $(this).addClass("hidden");
-            })
-        });
-    </script>
-@endpush
+        </script>
+    @endpush

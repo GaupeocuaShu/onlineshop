@@ -52,7 +52,19 @@ class PaymentController extends Controller
                 "unit_price" => $item->price, 
                 "qty" => $item->quantity, 
             ]);
+        };  
+        $ids = array(); 
+        foreach(Cart::getContent() as $item){ 
+            $ids[] = $item->id; 
+        }
+        Cart::clear();  
+        
+        Cart::session(Auth::user()->id);  
+        foreach($ids as $id) {
+            Cart::remove($id);
         };
-        return view("frontend.pages.payment-success");
+        return view("frontend.pages.payment-success",[
+            "title" => "Payment Success"
+        ]);
     }
 }

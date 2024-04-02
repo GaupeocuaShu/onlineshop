@@ -39,3 +39,7 @@
         background-position: 200% center;
     }
 }
+
+.focus-outline-none:focus {
+    outline: none;
+}
