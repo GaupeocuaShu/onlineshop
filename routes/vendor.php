@@ -1,6 +1,7 @@
 <?php
 use App\Models\Category;
 use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Frontend\ChatController;
 use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\ProductImageGalleryController;
 use App\Http\Controllers\Vendor\ProductVariantController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Vendor\ShopProfileController;
 use Illuminate\Http\Request;
 use App\Models\Brand;
 use App\Models\ProductImageGallery;
+use App\Http\Controllers\User\UserMessageController;
 
 // Profile -------------------------------------------------
 Route::post("profile-update",[ProfileController::class,"profileUpdate"])->name("profile-update");
@@ -65,4 +67,11 @@ Route::put("product/variant/item/{id}/is-default", [ProductVariantItemController
 Route::put("product/variant/item/{id}/change-status", [ProductVariantItemController::class, "changeStatus"])->name("product.variant.item.change_status");
 Route::resource("product.variant.item", ProductVariantItemController::class);
 // Product Variant Items -------------------------------------------------
+
+
+// Chat ------------------------------------------------- 
+Route::post("message/send-message",[UserMessageController::class,'sendMessage'])->name("message.send-message");
+Route::get('message/get-message',[UserMessageController::class,"getMessage"])->name("message.get-message");
+Route::get("chat",[ChatController::class,"index"])->name("chat");
+// Chat ------------------------------------------------- 
 

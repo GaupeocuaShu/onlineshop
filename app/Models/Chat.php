@@ -11,4 +11,6 @@ class Chat extends Model
     public $fillable =[
         "sender_id","receiver_id","message","seen"
     ];
+
+
 }

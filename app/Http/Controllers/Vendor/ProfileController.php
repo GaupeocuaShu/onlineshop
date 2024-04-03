@@ -7,10 +7,14 @@ use Illuminate\Http\Request;
 use App\Traits\UploadTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Models\Chat;
+use App\Models\User;
+
 class ProfileController extends Controller
 {
     use UploadTrait;
-    public function index(){
+    public function index(){ 
+       
         $user  = Auth::user(); 
         return view("vendor.profile.index",[ 
             "user" => $user, 

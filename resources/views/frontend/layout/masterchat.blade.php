@@ -1,3 +1,6 @@
+@php
+    $senderID = App\Models\ShopProfile::where('user_id', Auth::user()->id)->first()->id;
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,16 +16,12 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     @stack('styles')
     @vite(['resources/js/app.js'])
-    <title>{{ $title ?? 'Home' }}</title>
+    <title>Shuty Shop Chat System</title>
 </head>
 
 <body>
-    <div style="font-family:Roboto, sans-serif;">
-        {{-- Navbar --}}
-        @include('frontend.layout.navbar')
 
-        {{-- Sidebar --}}
-        @include('frontend.layout.sidebar')
+    <div style="font-family:Roboto, sans-serif;">
 
         <!-- Main Content -->
         <div class=" bg-slate-100">
@@ -31,10 +30,9 @@
             </div>
         </div>
 
-        {{-- Footer --}}
-        @include('frontend.layout.footer')
 
     </div>
+
     {{-- Sweetalert --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {{-- Jquery UI --}}
@@ -80,7 +78,7 @@
     </script>
     <script>
         // Chat -----------------------------------
-        const senderId = "{{ Auth::check() ? Auth::user()->id : ' ' }}";
+        const senderId = "{{ Auth::check() ? $senderID : ' ' }}";
 
         function init() {
             $(".receiver").each(function(i, v) {
@@ -101,11 +99,11 @@
                 minute: "2-digit"
             })
         }
-        // Get Message
+        // Get message
         function getMessage(senderID, receiverID) {
             $.ajax({
                 type: "GET",
-                url: "{{ route('user.message.get-message') }}",
+                url: "{{ route('vendor.message.get-message') }}",
                 data: {
                     receiver_id: receiverID,
                     sender_id: senderID,
@@ -148,11 +146,11 @@
                 }
             });
         }
-        // Send Message
+        // Send Message 
         function sendMessage(data) {
             $.ajax({
                 type: "POST",
-                url: "{{ route('user.message.send-message') }}",
+                url: "{{ route('vendor.message.send-message') }}",
                 data: data,
                 dataType: "JSON",
                 success: function(response) {
@@ -176,7 +174,7 @@
                             init();
                             $(".receivers").prepend(receiverHTML);
                         }
-
+                        $("#message_content").val("");
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -243,7 +241,6 @@
                         </div>
                 </div>
             `
-
             $(".message-area").append(messageAreaHTML);
             sendMessage(data);
             $("#message_content").val("");
