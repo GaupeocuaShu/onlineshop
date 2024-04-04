@@ -55,17 +55,10 @@ class HomeController extends Controller
         if($product){
             $shop = ShopProfile::findOrFail($product->shop_profile_id); 
             // Get Chat -----------------------------
-            $receiverIDs = Chat::where("sender_id",Auth::user()->id)->where("receiver_id","!=",Auth::user()->id)->groupBy("receiver_id")->get("receiver_id");
-            $receivers = array(); 
-            foreach($receiverIDs as $receiverID){ 
-                $receivers[] = ShopProfile::findOrFail($receiverID->receiver_id);
-            }
-            // Get Chat -----------------------------
             return view("frontend.pages.product",[
                 "categories" => $allCategories,
                 "product" => $product,
                 "shop" => $shop,
-                "receivers" => $receivers,
             ]);
         }
         // Product based on category filter

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Events\MessageEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\ShopProfile;
@@ -20,17 +21,24 @@ class UserMessageController extends Controller
         ->get()) <= 0 ? true :false ;
 
 
-        Chat::create([
+        $message = Chat::create([
             "receiver_id" => $receiverID , 
             "sender_id" => $senderID , 
             "message" => $request->message_content, 
         ]); 
-        
-        return response([
-            "status" => "success", 
-            "receiver" => ShopProfile::findOrFail($request->receiver_id),
-            "isNewConversation" =>$isNewConversation,
-        ]);
+        broadcast(new MessageEvent($message->message,$message->receiver_id)); 
+        if(Auth::user()->role =='user') {
+            return response([
+                "status" => "success", 
+                "receiver" => ShopProfile::findOrFail($request->receiver_id),
+                "isNewConversation" =>$isNewConversation,
+            ]);
+        }
+        else {
+            return response([
+                "status" => "success", 
+            ]);
+        }
     }
     public function getMessage(Request $request){
         $senderID = $request->sender_id; 
@@ -40,9 +48,12 @@ class UserMessageController extends Controller
                     ->whereIn('sender_id',[ $senderID , $receiverID ])
                     ->orderBy('created_at','asc')
                     ->get();
+        $lastChat = $chat->last();
+    
         return response([
             'status' => "success",
-            "chat" => $chat
+            "chat" => $chat, 
+            "lastChat" => $lastChat,
         ]);
     }
 }

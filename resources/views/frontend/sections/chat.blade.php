@@ -1,83 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
+<div
+    class="open-chat-pannel text-xl  bg-sky-600 text-white fixed bottom-5 right-10 p-3 rounded-md shadow-xl cursor-pointer">
+    <div><i class="fa-regular fa-comment"></i> Chat</div>
+</div>
+{{-- Chat Pannel --}}
+<div class="chat-pannel z-[100] hidden shadow-2xl bg-white w-[700px]  fixed top-0 h-full   right-0">
+    <div class="p-5 flex justify-between border-b-2 border-slate-200">
+        <p class="text-sky-600  text-2xl ">Chat</p>
+        <button class="close-chat-pannel text-sky-600 cursor-pointer text-xl"><i
+                class="fa-solid fa-circle-chevron-down"></i></button>
+    </div>
+    <div class="grid grid-cols-[250px_auto] my-3 h-full ">
+        {{-- Vendors --}}
+        <div class="receivers overflow-y-scroll border-r-2  border-slate-100">
+            {{-- Receiver - Vendor --}}
+            @foreach (getReceivers() as $receiver)
+                <div data-id="{{ $receiver->user_id }}"
+                    class="receiver cursor-pointer flex items-center p-2 max-w-[250px] max-h-[100px]   ">
+                    <div><img class="rounded-full" width="50" src="{{ asset($receiver->banner) }}" />
+                    </div>
+                    <div class="flex flex-col p-1">
+                        <p class="flex justify-between"><span
+                                class="font-semibold text-sm receiver-name">{{ $receiver->name }}</span>
+                            <span class="text-xs">4/2/2024</span>
+                        </p>
+                        <p class="">Lorem ipsum dolor sit,
+                        </p>
+                    </div>
+                </div>
+            @endforeach
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
-    @vite('resources/css/app.css')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+        </div>
+        {{-- Message --}}
+        <div class="message overflow-y-scroll  bg-slate-200 max-h-[550px]  gap-y-3">
+            <div class="bg-white p-3 text-xl text-sky-600 cursor-pointer message-receiver-name">
+            </div>
+            <div class="message-area flex flex-col gap-y-3  p-5">
 
-    {{-- Toastify --}}
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    @stack('styles')
-    <script>
-        const USER = {
-            id: "{{ auth()->user()->id }}"
-        }
-    </script>
-    @vite(['resources/js/app.js', 'resources/js/frontend.js'])
-    <title>Shuty Shop Chat System</title>
-</head>
-
-<body>
-
-    <div style="font-family:Roboto, sans-serif;">
-
-        <!-- Main Content -->
-        <div class=" bg-slate-100">
-            <div class="main-content lg:w-[1200px] mx-auto">
-                @yield('content')
             </div>
         </div>
 
-
     </div>
 
-    {{-- Sweetalert --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- Jquery UI --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    {{-- Font Awesome --}}
-    <script src="https://kit.fontawesome.com/1027857984.js" crossorigin="anonymous"></script>
-    {{-- Swiper --}}
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    {{-- Toastify --}}
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script>
-        @if ($errors->any())
-            @foreach ($errors->all() as $err)
+    <div class="absolute bottom-0 right-0 w-[450px] max-h-[100px]">
+        <form action="" class="send-message">
+            <input type="hidden" name="sender_id" value="{{ Auth::user()->id }}" />
+            <input type="hidden" name="receiver_id" />
+            <input name="message_content" id="message_content" placeholder="Type Something ....."
+                class="text-sm w-full h-full focus:ring-0 ring-transparent border-none " />
 
-                Toastify({
-                    text: "{{ $err }}",
-                    duration: 3000,
-                    className: "info",
-                    style: {
-                        background: "linear-gradient(to right, #00b09b, #96c93d)",
-                    }
-                }).showToast();
-            @endforeach
-        @endif
-        @if (Session::has('status'))
-            Toastify({
-                text: "{{ session('status') }}",
-                duration: 3000,
-                className: "info",
-                style: {
-                    background: "linear-gradient(to right, #00b09b, #96c93d)",
-                }
-            }).showToast();
-        @endif
-    </script>
-    <script type="text/javascript">
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-    </script>
+
+            <div class=" text-end px-4 py-1 border-t-2 border-gray-200 text-sky-600 text-xl"><button><i
+                        class="fa-solid fa-paper-plane"></i></button></div>
+        </form>
+    </div>
+</div>
+
+
+@push('scripts')
     <script>
         // Chat -----------------------------------
         const senderId = "{{ Auth::check() ? auth()->user()->id : ' ' }}";
@@ -105,7 +84,7 @@
         function getMessage(senderID, receiverID) {
             $.ajax({
                 type: "GET",
-                url: "{{ route('vendor.message.get-message') }}",
+                url: "{{ route('user.message.get-message') }}",
                 data: {
                     receiver_id: receiverID,
                     sender_id: senderID,
@@ -152,13 +131,13 @@
         function sendMessage(data) {
             $.ajax({
                 type: "POST",
-                url: "{{ route('vendor.message.send-message') }}",
+                url: "{{ route('user.message.send-message') }}",
                 data: data,
                 dataType: "JSON",
                 success: function(response) {
                     if (response.status == "success") {
-                        const receiver = response.receiver;
                         if (response.isNewConversation) {
+                            const receiver = response.receiver;
                             const receiverHTML = `
                             <div data-id="${receiver.id}" class="receiver cursor-pointer flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
                                     <div><img class="rounded-full" width="50"
@@ -197,38 +176,42 @@
             const receiverName = $(this).find(".receiver-name").html();
             $(".message-receiver-name").html(receiverName);
         })
-        $(".show-chat-pannel").on("click", function() {
+        // $(".show-chat-pannel").on("click", function() {
 
-            const name = $(this).data("name");
-            const banner = $(this).data("banner");
-            const receiverID = $(this).data("id");
+        //     const name = $(this).data("name");
+        //     const banner = $(this).data("banner");
+        //     const receiverID = $(this).data("id");
 
-            $(".receiver").each(function(i, v) {
-                if ($(v).data('id') == receiverID) {
-                    init();
-                    $(v).addClass("bg-slate-100");
-                    getMessage(senderId, receiverID);
-                } else {
-                    const messagePatternHTML = `
-                    <div class="message overflow-y-scroll  bg-slate-200 max-h-[550px]  gap-y-3">
-                            <div class="bg-white p-3 text-xl text-sky-600 cursor-pointer message-receiver-name">${name}
-                            </div>
-                            <div class="message-area flex flex-col gap-y-3  p-5">
-                                
-                            </div>
-                        </div>
-                    `
-                    $(".message").replaceWith(messagePatternHTML);
-                }
-            })
+        //     $(".receiver").each(function(i, v) {
+        //         if ($(v).data('id') == receiverID) {
+        //             init();
+        //             $(v).addClass("bg-slate-100");
+        //             getMessage(senderId, receiverID);
+        //         } else {
+        //             const messagePatternHTML = `
+    //         <div class="message overflow-y-scroll  bg-slate-200 max-h-[550px]  gap-y-3">
+    //                 <div class="bg-white p-3 text-xl text-sky-600 cursor-pointer message-receiver-name">${name}
+    //                 </div>
+    //                 <div class="message-area flex flex-col gap-y-3  p-5">
 
-            setInputReceiverID(receiverID);
+    //                 </div>
+    //             </div>
+    //         `
+        //             $(".message").replaceWith(messagePatternHTML);
+        //         }
+        //     })
 
-            $(".chat-pannel").show(500);
+        //     setInputReceiverID(receiverID);
 
-        });
+        //     $(".chat-pannel").show(500);
+
+        // });
         $(".close-chat-pannel").on("click", function() {
             $(".chat-pannel").hide(500);
+        });
+
+        $(".open-chat-pannel").on("click", function() {
+            $(".chat-pannel").show(500);
         });
         $(".send-message").on("submit", function(e) {
             e.preventDefault();
@@ -250,7 +233,4 @@
         })
         // Chat -----------------------------------
     </script>
-    @stack('scripts')
-</body>
-
-</html>
+@endpush

@@ -1,6 +1,3 @@
-@php
-    $senderID = App\Models\ShopProfile::where('user_id', Auth::user()->id)->first()->id;
-@endphp
 @extends('frontend.layout.masterchat')
 @section('content')
     {{-- Chat Pannel --}}
@@ -15,7 +12,7 @@
             {{-- Vendors --}}
             <div class="receivers overflow-y-scroll border-r-2  border-slate-100">
                 {{-- Receiver - Vendor --}}
-                @foreach ($receivers as $receiver)
+                @foreach (getReceivers() as $receiver)
                     <div data-id="{{ $receiver->id }}"
                         class="receiver cursor-pointer flex items-center p-2 max-w-[250px] max-h-[100px]   ">
                         <div><img class="rounded-full" width="50" src="{{ asset($receiver->image) }}" />
@@ -25,7 +22,7 @@
                                     class="font-semibold text-sm receiver-name">{{ $receiver->name }}</span>
                                 <span class="text-xs">4/2/2024</span>
                             </p>
-                            <p class="">Lorem, ipsum dolor sit
+                            <p class="">Lorem ipsum dolor sit,
                             </p>
                         </div>
                     </div>
@@ -45,7 +42,7 @@
 
         <div class="absolute bottom-0 right-0 w-[450px] max-h-[100px]">
             <form action="" class="send-message">
-                <input type="hidden" name="sender_id" value="{{ $senderID }}" />
+                <input type="hidden" name="sender_id" value="{{ auth()->user()->id }}" />
                 <input type="hidden" name="receiver_id" />
                 <input name="message_content" id="message_content" placeholder="Type Something ....."
                     class="text-sm w-full h-full focus:ring-0 ring-transparent border-none " />

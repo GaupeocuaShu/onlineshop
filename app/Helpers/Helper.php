@@ -1,5 +1,10 @@
 <?php
 // Set active for admin navbar
+
+use App\Models\Chat;
+use App\Models\ShopProfile;
+use App\Models\User;
+
 function setActive(array $routes)
 {
     foreach ($routes as $route) {
@@ -62,3 +67,25 @@ function getProductType($product)
 function getAllType(){
     return ["featured" => "Featured","best" => "Best","top" => "Top","new" => "New Arrival"];
 }
+
+// Chat -------------------------------------
+function getReceivers() : array{
+    $receivers = array();
+    $id = auth()->user()->id;
+    $receiverIDs = Chat::where("sender_id", $id)->groupBy('receiver_id')->pluck('receiver_id')->toArray();
+    if( auth()->user()->role == 'user'){
+        foreach($receiverIDs as $id) {
+            $receivers[] = ShopProfile::where("user_id",$id)->first();
+        };
+    }
+    else {
+        foreach($receiverIDs as $id) {
+            $receivers[] = User::findOrFail($id);
+        };
+    }
+    return $receivers;
+
+}
+
+
+// Chat -------------------------------------
