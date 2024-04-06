@@ -15,7 +15,7 @@
     <title>{{ $title ?? 'Home' }}</title>
     <script>
         const USER = {
-            id: "{{ auth()->check() && auth()->user()->id }}"
+            id: "{{ auth()->check() ? auth()->user()->id : ' ' }}"
         }
     </script>
     @vite(['resources/js/app.js', 'resources/js/frontend.js'])

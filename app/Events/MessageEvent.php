@@ -16,14 +16,16 @@ class MessageEvent implements ShouldBroadcast
 
     public $message;
     public $receiver_id;
+    public $date_time; 
 
     /**
      * Create a new event instance.
      */
-    public function __construct($message,$receiver_id)
+    public function __construct($message,$receiver_id,$date_time)
     {
         $this->message = $message;
         $this->receiver_id = $receiver_id;
+        $this->date_time = $date_time;
     }
 
     /**
@@ -37,11 +39,12 @@ class MessageEvent implements ShouldBroadcast
             new PrivateChannel('message.'.$this->receiver_id),
         ];
     }
-    public function broadcastWith():array{
+    function broadcastWith():array{
         return [
             'message' => $this->message,
             'receiver_id' => $this->receiver_id,
-            'sender_id' => Auth::user()->id,
+            'sender_id' => Auth::user()->id, 
+            'created_at' => $this->date_time,
         ];
     }
 }

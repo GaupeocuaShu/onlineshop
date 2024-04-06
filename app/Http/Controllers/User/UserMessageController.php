@@ -26,11 +26,11 @@ class UserMessageController extends Controller
             "sender_id" => $senderID , 
             "message" => $request->message_content, 
         ]); 
-        broadcast(new MessageEvent($message->message,$message->receiver_id)); 
+        broadcast(new MessageEvent($message->message,$message->receiver_id,$message->created_at)); 
         if(Auth::user()->role =='user') {
             return response([
                 "status" => "success", 
-                "receiver" => ShopProfile::findOrFail($request->receiver_id),
+                "receiver" => ShopProfile::where("user_id",$request->receiver_id)->first(),
                 "isNewConversation" =>$isNewConversation,
             ]);
         }
