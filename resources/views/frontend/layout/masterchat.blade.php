@@ -86,6 +86,15 @@
             $(".receiver").each(function(i, v) {
                 $(v).removeClass("bg-slate-100");
             });
+            const messagePatternHTML = `
+                        <div class="message overflow-y-scroll  bg-slate-200 max-h-[550px]  gap-y-3">
+                            <div class="bg-white p-3 text-xl text-sky-600 cursor-pointer message-receiver-name">${name}
+                            </div>
+                            <div class="message-area flex flex-col gap-y-3  p-5">
+                            </div>
+                        </div>
+                    `
+            $(".message").replaceWith(messagePatternHTML);
         }
         init();
         // Scroll message to the bottom 
@@ -120,7 +129,6 @@
                     if (response.status == 'success') {
                         $(".message-area").html('');
                         $(".message-area").addClass("message-area-" + receiverID);
-
                         const chat = response.chat;
                         $.each(chat, function(i, e) {
                             let senderHTML, receiverHTML;
@@ -146,6 +154,7 @@
                             scrollBottom();
 
                         });
+                        $(".unseen-" + receiverID).hide();
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -164,8 +173,8 @@
                 data: data,
                 dataType: "JSON",
                 success: function(response) {
+                    const receiver = response.receiver;
                     if (response.status == "success") {
-                        const receiver = response.receiver;
                         if (response.isNewConversation) {
                             const receiverHTML = `
                             <div data-id="${receiver.id}" class="receiver cursor-pointer flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
@@ -181,7 +190,9 @@
                                     </div>
                             </div>
                         `
-                            init();
+                            $(".receiver").each(function(i, v) {
+                                $(v).removeClass("bg-slate-100");
+                            });
                             $(".receivers").prepend(receiverHTML);
                         }
                         $("#message_content").val("");
@@ -197,10 +208,10 @@
         }
         // Change Message Receiver
         $("body").on("click", ".receivers .receiver", function() {
+            init();
             const receiverID = $(this).data('id');
             getMessage(senderId, receiverID);
             setInputReceiverID(receiverID);
-            init();
             $(this).addClass("bg-slate-100");
             const receiverName = $(this).find(".receiver-name").html();
             $(".message-receiver-name").html(receiverName);
@@ -216,17 +227,6 @@
                     init();
                     $(v).addClass("bg-slate-100");
                     getMessage(senderId, receiverID);
-                } else {
-                    const messagePatternHTML = `
-                    <div class="message overflow-y-scroll  bg-slate-200 max-h-[550px]  gap-y-3">
-                            <div class="bg-white p-3 text-xl text-sky-600 cursor-pointer message-receiver-name">${name}
-                            </div>
-                            <div class="message-area flex flex-col gap-y-3  p-5">
-                                
-                            </div>
-                        </div>
-                    `
-                    $(".message").replaceWith(messagePatternHTML);
                 }
             })
 
@@ -236,10 +236,12 @@
 
         });
         $(".close-chat-pannel").on("click", function() {
+            init();
             $(".chat-pannel").hide(500);
         });
         $(".send-message").on("submit", function(e) {
             e.preventDefault();
+            const id = $("input[name = 'receiver_id']").val();
             const data = $(this).serialize();
             const messageContent = $("#message_content").val();
             const currentTime = getCurrentTime(new Date());
@@ -254,6 +256,7 @@
             $(".message-area").append(messageAreaHTML);
             sendMessage(data);
             $("#message_content").val("");
+            $(".unseen-" + id).html("").hide();
             scrollBottom()
 
         })

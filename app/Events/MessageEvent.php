@@ -18,6 +18,7 @@ class MessageEvent implements ShouldBroadcast
     public $receiver_id;
     public $date_time; 
 
+
     /**
      * Create a new event instance.
      */
@@ -25,7 +26,7 @@ class MessageEvent implements ShouldBroadcast
     {
         $this->message = $message;
         $this->receiver_id = $receiver_id;
-        $this->date_time = $date_time;
+        $this->date_time = $date_time; 
     }
 
     /**
@@ -44,7 +45,7 @@ class MessageEvent implements ShouldBroadcast
             'message' => $this->message,
             'receiver_id' => $this->receiver_id,
             'sender_id' => Auth::user()->id, 
-            'created_at' => $this->date_time,
+            'created_at' => $this->date_time, 
         ];
     }
 }

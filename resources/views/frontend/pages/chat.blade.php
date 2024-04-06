@@ -17,12 +17,15 @@
                         class="receiver cursor-pointer flex items-center p-2 max-w-[250px] max-h-[100px]   ">
                         <div><img class="rounded-full" width="50" src="{{ asset($receiver->image) }}" />
                         </div>
-                        <div class="flex flex-col p-1">
+                        <div class="flex flex-col p-1 flex-1">
                             <p class="flex justify-between"><span
                                     class="font-semibold text-sm receiver-name">{{ $receiver->name }}</span>
                                 <span class="text-xs">4/2/2024</span>
                             </p>
-                            <p class="">Lorem ipsum dolor sit,
+                            <p class="flex justify-between overflow-hidden text-sm">
+                                <span class=" whitespace-nowrap ">Lorem ipsum ipsum</span>
+                                <span class="hidden unseen-{{ $receiver->id }}  text-sky-600 text-xs "><i
+                                        class="fa-solid fa-circle"></i></span>
                             </p>
                         </div>
                     </div>

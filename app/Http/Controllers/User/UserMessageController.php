@@ -18,14 +18,14 @@ class UserMessageController extends Controller
         $receiverID = $request->receiver_id; 
         $isNewConversation =  count(Chat::whereIn('receiver_id',[ $senderID , $receiverID ])
         ->whereIn('sender_id',[ $senderID , $receiverID ])
-        ->get()) <= 0 ? true :false ;
-
+        ->get()) <= 0 ? true :false ; 
 
         $message = Chat::create([
             "receiver_id" => $receiverID , 
             "sender_id" => $senderID , 
             "message" => $request->message_content, 
-        ]); 
+        ]);  
+
         broadcast(new MessageEvent($message->message,$message->receiver_id,$message->created_at)); 
         if(Auth::user()->role =='user') {
             return response([
@@ -43,13 +43,14 @@ class UserMessageController extends Controller
     public function getMessage(Request $request){
         $senderID = $request->sender_id; 
         $receiverID = $request->receiver_id; 
-
         $chat = Chat::whereIn('receiver_id',[ $senderID , $receiverID ])
-                    ->whereIn('sender_id',[ $senderID , $receiverID ])
-                    ->orderBy('created_at','asc')
-                    ->get();
+            ->whereIn('sender_id',[ $senderID , $receiverID ])
+            ->orderBy('created_at','asc')
+            ->get(); 
+        // Set seen for all previous message
+        foreach($chat as $c) $c->update(['seen' => 1]);        
         $lastChat = $chat->last();
-    
+        
         return response([
             'status' => "success",
             "chat" => $chat, 

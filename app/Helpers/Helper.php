@@ -71,15 +71,19 @@ function getAllType(){
 // Chat -------------------------------------
 function getReceivers() : array{
     $receivers = array();
-    $id = auth()->user()->id;
+    $id = auth()->user()->id;  
+    // Case 1 $id in sender
     $receiverIDs = Chat::where("sender_id", $id)->groupBy('receiver_id')->pluck('receiver_id')->toArray();
+    // Case 2 $id in receiver
+    $senderIDs = Chat::where("receiver_id", $id)->groupBy('sender_id')->pluck('sender_id')->toArray();
+    $mergeIDs = array_unique(array_merge( $receiverIDs,$senderIDs));
     if( auth()->user()->role == 'user'){
-        foreach($receiverIDs as $id) {
+        foreach($mergeIDs as $id) {
             $receivers[] = ShopProfile::where("user_id",$id)->first();
         };
     }
     else {
-        foreach($receiverIDs as $id) {
+        foreach($mergeIDs as $id) {
             $receivers[] = User::findOrFail($id);
         };
     }

@@ -13,17 +13,21 @@
         {{-- Vendors --}}
         <div class="receivers overflow-y-scroll border-r-2  border-slate-100">
             {{-- Receiver - Vendor --}}
+            <div class="receiver"></div>
             @foreach (getReceivers() as $receiver)
                 <div data-id="{{ $receiver->user_id }}"
                     class="receiver cursor-pointer flex items-center p-2 max-w-[250px] max-h-[100px]   ">
                     <div><img class="rounded-full" width="50" src="{{ asset($receiver->banner) }}" />
                     </div>
-                    <div class="flex flex-col p-1">
-                        <p class="flex justify-between"><span
-                                class="font-semibold text-sm receiver-name">{{ $receiver->name }}</span>
+                    <div class="flex flex-col p-1 flex-1">
+                        <p class="flex justify-between">
+                            <span class="font-semibold text-sm receiver-name">{{ $receiver->name }}</span>
                             <span class="text-xs">4/2/2024</span>
                         </p>
-                        <p class="">Lorem ipsum dolor sit,
+                        <p class="flex justify-between overflow-hidden text-sm">
+                            <span class=" whitespace-nowrap ">Lorem ipsum ipsum</span>
+                            <span class="hidden unseen-{{ $receiver->user_id }}  text-sky-600 text-xs "><i
+                                    class="fa-solid fa-circle"></i></span>
                         </p>
                     </div>
                 </div>
@@ -65,8 +69,20 @@
             $(".receiver").each(function(i, v) {
                 $(v).removeClass("bg-slate-100");
             });
+            const messagePatternHTML = `
+                        <div class="message overflow-y-scroll  bg-slate-200 max-h-[550px]  gap-y-3">
+                            <div class="bg-white p-3 text-xl text-sky-600 cursor-pointer message-receiver-name">${name}
+                            </div>
+                            <div class="message-area flex flex-col gap-y-3  p-5">
+                            </div>
+                        </div>
+                    `
+            $(".message").replaceWith(messagePatternHTML);
         }
         init();
+
+
+
         // Scroll message to the bottom 
         function scrollBottom() {
             let messageArea = $(".message ");
@@ -123,7 +139,7 @@
                             }
                             scrollBottom();
                         });
-
+                        $(".unseen-" + receiverID).hide();
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -142,28 +158,30 @@
                 data: data,
                 dataType: "JSON",
                 success: function(response) {
+                    const receiver = response.receiver;
+                    console.log(receiver.id);
                     if (response.status == "success") {
                         if (response.isNewConversation) {
-                            const receiver = response.receiver;
                             const receiverHTML = `
-                            <div data-id="${receiver.id}" class="receiver cursor-pointer flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
-                                    <div><img class="rounded-full" width="50"
-                                            src="{{ asset('${receiver.banner}') }}" />
-                                    </div>
-                                    <div class="flex flex-col p-1">
-                                        <p class="flex justify-between"><span class="font-semibold text-sm receiver-name">${receiver.name}</span>
-                                            <span class='text-xs'>4/2/2024</span>
-                                        </p>
-                                        <p class="last-chat">Lorem, ipsum dolor sit
-                                        </p>
-                                    </div>
-                            </div>
-                        `
-                            init();
+                                <div data-id="${receiver.id}" class="receiver cursor-pointer flex items-center p-2 max-w-[250px] max-h-[100px] bg-slate-100  ">
+                                        <div><img class="rounded-full" width="50"
+                                                src="{{ asset('${receiver.banner}') }}" />
+                                        </div>
+                                        <div class="flex flex-col p-1">
+                                            <p class="flex justify-between"><span class="font-semibold text-sm receiver-name">${receiver.name}</span>
+                                                <span class='text-xs'>4/2/2024</span>
+                                            </p>
+                                            <p class="last-chat">Lorem, ipsum dolor sit
+                                            </p>
+                                        </div>
+                                </div>
+                            `
+                            $(".receiver").each(function(i, v) {
+                                $(v).removeClass("bg-slate-100");
+                            });
                             $(".receivers").prepend(receiverHTML);
                         }
                         $("#message_content").val("");
-
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -176,53 +194,43 @@
         }
         // Change Message Receiver
         $("body").on("click", ".receivers .receiver", function() {
+            init();
             const receiverID = $(this).data('id');
             getMessage(senderId, receiverID);
             setInputReceiverID(receiverID);
-            init();
             $(this).addClass("bg-slate-100");
             const receiverName = $(this).find(".receiver-name").html();
             $(".message-receiver-name").html(receiverName);
         })
-        // $(".show-chat-pannel").on("click", function() {
+        // Show chat with shop
+        $(".show-chat-pannel").on("click", function() {
+            const name = $(this).data("name");
+            const banner = $(this).data("banner");
+            const receiverID = $(this).data("id");
+            $(".receivers .receiver").each(function(i, v) {
+                if ($(v).data('id') == receiverID) {
+                    init();
+                    $(v).addClass("bg-slate-100");
+                    getMessage(senderId, receiverID);
+                    return
+                };
+            })
+            setInputReceiverID(receiverID);
+            $(".chat-pannel").show(500);
 
-        //     const name = $(this).data("name");
-        //     const banner = $(this).data("banner");
-        //     const receiverID = $(this).data("id");
-
-        //     $(".receiver").each(function(i, v) {
-        //         if ($(v).data('id') == receiverID) {
-        //             init();
-        //             $(v).addClass("bg-slate-100");
-        //             getMessage(senderId, receiverID);
-        //         } else {
-        //             const messagePatternHTML = `
-    //         <div class="message overflow-y-scroll  bg-slate-200 max-h-[550px]  gap-y-3">
-    //                 <div class="bg-white p-3 text-xl text-sky-600 cursor-pointer message-receiver-name">${name}
-    //                 </div>
-    //                 <div class="message-area flex flex-col gap-y-3  p-5">
-
-    //                 </div>
-    //             </div>
-    //         `
-        //             $(".message").replaceWith(messagePatternHTML);
-        //         }
-        //     })
-
-        //     setInputReceiverID(receiverID);
-
-        //     $(".chat-pannel").show(500);
-
-        // });
+        });
         $(".close-chat-pannel").on("click", function() {
+            init();
             $(".chat-pannel").hide(500);
         });
 
         $(".open-chat-pannel").on("click", function() {
+            init();
             $(".chat-pannel").show(500);
         });
         $(".send-message").on("submit", function(e) {
             e.preventDefault();
+            const id = $("input[name = 'receiver_id']").val();
             const data = $(this).serialize();
             const messageContent = $("#message_content").val();
             const currentTime = getCurrentTime(new Date());
@@ -237,9 +245,8 @@
             $(".message-area").append(messageAreaHTML);
             sendMessage(data);
             $("#message_content").val("");
+            $(".unseen-" + id).hide();
             scrollBottom();
-
-
         })
         // Chat -----------------------------------
     </script>

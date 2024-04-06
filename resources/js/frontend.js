@@ -14,6 +14,7 @@ window.Echo.private('message.' + USER.id).listen(
             </div>
         </div>  `
         $(".message-area-" + e.sender_id).append(receiverHTML);
+        $(".unseen-" + e.sender_id).show();
         scrollBottom();
     }
 )
