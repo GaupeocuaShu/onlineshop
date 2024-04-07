@@ -25,7 +25,7 @@
                             <span class="text-xs">4/2/2024</span>
                         </p>
                         <p class="flex justify-between overflow-hidden text-sm">
-                            <span class=" whitespace-nowrap ">Lorem ipsum ipsum</span>
+                            <span class="last-message whitespace-nowrap ">Lorem ipsum ipsum</span>
                             <span class="hidden unseen-{{ $receiver->user_id }}  text-sky-600 text-xs "><i
                                     class="fa-solid fa-circle"></i></span>
                         </p>
