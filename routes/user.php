@@ -15,6 +15,7 @@ Route::get("profile",[ProfileController::class,"index"])->name("profile");
 // Profile -------------------------------------------------
 
 // Cart   -------------------------------------------------
+
 Route::delete("/{id}/cart",[CartController::class,"delete"])->name("cart.delete");
 Route::put("/cart",[CartController::class,"update"])->name("cart.update");
 Route::get("/cart/get",[CartController::class,"get"])->name("cart.get");
@@ -27,9 +28,20 @@ Route::put("/apply-coupon",[CartController::class,"applyCoupon"])->name("apply-c
 // Cart   ------------------------------------------------- 
 
 
+
+// Payment   ------------------------------------------------- 
+Route::post("payment/make-payment",[PaymentController::class,"makePayment"])->name('payment.make-payment') ;
+Route::get("payment/payment-success",[PaymentController::class,"paymentSuccess"])->name("payment.payment-success");
+Route::get("payment/payment-cancel",[PaymentController::class,"paymentCancel"])->name("payment.payment-cancel");
+// Payment   ------------------------------------------------- 
+
+
+
+
 // Check out   ------------------------------------------------- 
-Route::post("/check-out",[PaymentController::class,"store"])->name("check-out");
-Route::get("/check-out",[CheckOutController::class,"index"])->name("check-out"); 
+
+Route::get("/check-out",[CheckOutController::class,"index"])->name("check-out");  
+
 // Check out   ------------------------------------------------- 
 
 // Address ------------------------------------------------- 

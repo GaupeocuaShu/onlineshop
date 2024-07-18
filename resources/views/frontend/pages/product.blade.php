@@ -1,7 +1,8 @@
 @extends('frontend.layout.master')
 @section('content')
-    <div class="hidden product-information" data-brandid = "{{ $product->brand->id }}"
-        data-vendorid = "{{ $product->shopProfile->id }}" data-imageurl = "{{ $product->thumb_image }}">
+    <div class="hidden product-information" data-description ="{{ $product->short_description }}"
+        data-brandid = "{{ $product->brand->id }}" data-vendorid = "{{ $product->shopProfile->id }}"
+        data-imageurl = "{{ $product->thumb_image }}">
     </div>
     <div class="py-10 ">
 
@@ -60,11 +61,11 @@
                 </div>
                 <div class="">
                     <div class="flex my-10">
-                        <span class="font-light min-w-[100px]">Deliver</span>
+                        <span class="text-slate-500 min-w-[100px]">Deliver</span>
                         <span>
-                            <span class="font-light"><i class="fa-solid fa-truck"></i> Deliver to &ensp;</span> 6320
+                            <span class="text-slate-500"><i class="fa-solid fa-truck"></i> Deliver to &ensp;</span> 6320
                             Creekbend Drive<br />
-                            <span class="font-light"> Shipping Fee &ensp;</span> $0
+                            <span class="text-slate-500"> Shipping Fee &ensp;</span> $0
                         </span>
 
                     </div>
@@ -78,7 +79,7 @@
                         @foreach ($product->productVariants as $variant)
                             @if ($variant->status == 1)
                                 <div class="flex  my-10 variant">
-                                    <span class="font-light  min-w-[100px] capitalize">{{ $variant->name }}</span>
+                                    <span class="text-slate-500  min-w-[100px] capitalize">{{ $variant->name }}</span>
                                     <div class="flex flex-wrap gap-4 ">
                                         @foreach ($variant->product_variant_item as $item)
                                             @if ($item->status == 1)
@@ -97,7 +98,7 @@
                     </div>
                     {{-- Variant --}}
                     <div class="flex  my-10 items-center">
-                        <span class="font-light min-w-[100px] capitalize">Quantity</span>
+                        <span class="text-slate-500 min-w-[100px] capitalize">Quantity</span>
                         <div class="flex">
                             <p class="decrease cursor-pointer border-2 border-slate-200 py-1 px-3">-</p>
                             <input value="1" type="text"
@@ -107,7 +108,7 @@
                             <p data-max="{{ $product->qty }}"
                                 class="increase cursor-pointer border-2 border-slate-200 py-1 px-3">+</p>
                         </div>
-                        <p class="text-sm font-light">&emsp;{{ $product->qty }} is Available</p>
+                        <p class="text-sm text-slate-500">&emsp;{{ $product->qty }} is Available</p>
                     </div>
                     <div class="flex gap-7">
                         <form>
@@ -181,37 +182,140 @@
             </div>
         </div>
 
-        <div class="bg-white p-5 my-7  gap-5">
-            <div>
-                <div class="bg-slate-100 p-3 font-semibold text-lg">PRODUCT DETAIL</div>
-                <div class="my-10 leading-10 p-3">
-                    <div class="flex gap-16">
-                        <span class="font-light min-w-[100px]">Category</span>
-                        <span>{{ $product->category->name }}
-                            {{ !empty($product->subCategory->name) ? ' - ' . $product->subCategory->name : '' }}
-                        </span>
+        <div class="grid grid-cols-12 gap-5">
+            <div class="bg-white p-5 my-7 gap-5 col-span-9">
+                <div>
+                    <div class="bg-slate-100 p-3 font-semibold text-lg">PRODUCT DETAIL</div>
+                    <div class="my-10 leading-10 p-3">
+                        <div class="flex gap-16">
+                            <span class="text-slate-500 min-w-[100px]">Category</span>
+                            <span>{{ $product->category->name }}
+                                {{ !empty($product->subCategory->name) ? ' - ' . $product->subCategory->name : '' }}
+                            </span>
+                        </div>
+                        <div class="flex gap-16">
+                            <span class="text-slate-500 min-w-[100px]">Quantity</span>
+                            <span>{{ $product->qty }}</span>
+                        </div>
+                        <div class="flex gap-16">
+                            <span class="text-slate-500 min-w-[100px]">Brand</span>
+                            <span>{{ $product->brand->name }}</span>
+                        </div>
                     </div>
-                    <div class="flex gap-16">
-                        <span class="font-light min-w-[100px]">Quantity</span>
-                        <span>{{ $product->qty }}</span>
-                    </div>
-                    <div class="flex gap-16">
-                        <span class="font-light min-w-[100px]">Brand</span>
-                        <span>{{ $product->brand->name }}</span>
+                </div>
+                <div>
+                    <div class="bg-slate-100 p-3 font-semibold text-lg">PRODUCT DESCRIPTION</div>
+                    <div class="my-10 leading-10 p-3">
+                        <div class="gap-16">
+                            {!! $product->short_description !!}
+                        </div>
+                        <div class="gap-16">
+                            {!! $product->long_description !!}
+                        </div>
+
                     </div>
                 </div>
             </div>
-            <div>
-                <div class="bg-slate-100 p-3 font-semibold text-lg">PRODUCT DESCRIPTION</div>
-                <div class="my-10 leading-10 p-3">
-                    <div class="gap-16">
-                        {!! $product->short_description !!}
-                    </div>
-                    <div class="gap-16">
-                        {!! $product->long_description !!}
-                    </div>
+            <div class=" bg-white p-5 my-7 gap-5 col-span-3">
+                <h2 class="text-slate-500">Top picks from Shop</h2>
 
+                <div class="flex flex-col gap-4 pt-5">
+                    @foreach ($productsBelongsToShop as $t)
+                        <li data-url="{{ route('product', ['product' => $t->slug]) }}"
+                            class= " product cursor-pointer shadow-lg relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 transition-all  flex flex-col justify-between  leading-6  ">
+                            <img class="min-h-[100px] w-full" src="{{ asset($t->thumb_image) }}" />
+                            <div class="absolute w-full text-xs flex justify-between">
+                                <span class="bg-sky-600 rounded-sm text-white  p-1 ">
+                                    {{ getProductType($t) }}
+                                </span>
+                                @if (checkSale($t))
+                                    <span class="bg-sky-700 rounded-sm text-white p-1 ">
+                                        {{ calculateSalePercent($t) . '%' }}
+                                    </span>
+                                @endif
+                            </div>
+                            <div class=" p-2">
+                                <h1>{{ $t->name }}</h1>
+                                <p class="flex justify-between items-center mt-3">
+                                    <span class="text-orange-500 font-bold">${{ $t->price }}</span>
+                                    <span class="text-sm ">30 Sold</span>
+                                </p>
+                            </div>
+
+                        </li>
+                    @endforeach
                 </div>
+            </div>
+
+
+        </div>
+        <div>
+            <h1 class="text-slate-500 uppercase">From the same shop</h1>
+            <div class="flex gap-4 pt-5">
+                @foreach ($productsBelongsToShop as $t)
+                    <li data-url="{{ route('product', ['product' => $t->slug]) }}"
+                        class= "bg-white product cursor-pointer shadow-lg 
+                        relative hover:shadow-lg hover:shadow-slate-400 
+                        hover:-translate-y-1 transition-all flex-1  flex flex-col justify-between  leading-6  ">
+                        <img class="max-h-[180px]" src="{{ asset($t->thumb_image) }}" />
+                        <div class="absolute w-full text-xs flex justify-between">
+                            <span class="bg-sky-600 rounded-sm text-white  p-1 ">
+                                {{ getProductType($t) }}
+                            </span>
+                            @if (checkSale($t))
+                                <span class="bg-sky-700 rounded-sm text-white p-1 ">
+                                    {{ calculateSalePercent($t) . '%' }}
+                                </span>
+                            @endif
+                        </div>
+                        <div class=" p-2">
+                            <h1>{{ $t->name }}</h1>
+                            <p>
+                                {!! $t->short_description !!}
+                            </p>
+                            <p class="flex justify-between items-center mt-3">
+                                <span class="text-orange-500 font-bold">${{ $t->price }}</span>
+                                <span class="text-sm ">30 Sold</span>
+                            </p>
+                        </div>
+
+                    </li>
+                @endforeach
+            </div>
+        </div>
+
+        <div>
+            <h1 class="text-slate-500 uppercase  my-5">You may also like</h1>
+            <div class="grid gap-4 pt-5 grid-cols-12">
+                @foreach ($productsBelongsToSameCategory as $t)
+                    <li data-url="{{ route('product', ['product' => $t->slug]) }}"
+                        class= "bg-white col-span-2 product cursor-pointer shadow-lg 
+                        relative hover:shadow-lg hover:shadow-slate-400 hover:-translate-y-1 
+                        transition-all  flex flex-col justify-between  leading-6  ">
+                        <img class="min-h-[180px] w-full" src="{{ asset($t->thumb_image) }}" />
+                        <div class="absolute w-full text-xs flex justify-between">
+                            <span class="bg-sky-600 rounded-sm text-white  p-1 ">
+                                {{ getProductType($t) }}
+                            </span>
+                            @if (checkSale($t))
+                                <span class="bg-sky-700 rounded-sm text-white p-1 ">
+                                    {{ calculateSalePercent($t) . '%' }}
+                                </span>
+                            @endif
+                        </div>
+                        <div class=" p-2">
+                            <h1>{{ $t->name }}</h1>
+                            <p>
+                                {!! $t->short_description !!}
+                            </p>
+                            <p class="flex justify-between items-center mt-3">
+                                <span class="text-orange-500 font-bold">${{ $t->price }}</span>
+                                <span class="text-sm ">30 Sold</span>
+                            </p>
+                        </div>
+
+                    </li>
+                @endforeach
             </div>
         </div>
     @endsection
@@ -223,7 +327,7 @@
     @endpush
     @push('scripts')
         <!-- Swiper JS
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    -->
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
         <!-- Initialize Swiper -->
@@ -234,6 +338,7 @@
                     const imageURL = $(".product-information").data("imageurl");
                     const brandID = $(".product-information").data("brandid");
                     const vendorID = $(".product-information").data("vendorid");
+                    const productDescription = $(".product-information").data("description");
                     const id = $('input[name="temp_id"]').val();
                     allVarNames.push({
                         imageURL: imageURL
@@ -243,6 +348,8 @@
                         product_id: id
                     }, {
                         vendor_id: vendorID
+                    }, {
+                        product_description: productDescription
                     });
                     const allVarNamesJson = JSON.stringify(allVarNames);
                     $('input[name="attributes"]').val(allVarNamesJson);
@@ -290,6 +397,7 @@
                     const imageURL = $(activeImage).data("imageurl");
                     var brandID = $(".product-information").data("brandid");
                     var vendorID = $(".product-information").data("vendorid");
+                    var productDescription = $(".product-information").data("description");
 
                     allVarNames.push({
                         imageURL: imageURL
@@ -299,6 +407,8 @@
                         product_id: id
                     }, {
                         vendor_id: vendorID
+                    }, {
+                        product_description: productDescription
                     });
                     // Add variant Price
                     if ($(this).data("price") > 0) {
@@ -425,6 +535,11 @@
                 $(".variant-select").on("click", function() {
                     $(this).addClass("hidden");
                 })
+
+                $(".product").on("click", function() {
+                    const url = $(this).data("url");
+                    window.location.replace(url);
+                });
             });
         </script>
     @endpush

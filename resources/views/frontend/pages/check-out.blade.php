@@ -135,10 +135,12 @@
                 <div class="flex gap-x-10 items-start my-5">
                     <h1 class="text-xl">Payment Method</h1>
                     <ul class="flex ">
-                        <li><a href="#tabs-1" class="border-2 tab border-slate-200 py-2 mr-3 px-4 active">Cash On
+                        <li><a href="#tabs-1" data-method="cash"
+                                class="border-2 tab border-slate-200 py-2 mr-3 px-4 active">Cash On
                                 Delivery</a>
                         </li>
-                        <li><a href="#tabs-2" class="border-2 tab border-slate-200 py-2 mr-3 px-4">Credit Card/Debit
+                        <li><a href="#tabs-2" data-method ="card"
+                                class="border-2 tab border-slate-200 py-2 mr-3 px-4">Credit Card/Debit
                                 Card</a>
                         </li>
                     </ul>
@@ -178,7 +180,7 @@
                     By clicking "Place Order", you are agreeing to <a class="text-sky-700" href="#">ShuTy's Shop
                         General Transaction Terms</a>
                 </p>
-                <form action="{{ route('user.check-out') }}" method="POST">
+                <form action="{{ route('user.payment.make-payment') }}" method="POST">
                     @csrf
                     <input name="order_address" value="{{ $address->id }}" type="hidden" />
                     <input name="payment_method" value="cash" type="hidden" />
@@ -198,9 +200,13 @@
             $(function() {
                 $("#tabs").tabs();
             });
+
+
             $(".tab").on("click", function() {
                 $(".tab").removeClass("active");
                 $(this).addClass("active");
+                const method = $(this).data('method');
+                $('input[name="payment_method"]').val(method);
             })
             $(".change-address").on("click", function() {
                 $(".select-address-panel").show();

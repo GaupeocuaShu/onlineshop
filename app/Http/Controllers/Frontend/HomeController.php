@@ -53,12 +53,23 @@ class HomeController extends Controller
         // Product Detail 
         $product = Product::where("slug",$request->product)->first();
         if($product){
-            $shop = ShopProfile::findOrFail($product->shop_profile_id); 
+            $shop = ShopProfile::findOrFail($product->shop_profile_id);  
+
+            $productsBelongsToShop =  Product::where("shop_profile_id",$shop->id)
+                                                ->where("status",1)
+                                                ->where("is_approved",1)->get()->take(6);
+
+            $productsBelongsToSameCategory =  Product::where("category_id",$product->category_id)
+            ->where("status",1)
+            ->where("is_approved",1)->get()->take(30);
+
             // Get Chat -----------------------------
             return view("frontend.pages.product",[
                 "categories" => $allCategories,
                 "product" => $product,
-                "shop" => $shop,
+                "shop" => $shop, 
+                "productsBelongsToShop" => $productsBelongsToShop, 
+                "productsBelongsToSameCategory" => $productsBelongsToSameCategory, 
             ]);
         }
         // Product based on category filter
