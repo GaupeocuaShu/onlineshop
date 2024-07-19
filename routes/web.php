@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/',[HomeController::class,"home"]);
+Route::get('/', [HomeController::class, "home"]);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -28,9 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get("get-slug-url/",[HomeController::class,"getSlugUrl"])->name("get-slug-url");
+Route::get("get-slug-url/", [HomeController::class, "getSlugUrl"])->name("get-slug-url");
 
-Route::get("/product",[HomeController::class,"product"])->name("product");
+Route::get("/product", [HomeController::class, "product"])->name("product");
 
-
-require __DIR__.'/auth.php';
+Route::get("/not-found", [HomeController::class, "notFound"])->name("not-found");
+require __DIR__ . '/auth.php';

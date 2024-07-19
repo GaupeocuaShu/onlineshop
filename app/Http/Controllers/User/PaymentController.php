@@ -9,12 +9,12 @@ use Carbon\Carbon;
 use Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Cashier\Cashier;
 
 class PaymentController extends Controller
 {
-
     // Cash Payment
-    public function store(Request $request)
+    public function store($payment_status, $payment_method)
     {
         Cart::session("checked");
         $cartConditions = Cart::getConditions();
@@ -33,9 +33,9 @@ class PaymentController extends Controller
             'sub_total' => Cart::getSubTotal(),
             'total' => Cart::getTotal(),
             "product_qty" => Cart::getTotalQuantity(),
-            "payment_method" => $request->payment_method,
-            "payment_status" => $request->payment_status,
-            "user_address_id" => $request->order_address,
+            "payment_method" => $payment_method,
+            "payment_status" => $payment_status,
+            "user_address_id" => getUserOrderAddress(),
             "coupon" =>  $coupon,
             "order_status" => "pending",
         ]);
@@ -76,23 +76,9 @@ class PaymentController extends Controller
     //  Stripe Payment 
     public function makePayment(Request $request)
     {
+
+        if ($request->payment_method == 'cash') return self::store(0, 'cash');
         Cart::session("checked");
-        $coupon = "";
-        $invoice_id = Auth::user()->id;
-        $current = Carbon::now();
-        $invoice_id .= $current->isoFormat('YYMMDDkkmm');
-        $order = Order::create([
-            'invoice_id' =>  $invoice_id,
-            'user_id' => Auth::user()->id,
-            'sub_total' => Cart::getSubTotal(),
-            'total' => Cart::getTotal(),
-            "product_qty" => Cart::getTotalQuantity(),
-            "payment_method" => $request->payment_method,
-            "payment_status" => $request->payment_status,
-            "user_address_id" => $request->order_address,
-            "coupon" =>  $coupon,
-            "order_status" => "pending",
-        ]);
         $priceIDs = array();
         $stripe = new \Stripe\StripeClient(config('stripe.secret_key'));
         foreach (Cart::getContent() as $item) {
@@ -114,12 +100,21 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function paymentSuccess()
+    public function paymentSuccess(Request $request)
     {
+        $sessionId = $request->session_id;
 
-        return view("frontend.pages.payment-success", [
-            "title" => "Payment Success"
-        ]);
+        if ($sessionId === null) {
+            return redirect()->route('not-found');
+        }
+
+        $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
+
+        if ($session->payment_status !== 'paid') {
+            return redirect()->route('not-found');
+        }
+
+        return $this->store(1, 'card');
     }
 
     public function paymentCancel()

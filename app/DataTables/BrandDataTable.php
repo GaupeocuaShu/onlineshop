@@ -45,7 +45,7 @@ class BrandDataTable extends DataTable
                 if ($query->is_featured == 1) {
                     return
                         '<label class="custom-switch mt-2">
-                        <input type="checkbox" checked data-url=" ' . route("admin.brand.change-featured", $query->id) . '" class="status custom-switch-input">
+                        <input type="checkbox" checked  data-url=" ' . route("admin.brand.change-featured", $query->id) . '" class="status custom-switch-input">
                         <span class="custom-switch-indicator"></span>
                     </label>';
                 } else {
@@ -58,7 +58,7 @@ class BrandDataTable extends DataTable
             })
             ->addColumn('action', function ($query) {
                 $updateBtn = "<a href = '" . route("admin.brand.edit", $query->id) . " ' class='btn btn-primary'><i class='fa-solid fa-pen-to-square'></i> </a> &emsp;";
-                $deleteBtn = "<button class='delete btn btn-danger' data-url='".route("admin.brand.destroy", $query->id) ."'><i class='fa-solid fa-trash-can-arrow-up'></i></button>"; 
+                $deleteBtn = "<button class='delete btn btn-danger' data-url='" . route("admin.brand.destroy", $query->id) . "'><i class='fa-solid fa-trash-can-arrow-up'></i></button>";
                 return $updateBtn . $deleteBtn;
             })
             ->rawColumns(["action", "is_featured", "status", "logo"])
@@ -79,20 +79,20 @@ class BrandDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('brand-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    //->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->selectStyleSingle()
-                    ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    ]);
+            ->setTableId('brand-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            //->dom('Bfrtip')
+            ->orderBy(1)
+            ->selectStyleSingle()
+            ->buttons([
+                Button::make('excel'),
+                Button::make('csv'),
+                Button::make('pdf'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload')
+            ]);
     }
 
     /**

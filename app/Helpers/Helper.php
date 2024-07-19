@@ -4,6 +4,7 @@
 use App\Models\Chat;
 use App\Models\ShopProfile;
 use App\Models\User;
+use App\Models\UserAddresses;
 
 function setActive(array $routes)
 {
@@ -14,10 +15,11 @@ function setActive(array $routes)
 };
 
 // Check table is Empty 
-function isTableEmpty($model){
+function isTableEmpty($model)
+{
     return $model->isEmpty();
 }
- 
+
 // Check sale 
 
 function checkSale($product)
@@ -36,7 +38,7 @@ function calculateSalePercent($product)
 {
     $discountPrice = $product->price - $product->offer_price;
     $percent =  ($discountPrice / $product->price) * 100;
-    return number_format($percent,0);
+    return number_format($percent, 0);
 }
 
 // Get Product type
@@ -64,32 +66,36 @@ function getProductType($product)
 }
 
 
-function getAllType(){
-    return ["featured" => "Featured","best" => "Best","top" => "Top","new" => "New Arrival"];
+function getAllType()
+{
+    return ["featured" => "Featured", "best" => "Best", "top" => "Top", "new" => "New Arrival"];
 }
 
 // Chat -------------------------------------
-function getReceivers() : array{
+function getReceivers(): array
+{
     $receivers = array();
-    $id = auth()->user()->id;  
+    $id = auth()->user()->id;
     // Case 1 $id in sender
     $receiverIDs = Chat::where("sender_id", $id)->groupBy('receiver_id')->pluck('receiver_id')->toArray();
     // Case 2 $id in receiver
     $senderIDs = Chat::where("receiver_id", $id)->groupBy('sender_id')->pluck('sender_id')->toArray();
-    $mergeIDs = array_unique(array_merge( $receiverIDs,$senderIDs));
-    if( auth()->user()->role == 'user'){
-        foreach($mergeIDs as $id) {
-            $receivers[] = ShopProfile::where("user_id",$id)->first();
+    $mergeIDs = array_unique(array_merge($receiverIDs, $senderIDs));
+    if (auth()->user()->role == 'user') {
+        foreach ($mergeIDs as $id) {
+            $receivers[] = ShopProfile::where("user_id", $id)->first();
         };
-    }
-    else {
-        foreach($mergeIDs as $id) {
+    } else {
+        foreach ($mergeIDs as $id) {
             $receivers[] = User::findOrFail($id);
         };
     }
     return $receivers;
-
 }
-
+function getUserOrderAddress()
+{
+    $addr =  UserAddresses::where('user_id', auth()->user()->id)->where('is_default', 1)->first();
+    return $addr->id;
+}
 
 // Chat -------------------------------------
